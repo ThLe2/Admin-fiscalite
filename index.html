@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMK Performances — Admin Fiscalité du particulier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{
+  --tmk-prune: #8C1E70;
+  --tmk-prune-dark: #5E1349;
+  --tmk-prune-light: #B83A93;
+  --tmk-charbon: #283C28;
+  --tmk-gris: #3C3C3C;
+  --tmk-or: #C9A961;
+  --tmk-sauge: #8B9A7A;
+  --bg: #FAF7F5;
+  --bg-card: #FFFFFF;
+  --bg-soft: #F4EEF1;
+  --border: #E8DCE3;
+  --text: #2A2024;
+  --text-muted: #6B5B62;
+  --shadow-sm: 0 1px 2px rgba(140, 30, 112, 0.06);
+  --shadow: 0 4px 16px rgba(140, 30, 112, 0.08), 0 1px 3px rgba(140, 30, 112, 0.06);
+  --shadow-lg: 0 16px 40px rgba(140, 30, 112, 0.12);
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(140, 30, 112, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 80% 100%, rgba(40, 60, 40, 0.03) 0%, transparent 40%);
+}
+.app{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+
+/* HEADER */
+.header{
+  background: linear-gradient(135deg, var(--tmk-prune) 0%, var(--tmk-prune-dark) 100%);
+  border-radius: var(--radius-lg);
+  padding: 36px 40px;
+  margin-bottom: 32px;
+  color: white;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+.header::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  right:-10%;
+  width:400px;
+  height:400px;
+  background: radial-gradient(circle, rgba(201, 169, 97, 0.18) 0%, transparent 70%);
+  border-radius:50%;
+}
+.header-content{position:relative;z-index:1}
+.header-badge{
+  display:inline-block;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--tmk-or);
+  margin-bottom:8px;
+}
+.header h1{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:34px;
+  letter-spacing:-0.02em;
+  line-height:1.1;
+  margin-bottom:8px;
+}
+.header p{opacity:0.92;font-size:15px;max-width:680px}
+.header-meta{
+  margin-top:20px;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,0.2);
+  display:flex;
+  gap:32px;
+  flex-wrap:wrap;
+  font-size:13px;
+}
+.header-meta span{opacity:0.85}
+.header-meta strong{color:var(--tmk-or);font-weight:600}
+
+/* LAYOUT */
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:24px;
+  align-items:start;
+}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+
+/* CARDS */
+.card{
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.card-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.card-num{
+  width:32px;
+  height:32px;
+  background:var(--tmk-prune);
+  color:white;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:600;
+  font-size:14px;
+  flex-shrink:0;
+}
+.card-title{
+  font-family:'Fraunces',serif;
+  font-size:22px;
+  font-weight:600;
+  color:var(--tmk-charbon);
+  letter-spacing:-0.01em;
+}
+.card-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px}
+
+/* FORM */
+.form-row{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:16px;
+  margin-bottom:14px;
+}
+.form-row.three{grid-template-columns:1fr 1fr 1fr}
+.form-row.full{grid-template-columns:1fr}
+.form-field{display:flex;flex-direction:column;gap:6px}
+.form-field label{
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.form-field input{
+  padding:11px 14px;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+  font-variant-numeric:tabular-nums;
+  background:white;
+  transition:all 0.15s ease;
+  color:var(--text);
+}
+.form-field input:focus{
+  outline:none;
+  border-color:var(--tmk-prune);
+  box-shadow:0 0 0 3px rgba(140, 30, 112, 0.1);
+}
+.form-field input:hover:not(:focus){border-color:var(--tmk-prune-light)}
+
+.subsection{
+  margin: 24px 0 14px;
+  padding-bottom:8px;
+  border-bottom:1px dashed var(--border);
+}
+.subsection-title{
+  font-size:12px;
+  font-weight:700;
+  color: var(--tmk-prune);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+}
+.subsection-desc{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+.tranche-row{
+  display:grid;
+  grid-template-columns: 70px 1fr 1fr 1fr;
+  gap:12px;
+  align-items:center;
+  margin-bottom:10px;
+  padding:10px 14px;
+  background:var(--bg-soft);
+  border-radius:var(--radius-sm);
+}
+.tranche-row .tmi-badge{
+  background:var(--tmk-prune);
+  color:white;
+  padding:4px 10px;
+  border-radius:20px;
+  font-weight:600;
+  font-size:13px;
+  text-align:center;
+}
+.tranche-row input{
+  padding:8px 10px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  font-size:13px;
+  font-family:'Inter',sans-serif;
+  font-variant-numeric:tabular-nums;
+  background:white;
+}
+.tranche-row .label{font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:24px}
+.sidebar-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+.sidebar-card h3{
+  font-family:'Fraunces',serif;
+  font-size:18px;
+  font-weight:600;
+  color:var(--tmk-charbon);
+  margin-bottom:8px;
+}
+.sidebar-card p{
+  font-size:13px;
+  color:var(--text-muted);
+  margin-bottom:20px;
+  line-height:1.6;
+}
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+  padding:14px 20px;
+  border:none;
+  border-radius:var(--radius-sm);
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  text-decoration:none;
+  margin-bottom:10px;
+}
+.btn-primary{
+  background:var(--tmk-prune);
+  color:white;
+  box-shadow:0 4px 12px rgba(140, 30, 112, 0.25);
+}
+.btn-primary:hover{background:var(--tmk-prune-dark);transform:translateY(-1px);box-shadow:0 6px 16px rgba(140, 30, 112, 0.35)}
+.btn-secondary{
+  background:var(--tmk-charbon);
+  color:white;
+}
+.btn-secondary:hover{background:#1a2a1a}
+.btn-ghost{
+  background:transparent;
+  color:var(--tmk-prune);
+  border:1.5px solid var(--tmk-prune);
+}
+.btn-ghost:hover{background:var(--bg-soft)}
+.btn:active{transform:translateY(0)}
+
+.year-banner{
+  background: linear-gradient(135deg, var(--tmk-or) 0%, #b8965a 100%);
+  color:white;
+  padding:14px 18px;
+  border-radius:var(--radius-sm);
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.year-banner-icon{font-size:24px}
+.year-banner-content{flex:1}
+.year-banner-label{font-size:11px;opacity:0.9;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.year-banner-value{font-family:'Fraunces',serif;font-size:22px;font-weight:600;line-height:1}
+
+.computed{
+  margin-top:20px;
+  padding:14px;
+  background:var(--bg-soft);
+  border-radius:var(--radius-sm);
+  border-left:3px solid var(--tmk-prune);
+}
+.computed-title{font-size:11px;font-weight:700;color:var(--tmk-prune);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.computed-line{
+  display:flex;
+  justify-content:space-between;
+  padding:4px 0;
+  font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+.computed-line span:first-child{color:var(--text-muted)}
+.computed-line span:last-child{color:var(--tmk-charbon);font-weight:600}
+
+.note{
+  background:#FFF8E1;
+  border-left:3px solid var(--tmk-or);
+  padding:12px 16px;
+  border-radius:var(--radius-sm);
+  margin:16px 0;
+  font-size:13px;
+  color:var(--tmk-charbon);
+}
+.note strong{color:var(--tmk-prune-dark)}
+
+.footer-info{
+  text-align:center;
+  margin-top:40px;
+  padding:24px;
+  font-size:12px;
+  color:var(--text-muted);
+}
+.footer-info strong{color:var(--tmk-prune);font-weight:600}
+
+.toast{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  background:var(--tmk-charbon);
+  color:white;
+  padding:14px 20px;
+  border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-lg);
+  font-size:14px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all 0.3s ease;
+  pointer-events:none;
+  z-index:1000;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{background:var(--tmk-charbon);border-left:4px solid #6BCB77}
+.toast.error{background:#5E1349;border-left:4px solid #FF6B6B}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-badge">TMK Performances · Espace Formateur</div>
+      <h1>Module C4-1 — Droit et environnement fiscal du particulier</h1>
+      <p>Interface de mise à jour des paramètres fiscaux annuels et de génération des supports stagiaires (fiche mémo et exercices corrigés).</p>
+      <div class="header-meta">
+        <span>📋 <strong>Année d'imposition</strong> : configurable</span>
+        <span>🔒 <strong>Accès</strong> : formateur uniquement</span>
+        <span>📄 <strong>Format de sortie</strong> : PDF imprimable</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- COLONNE PRINCIPALE -->
+    <main>
+
+      <!-- SECTION 1 : ANNÉE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">1</div>
+          <div>
+            <div class="card-title">Année d'imposition</div>
+            <div class="card-subtitle">Précise l'année du barème (ex : 2026 sur revenus 2025)</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Année du barème</label>
+            <input type="number" id="annee" value="2026" min="2020" max="2099">
+          </div>
+          <div class="form-field">
+            <label>Année des revenus concernés</label>
+            <input type="number" id="anneeRevenus" value="2025" min="2019" max="2098">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 : BARÈME -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">2</div>
+          <div>
+            <div class="card-title">Barème progressif de l'IRPP</div>
+            <div class="card-subtitle">Seuils de quotient familial et taux marginaux d'imposition</div>
+          </div>
+        </div>
+
+        <div class="tranche-row">
+          <div class="tmi-badge">0 %</div>
+          <div class="form-field"><span class="label">Jusqu'à</span><input type="number" id="seuil1" value="11600"></div>
+          <div></div>
+          <div></div>
+        </div>
+
+        <div class="tranche-row">
+          <div class="tmi-badge">11 %</div>
+          <div class="form-field"><span class="label">De</span><input type="number" id="seuil1b" value="11601" readonly style="background:#f0f0f0"></div>
+          <div class="form-field"><span class="label">À</span><input type="number" id="seuil2" value="29579"></div>
+          <div></div>
+        </div>
+
+        <div class="tranche-row">
+          <div class="tmi-badge">30 %</div>
+          <div class="form-field"><span class="label">De</span><input type="number" id="seuil2b" value="29580" readonly style="background:#f0f0f0"></div>
+          <div class="form-field"><span class="label">À</span><input type="number" id="seuil3" value="84577"></div>
+          <div></div>
+        </div>
+
+        <div class="tranche-row">
+          <div class="tmi-badge">41 %</div>
+          <div class="form-field"><span class="label">De</span><input type="number" id="seuil3b" value="84578" readonly style="background:#f0f0f0"></div>
+          <div class="form-field"><span class="label">À</span><input type="number" id="seuil4" value="181917"></div>
+          <div></div>
+        </div>
+
+        <div class="tranche-row">
+          <div class="tmi-badge">45 %</div>
+          <div class="form-field"><span class="label">À partir de</span><input type="number" id="seuil4b" value="181918" readonly style="background:#f0f0f0"></div>
+          <div></div>
+          <div></div>
+        </div>
+
+        <div class="note">
+          <strong>💡 Auto-calcul</strong> — Les bornes basses se mettent à jour automatiquement à partir des bornes hautes (+1 €). Les <strong>constantes des formules de calcul rapide</strong> sont calculées automatiquement et affichées dans l'encart de droite.
+        </div>
+      </div>
+
+      <!-- SECTION 3 : DÉCOTE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">3</div>
+          <div>
+            <div class="card-title">Décote</div>
+            <div class="card-subtitle">Réduction d'impôt automatique pour les faibles revenus imposables</div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Déclaration individuelle</div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Seuil d'application (IR brut &lt;)</label>
+            <input type="number" id="decoteSeuilIndiv" value="1982">
+          </div>
+          <div class="form-field">
+            <label>Constante forfaitaire</label>
+            <input type="number" id="decoteForfIndiv" value="897">
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Déclaration commune</div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Seuil d'application (IR brut &lt;)</label>
+            <input type="number" id="decoteSeuilCouple" value="3277">
+          </div>
+          <div class="form-field">
+            <label>Constante forfaitaire</label>
+            <input type="number" id="decoteForfCouple" value="1483">
+          </div>
+        </div>
+
+        <div class="form-row full">
+          <div class="form-field">
+            <label>Taux à déduire (%)</label>
+            <input type="number" id="decoteTaux" value="45.25" step="0.01">
+          </div>
+        </div>
+
+        <div class="note">
+          Formule : <strong>Décote = constante − (taux × IR brut)</strong>. Le taux est commun aux deux situations.
+        </div>
+      </div>
+
+      <!-- SECTION 4 : QUOTIENT FAMILIAL -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">4</div>
+          <div>
+            <div class="card-title">Plafonnement du quotient familial</div>
+            <div class="card-subtitle">Limite annuelle de l'avantage fiscal procuré par les demi-parts</div>
+          </div>
+        </div>
+
+        <div class="form-row three">
+          <div class="form-field">
+            <label>Cas général (par demi-part)</label>
+            <input type="number" id="plafondQF" value="1807">
+          </div>
+          <div class="form-field">
+            <label>Quart de part (garde alternée)</label>
+            <input type="number" id="plafondQFQuart" value="904">
+          </div>
+          <div class="form-field">
+            <label>Parent isolé (1ère part / 1er enfant)</label>
+            <input type="number" id="plafondParentIsole" value="4262">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Personne seule ayant élevé un enfant ≥ 5 ans</label>
+            <input type="number" id="plafondVeuf" value="1079">
+          </div>
+          <div class="form-field">
+            <label>Anciens combattants / CMI invalidité</label>
+            <input type="number" id="plafondInvalidite" value="3608">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 : ABATTEMENTS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">5</div>
+          <div>
+            <div class="card-title">Abattements et déductions</div>
+            <div class="card-subtitle">Paramètres divers utiles aux exercices</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Abattement frais professionnels (%)</label>
+            <input type="number" id="abattementFP" value="10" step="0.01">
+          </div>
+          <div class="form-field">
+            <label>Plafond de la pension alimentaire enfant majeur (€)</label>
+            <input type="number" id="plafondPension" value="6794">
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="year-banner">
+          <div class="year-banner-icon">📅</div>
+          <div class="year-banner-content">
+            <div class="year-banner-label">Barème en cours</div>
+            <div class="year-banner-value" id="afficheAnnee">2026</div>
+          </div>
+        </div>
+
+        <h3>Génération des supports</h3>
+        <p>Une fois les paramètres saisis, télécharge les PDF mis à jour à destination des stagiaires.</p>
+
+        <button class="btn btn-primary" onclick="genererFicheMemo()">
+          📄 Fiche mémo PDF
+        </button>
+        <button class="btn btn-secondary" onclick="genererExercices()">
+          ✏️ Exercices corrigés PDF
+        </button>
+        <button class="btn btn-ghost" onclick="exporterParametres()">
+          💾 Exporter les paramètres (JSON)
+        </button>
+
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importerParametres(event)">
+        <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">
+          📂 Importer un fichier paramètres
+        </button>
+
+        <div class="computed">
+          <div class="computed-title">Constantes calculées</div>
+          <div class="computed-line"><span>TMI 11 %</span><span id="cst11">1 276,00 €</span></div>
+          <div class="computed-line"><span>TMI 30 %</span><span id="cst30">6 893,77 €</span></div>
+          <div class="computed-line"><span>TMI 41 %</span><span id="cst41">16 197,24 €</span></div>
+          <div class="computed-line"><span>TMI 45 %</span><span id="cst45">23 473,92 €</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="footer-info">
+    <strong>TMK Performances</strong> · Module C4-1 Droit et environnement fiscal du particulier<br>
+    Outil interne de gestion des supports pédagogiques.
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =======================================================
+// LOGIQUE DE CALCUL ET MISE À JOUR DYNAMIQUE
+// =======================================================
+
+const inputs = document.querySelectorAll('input[type="number"]');
+inputs.forEach(input => input.addEventListener('input', updateAll));
+
+function updateAll() {
+  // Mise à jour des bornes basses automatiques
+  document.getElementById('seuil1b').value = parseInt(document.getElementById('seuil1').value) + 1;
+  document.getElementById('seuil2b').value = parseInt(document.getElementById('seuil2').value) + 1;
+  document.getElementById('seuil3b').value = parseInt(document.getElementById('seuil3').value) + 1;
+  document.getElementById('seuil4b').value = parseInt(document.getElementById('seuil4').value) + 1;
+
+  // Année dans le bandeau
+  document.getElementById('afficheAnnee').textContent = document.getElementById('annee').value;
+
+  // Calcul des constantes
+  const c = computeConstants();
+  document.getElementById('cst11').textContent = formatEur(c.cst11);
+  document.getElementById('cst30').textContent = formatEur(c.cst30);
+  document.getElementById('cst41').textContent = formatEur(c.cst41);
+  document.getElementById('cst45').textContent = formatEur(c.cst45);
+}
+
+function computeConstants() {
+  const s1 = parseInt(document.getElementById('seuil1').value);
+  const s2 = parseInt(document.getElementById('seuil2').value);
+  const s3 = parseInt(document.getElementById('seuil3').value);
+  const s4 = parseInt(document.getElementById('seuil4').value);
+
+  // Méthode : la constante N pour le TMI t est telle que (R*t - N) donne le bon impôt
+  // Pour TMI 11% : impôt à seuil1 = 0, donc N = s1 * 0.11
+  const cst11 = s1 * 0.11;
+  // Pour TMI 30% : à s2, impôt = (s2 - s1) * 0.11. On veut s2*0.30 - N = (s2-s1)*0.11
+  // Donc N = s2*0.30 - (s2-s1)*0.11 = s2*0.19 + s1*0.11
+  const impot_a_s2 = (s2 - s1) * 0.11;
+  const cst30 = s2 * 0.30 - impot_a_s2;
+  const impot_a_s3 = impot_a_s2 + (s3 - s2) * 0.30;
+  const cst41 = s3 * 0.41 - impot_a_s3;
+  const impot_a_s4 = impot_a_s3 + (s4 - s3) * 0.41;
+  const cst45 = s4 * 0.45 - impot_a_s4;
+  return { cst11, cst30, cst41, cst45 };
+}
+
+function formatEur(n) {
+  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+function formatEntier(n) {
+  return n.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €';
+}
+
+function getParametres() {
+  const c = computeConstants();
+  return {
+    annee: parseInt(document.getElementById('annee').value),
+    anneeRevenus: parseInt(document.getElementById('anneeRevenus').value),
+    bareme: {
+      seuil1: parseInt(document.getElementById('seuil1').value),
+      seuil2: parseInt(document.getElementById('seuil2').value),
+      seuil3: parseInt(document.getElementById('seuil3').value),
+      seuil4: parseInt(document.getElementById('seuil4').value),
+    },
+    constantes: c,
+    decote: {
+      seuilIndiv: parseInt(document.getElementById('decoteSeuilIndiv').value),
+      forfIndiv: parseInt(document.getElementById('decoteForfIndiv').value),
+      seuilCouple: parseInt(document.getElementById('decoteSeuilCouple').value),
+      forfCouple: parseInt(document.getElementById('decoteForfCouple').value),
+      taux: parseFloat(document.getElementById('decoteTaux').value),
+    },
+    plafondQF: parseInt(document.getElementById('plafondQF').value),
+    plafondQFQuart: parseInt(document.getElementById('plafondQFQuart').value),
+    plafondParentIsole: parseInt(document.getElementById('plafondParentIsole').value),
+    plafondVeuf: parseInt(document.getElementById('plafondVeuf').value),
+    plafondInvalidite: parseInt(document.getElementById('plafondInvalidite').value),
+    abattementFP: parseFloat(document.getElementById('abattementFP').value),
+    plafondPension: parseInt(document.getElementById('plafondPension').value),
+  };
+}
+
+// =======================================================
+// EXPORT / IMPORT JSON
+// =======================================================
+function exporterParametres() {
+  const data = getParametres();
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `parametres-fiscalite-${data.annee}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Paramètres exportés', 'success');
+}
+
+function importerParametres(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      document.getElementById('annee').value = data.annee;
+      document.getElementById('anneeRevenus').value = data.anneeRevenus;
+      document.getElementById('seuil1').value = data.bareme.seuil1;
+      document.getElementById('seuil2').value = data.bareme.seuil2;
+      document.getElementById('seuil3').value = data.bareme.seuil3;
+      document.getElementById('seuil4').value = data.bareme.seuil4;
+      document.getElementById('decoteSeuilIndiv').value = data.decote.seuilIndiv;
+      document.getElementById('decoteForfIndiv').value = data.decote.forfIndiv;
+      document.getElementById('decoteSeuilCouple').value = data.decote.seuilCouple;
+      document.getElementById('decoteForfCouple').value = data.decote.forfCouple;
+      document.getElementById('decoteTaux').value = data.decote.taux;
+      document.getElementById('plafondQF').value = data.plafondQF;
+      document.getElementById('plafondQFQuart').value = data.plafondQFQuart;
+      document.getElementById('plafondParentIsole').value = data.plafondParentIsole;
+      document.getElementById('plafondVeuf').value = data.plafondVeuf;
+      document.getElementById('plafondInvalidite').value = data.plafondInvalidite;
+      document.getElementById('abattementFP').value = data.abattementFP;
+      document.getElementById('plafondPension').value = data.plafondPension;
+      updateAll();
+      showToast('Paramètres importés', 'success');
+    } catch (err) {
+      showToast('Fichier invalide', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast ' + type, 2500);
+}
+
+// =======================================================
+// CALCUL DE L'IMPÔT (utilisé pour les exercices)
+// =======================================================
+function calculerImpot(rni, parts, isCouple, p) {
+  const qf = rni / parts;
+  const c = p.constantes;
+  let tmi, impotParPart;
+
+  if (qf <= p.bareme.seuil1) {
+    tmi = 0; impotParPart = 0;
+  } else if (qf <= p.bareme.seuil2) {
+    tmi = 11;
+    impotParPart = qf * 0.11 - c.cst11;
+  } else if (qf <= p.bareme.seuil3) {
+    tmi = 30;
+    impotParPart = qf * 0.30 - c.cst30;
+  } else if (qf <= p.bareme.seuil4) {
+    tmi = 41;
+    impotParPart = qf * 0.41 - c.cst41;
+  } else {
+    tmi = 45;
+    impotParPart = qf * 0.45 - c.cst45;
+  }
+
+  const impotBrut = impotParPart * parts;
+
+  // Décote
+  let decote = 0;
+  const seuil = isCouple ? p.decote.seuilCouple : p.decote.seuilIndiv;
+  const forf = isCouple ? p.decote.forfCouple : p.decote.forfIndiv;
+  if (impotBrut > 0 && impotBrut < seuil) {
+    decote = forf - (p.decote.taux / 100) * impotBrut;
+    if (decote < 0) decote = 0;
+    // La décote ne peut pas dépasser l'impôt brut (l'IRPP minimum est 0 avant crédits)
+    if (decote > impotBrut) decote = impotBrut;
+  }
+
+  return {
+    qf: Math.round(qf),
+    tmi,
+    impotBrut: Math.round(impotBrut),
+    decote: Math.round(decote),
+    impotNet: Math.round(impotBrut - decote)
+  };
+}
+
+// =======================================================
+// GÉNÉRATION DE LA FICHE MÉMO PDF
+// =======================================================
+function genererFicheMemo() {
+  const p = getParametres();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'landscape' });
+
+  // Couleurs TMK
+  const PRUNE = [140, 30, 112];
+  const PRUNE_DARK = [94, 19, 73];
+  const CHARBON = [40, 60, 40];
+  const GRIS = [60, 60, 60];
+  const OR = [201, 169, 97];
+  const SOFT = [244, 238, 241];
+
+  const W = 297, H = 210;
+
+  // Bandeau supérieur
+  doc.setFillColor(...PRUNE);
+  doc.rect(0, 0, W, 22, 'F');
+  doc.setFillColor(...OR);
+  doc.rect(0, 22, W, 1.2, 'F');
+
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);
+  doc.text(`Fiche mémo — Droit et environnement fiscal du particulier ${p.annee}`, 14, 14);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...OR);
+  doc.text('TMK PERFORMANCES · MODULE C4-1', W - 14, 14, { align: 'right' });
+
+  // Sous-titre
+  doc.setTextColor(...GRIS);
+  doc.setFontSize(9);
+  doc.text(`Barème ${p.annee} applicable aux revenus perçus en ${p.anneeRevenus}`, 14, 30);
+
+  let y = 38;
+
+  // ===== COLONNE GAUCHE =====
+  // Bloc Revenu Fiscal de Référence
+  doc.setFillColor(...SOFT);
+  doc.rect(10, y, 138, 32, 'F');
+  doc.setFillColor(...PRUNE);
+  doc.rect(10, y, 2, 32, 'F');
+  doc.setTextColor(...PRUNE);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('REVENU FISCAL DE RÉFÉRENCE', 15, y + 6);
+  doc.setTextColor(...GRIS);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8.5);
+  const txtRFR = [
+    `· Traitements et salaires – ${p.abattementFP}% d'abattement pour frais professionnels`,
+    '   ou frais réels',
+    '· Bénéfices Industriels et Commerciaux',
+    '· Bénéfices Non Commerciaux',
+    '· Bénéfices Agricoles',
+  ];
+  txtRFR.forEach((t, i) => doc.text(t, 15, y + 12 + i * 4));
+
+  y += 38;
+
+  // Bloc Parts fiscales
+  doc.setFillColor(...SOFT);
+  doc.rect(10, y, 138, 56, 'F');
+  doc.setFillColor(...PRUNE);
+  doc.rect(10, y, 2, 56, 'F');
+  doc.setTextColor(...PRUNE);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('PARTS FISCALES', 15, y + 6);
+  doc.setTextColor(...GRIS);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  const txtParts = [
+    '1 part : célibataire, divorcé(e), veuf(ve) sans enfant, union libre',
+    '2 parts : couples mariés, pacsés, veuf(ve) avec un enfant à charge',
+    '',
+    '+ 0,5 part par enfant pour les 2 premiers',
+    '+ 1 part par enfant à partir du 3ème',
+    '+ 0,5 part : parent isolé / pers. ayant élevé un enfant seul ≥ 5 ans',
+    '+ 0,5 part : personne handicapée',
+    '',
+    'Garde alternée : 1er et 2e enfant = 0,25 part chacun',
+    'Quotient familial = Revenu net imposable ÷ Nombre de parts',
+  ];
+  txtParts.forEach((t, i) => doc.text(t, 15, y + 12 + i * 4));
+
+  y += 62;
+
+  // Bloc Décote
+  doc.setFillColor(...SOFT);
+  doc.rect(10, y, 138, 38, 'F');
+  doc.setFillColor(...PRUNE);
+  doc.rect(10, y, 2, 38, 'F');
+  doc.setTextColor(...PRUNE);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('DÉCOTE', 15, y + 6);
+  doc.setTextColor(...GRIS);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica','bold');
+  doc.text('Déclaration individuelle', 15, y + 12);
+  doc.setFont('helvetica','normal');
+  doc.text(`Si IR brut < ${formatEntier(p.decote.seuilIndiv)} → Décote = ${p.decote.forfIndiv} − ${p.decote.taux}% × IR brut`, 15, y + 17);
+  doc.setFont('helvetica','bold');
+  doc.text('Déclaration commune', 15, y + 24);
+  doc.setFont('helvetica','normal');
+  doc.text(`Si IR brut < ${formatEntier(p.decote.seuilCouple)} → Décote = ${p.decote.forfCouple} − ${p.decote.taux}% × IR brut`, 15, y + 29);
+  doc.setFontSize(7.5);
+  doc.setTextColor(...GRIS);
+  doc.text('La décote s\'applique automatiquement et ne peut pas être négative.', 15, y + 35);
+
+  // ===== COLONNE DROITE =====
+  // Barème
+  let y2 = 38;
+  doc.setFillColor(...PRUNE);
+  doc.rect(155, y2, 132, 8, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text(`BARÈME ${p.annee} (REVENUS ${p.anneeRevenus})`, 158, y2 + 5.5);
+
+  // Tableau du barème
+  doc.autoTable({
+    startY: y2 + 8,
+    margin: { left: 155, right: 10 },
+    head: [['Quotient familial', 'TMI']],
+    body: [
+      [`Jusqu'à ${formatEntier(p.bareme.seuil1)}`, '0 %'],
+      [`De ${formatEntier(p.bareme.seuil1 + 1)} à ${formatEntier(p.bareme.seuil2)}`, '11 %'],
+      [`De ${formatEntier(p.bareme.seuil2 + 1)} à ${formatEntier(p.bareme.seuil3)}`, '30 %'],
+      [`De ${formatEntier(p.bareme.seuil3 + 1)} à ${formatEntier(p.bareme.seuil4)}`, '41 %'],
+      [`À partir de ${formatEntier(p.bareme.seuil4 + 1)}`, '45 %'],
+    ],
+    theme: 'plain',
+    styles: { font: 'helvetica', fontSize: 8.5, cellPadding: 2.2, lineColor: [200,200,200], lineWidth: 0.1 },
+    headStyles: { fillColor: SOFT, textColor: PRUNE, fontStyle: 'bold', fontSize: 8 },
+    columnStyles: { 1: { halign: 'center', fontStyle: 'bold', textColor: PRUNE_DARK, cellWidth: 22 } },
+    alternateRowStyles: { fillColor: [251, 248, 250] },
+  });
+
+  // Formules de calcul
+  y2 = doc.lastAutoTable.finalY + 4;
+  doc.setFillColor(...PRUNE);
+  doc.rect(155, y2, 132, 8, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('FORMULES DE CALCUL RAPIDE', 158, y2 + 5.5);
+
+  doc.autoTable({
+    startY: y2 + 8,
+    margin: { left: 155, right: 10 },
+    head: [['TMI', 'Formule']],
+    body: [
+      ['0 %', '/'],
+      ['11 %', `(R × 0,11) − (N × ${p.constantes.cst11.toFixed(2)})`],
+      ['30 %', `(R × 0,30) − (N × ${p.constantes.cst30.toFixed(2)})`],
+      ['41 %', `(R × 0,41) − (N × ${p.constantes.cst41.toFixed(2)})`],
+      ['45 %', `(R × 0,45) − (N × ${p.constantes.cst45.toFixed(2)})`],
+    ],
+    theme: 'plain',
+    styles: { font: 'helvetica', fontSize: 8.5, cellPadding: 2.2, lineColor: [200,200,200], lineWidth: 0.1 },
+    headStyles: { fillColor: SOFT, textColor: PRUNE, fontStyle: 'bold', fontSize: 8 },
+    columnStyles: { 0: { halign: 'center', fontStyle: 'bold', textColor: PRUNE_DARK, cellWidth: 22 } },
+    alternateRowStyles: { fillColor: [251, 248, 250] },
+  });
+
+  y2 = doc.lastAutoTable.finalY + 1;
+  doc.setFontSize(7);
+  doc.setTextColor(...GRIS);
+  doc.setFont('helvetica','italic');
+  doc.text('R = Revenu net imposable du foyer · N = Nombre de parts du foyer', 158, y2 + 3);
+
+  y2 += 7;
+
+  // Plafonnement QF
+  doc.setFillColor(...PRUNE);
+  doc.rect(155, y2, 132, 8, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('PLAFONNEMENT DU QUOTIENT FAMILIAL', 158, y2 + 5.5);
+
+  doc.autoTable({
+    startY: y2 + 8,
+    margin: { left: 155, right: 10 },
+    body: [
+      ['Cas général (par demi-part)', formatEntier(p.plafondQF)],
+      ['Quart de part (garde alternée)', formatEntier(p.plafondQFQuart)],
+      ['Parent isolé (1er enfant)', formatEntier(p.plafondParentIsole)],
+      ['Pers. ayant élevé un enfant seul ≥ 5 ans', formatEntier(p.plafondVeuf)],
+      ['Anciens combattants / CMI invalidité', formatEntier(p.plafondInvalidite)],
+    ],
+    theme: 'plain',
+    styles: { font: 'helvetica', fontSize: 8.5, cellPadding: 2, lineColor: [200,200,200], lineWidth: 0.1 },
+    columnStyles: { 1: { halign: 'right', fontStyle: 'bold', textColor: PRUNE_DARK, cellWidth: 32 } },
+    alternateRowStyles: { fillColor: [251, 248, 250] },
+  });
+
+  // PIED DE PAGE
+  doc.setFillColor(...PRUNE);
+  doc.rect(0, H - 10, W, 10, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7);
+  doc.text('TMK Performances · SARL au capital de 20 000 € · 8 rue des entrepreneurs · 59700 Marcq-en-Barœul · RCS Lille Métropole 498 419 241', 14, H - 4);
+  doc.setTextColor(...OR);
+  doc.text(`Module C4-1 · Fiche mémo ${p.annee}`, W - 14, H - 4, { align: 'right' });
+
+  doc.save(`TMK-Fiche-Memo-Fiscalite-${p.annee}.pdf`);
+  showToast('Fiche mémo téléchargée');
+}
+
+// =======================================================
+// GÉNÉRATION DES EXERCICES CORRIGÉS PDF
+// =======================================================
+function genererExercices() {
+  const p = getParametres();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+  const PRUNE = [140, 30, 112];
+  const PRUNE_DARK = [94, 19, 73];
+  const CHARBON = [40, 60, 40];
+  const GRIS = [60, 60, 60];
+  const OR = [201, 169, 97];
+  const SOFT = [244, 238, 241];
+
+  const W = 210, H = 297;
+
+  function header(pageNum) {
+    doc.setFillColor(...PRUNE);
+    doc.rect(0, 0, W, 22, 'F');
+    doc.setFillColor(...OR);
+    doc.rect(0, 22, W, 1.2, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(13);
+    doc.text(`Exercices — Fiscalité du particulier ${p.annee}`, 14, 14);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(...OR);
+    doc.setFontSize(8);
+    doc.text('TMK PERFORMANCES · MODULE C4-1', W - 14, 14, { align: 'right' });
+  }
+  function footer(pageNum) {
+    doc.setFillColor(...PRUNE);
+    doc.rect(0, H - 10, W, 10, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7);
+    doc.text(`Module C4-1 · Exercices ${p.annee}`, 14, H - 4);
+    doc.setTextColor(...OR);
+    doc.text(`Page ${pageNum}`, W - 14, H - 4, { align: 'right' });
+  }
+
+  let pageNum = 1;
+  header(pageNum);
+
+  // Page de garde
+  let y = 32;
+  doc.setTextColor(...PRUNE);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(20);
+  doc.text('Exercices d\'application', 14, y);
+  doc.setTextColor(...GRIS);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(11);
+  y += 8;
+  doc.text(`Barème ${p.annee} sur les revenus ${p.anneeRevenus}`, 14, y);
+
+  y += 12;
+  doc.setFillColor(...SOFT);
+  doc.rect(14, y, 182, 60, 'F');
+  doc.setFillColor(...PRUNE);
+  doc.rect(14, y, 2, 60, 'F');
+  doc.setTextColor(...PRUNE_DARK);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(11);
+  doc.text('Mode d\'emploi', 20, y + 8);
+  doc.setTextColor(...GRIS);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9.5);
+  const intro = [
+    'Chaque exercice présente un cas client puis détaille la correction étape par étape :',
+    '   1. Calcul du revenu net imposable (RNI)',
+    '   2. Détermination du nombre de parts fiscales',
+    '   3. Calcul du quotient familial et identification de la TMI',
+    '   4. Calcul de l\'IRPP brut (méthode tranche par tranche puis vérification par formule)',
+    '   5. Application de la décote si éligible',
+    '   6. IRPP net à payer',
+    '',
+    'Effectue les calculs au crayon avant de comparer avec le corrigé.',
+  ];
+  intro.forEach((t, i) => doc.text(t, 20, y + 14 + i * 5));
+
+  // ============= EXERCICE 1 — THIERRY ET AUDREY =============
+  doc.addPage();
+  pageNum++;
+  header(pageNum);
+  y = 32;
+
+  ajouterExercice(doc, 1, 'Couple marié sans enfant',
+    `Thierry et Audrey sont mariés et n'ont pas d'enfant. Ils sont salariés et perçoivent respectivement un revenu mensuel net de 1 890 € et 1 780 €. Ils n'ont pas de charge à déduire.\n\nCalcule le montant de leur IRPP final.`,
+    () => {
+      const r1 = 1890, r2 = 1780;
+      const rbg = (r1 + r2) * 12;
+      const rni = rbg * 0.9;
+      const parts = 2;
+      const res = calculerImpot(rni, parts, true, p);
+      const cst = p.constantes;
+      // Calcul tranche par tranche
+      const t1 = (Math.min(res.qf, p.bareme.seuil2) - p.bareme.seuil1) * 0.11;
+      return [
+        ['Étape', 'Calcul', 'Résultat'],
+        ['Revenu brut global', `(${r1} + ${r2}) × 12`, formatEntier(rbg)],
+        ['Abattement frais pro', `${formatEntier(rbg)} × ${(100 - p.abattementFP)/100}`, formatEntier(rni)],
+        ['Nombre de parts', 'couple marié, pas d\'enfant', `${parts} parts`],
+        ['Quotient familial', `${formatEntier(rni)} ÷ ${parts}`, formatEntier(res.qf)],
+        ['TMI', `Quotient familial dans tranche ${res.tmi}%`, `${res.tmi} %`],
+        ['IRPP brut (par tranches)', `((${formatEntier(res.qf)} − ${formatEntier(p.bareme.seuil1)}) × 11%) × ${parts}`, formatEntier(res.impotBrut)],
+        ['IRPP brut (par formule)', `(${formatEntier(rni)} × 0,11) − (${parts} × ${cst.cst11.toFixed(2)})`, formatEntier(res.impotBrut)],
+        ['Décote ?', res.impotBrut < p.decote.seuilCouple
+          ? `IR < ${formatEntier(p.decote.seuilCouple)} → ${p.decote.forfCouple} − ${p.decote.taux}% × ${formatEntier(res.impotBrut)}`
+          : `IR ≥ ${formatEntier(p.decote.seuilCouple)} → pas de décote`,
+          res.decote > 0 ? formatEntier(res.decote) : 'aucune'],
+        ['IRPP net à payer', '—', formatEntier(res.impotNet)],
+      ];
+    }, y, p);
+
+  // ============= EXERCICE 2 — UNION LIBRE AVEC ENFANT =============
+  doc.addPage();
+  pageNum++;
+  header(pageNum);
+  y = 32;
+  ajouterExercice(doc, 2, 'Personne en union libre avec un enfant à charge',
+    `Cécile vit en union libre et a un enfant à charge. Elle est salariée et perçoit un revenu mensuel net de 3 800 €. Elle ne déduit aucune charge.\n\nCalcule son IRPP final, en tenant compte du plafonnement éventuel du quotient familial.`,
+    () => {
+      const r = 3800;
+      const rbg = r * 12;
+      const rni = rbg * 0.9;
+      const parts = 1.5; // union libre + 0.5 part pour 1 enfant
+      const partsRef = 1;
+
+      // Calcul théorique avec QF complet
+      const resTheorique = calculerImpot(rni, parts, false, p);
+      // Calcul plafonné : impôt avec 1 part
+      const resPart1 = calculerImpot(rni, partsRef, false, p);
+      const impotPlafonne = resPart1.impotBrut - p.plafondQF;
+
+      const impotRetenu = Math.max(resTheorique.impotBrut, impotPlafonne);
+      let decote = 0;
+      if (impotRetenu > 0 && impotRetenu < p.decote.seuilIndiv) {
+        decote = p.decote.forfIndiv - (p.decote.taux/100) * impotRetenu;
+        if (decote < 0) decote = 0;
+        if (decote > impotRetenu) decote = impotRetenu;
+      }
+
+      return [
+        ['Étape', 'Calcul', 'Résultat'],
+        ['Revenu brut global', `${r} × 12`, formatEntier(rbg)],
+        ['Abattement frais pro', `${formatEntier(rbg)} × 0,9`, formatEntier(rni)],
+        ['Nombre de parts', 'union libre (1) + 0,5 enfant', `${parts} parts`],
+        ['Quotient familial', `${formatEntier(rni)} ÷ ${parts}`, formatEntier(resTheorique.qf)],
+        ['IRPP avec QF complet', '(formule TMI 30% × 1,5 part)', formatEntier(resTheorique.impotBrut)],
+        ['IRPP sans enfant (1 part)', '(formule TMI 30% × 1 part)', formatEntier(resPart1.impotBrut)],
+        ['Plafond QF appliqué', `${formatEntier(resPart1.impotBrut)} − ${formatEntier(p.plafondQF)} (1 demi-part)`, formatEntier(impotPlafonne)],
+        ['IRPP retenu', 'le plus élevé des deux', formatEntier(impotRetenu)],
+        ['Décote', Math.round(decote) > 0 ? `${p.decote.forfIndiv} − ${p.decote.taux}% × ${formatEntier(impotRetenu)}` : 'pas de décote',
+          Math.round(decote) > 0 ? formatEntier(decote) : 'aucune'],
+        ['IRPP net à payer', '—', formatEntier(impotRetenu - decote)],
+      ];
+    }, y, p);
+
+  // ============= EXERCICE 3 — DÉCOTE COUPLE =============
+  doc.addPage();
+  pageNum++;
+  header(pageNum);
+  y = 32;
+  ajouterExercice(doc, 3, 'Couple marié — Application de la décote',
+    `Mélanie et Martin sont mariés. Ils sont salariés et perçoivent respectivement 1 450 € et 1 400 € nets par mois. Ils n'ont pas d'enfant.\n\nDémontre s'ils bénéficient d'une décote et calcule leur IRPP final.`,
+    () => {
+      const r1 = 1450, r2 = 1400;
+      const rbg = (r1 + r2) * 12;
+      const rni = rbg * 0.9;
+      const parts = 2;
+      const res = calculerImpot(rni, parts, true, p);
+      return [
+        ['Étape', 'Calcul', 'Résultat'],
+        ['Revenu brut global', `(${r1} + ${r2}) × 12`, formatEntier(rbg)],
+        ['Abattement frais pro', `${formatEntier(rbg)} × 0,9`, formatEntier(rni)],
+        ['Quotient familial', `${formatEntier(rni)} ÷ 2`, formatEntier(res.qf)],
+        ['TMI', `Quotient familial → tranche ${res.tmi}%`, `${res.tmi} %`],
+        ['IRPP brut', `(${formatEntier(rni)} × 0,11) − (2 × ${p.constantes.cst11.toFixed(2)})`, formatEntier(res.impotBrut)],
+        ['Test décote', `IR brut < ${formatEntier(p.decote.seuilCouple)} ?`, res.impotBrut < p.decote.seuilCouple ? 'OUI' : 'NON'],
+        ['Décote', res.decote > 0 ? `${p.decote.forfCouple} − ${p.decote.taux}% × ${formatEntier(res.impotBrut)}` : '—',
+          res.decote > 0 ? formatEntier(res.decote) : '0 €'],
+        ['IRPP net à payer', '—', formatEntier(res.impotNet)],
+      ];
+    }, y, p);
+
+  // ============= EXERCICE 4 — PER ET ÉCONOMIE D'IMPÔT =============
+  doc.addPage();
+  pageNum++;
+  header(pageNum);
+  y = 32;
+  ajouterExercice(doc, 4, 'Effet d\'un versement PER déductible',
+    `Hugues est employé d'une entreprise d'informatique de gestion. Il perçoit un revenu mensuel net de 2 750 € par mois. Il est célibataire sans enfant.\n\nIl décide de verser 190 € par mois sur un Plan Épargne Retraite et de déduire les cotisations de ses revenus. Calcule l'économie d'impôt qu'il réalise.`,
+    () => {
+      const r = 2750;
+      const rbg = r * 12;
+      const rni_avant = rbg * 0.9;
+      const versementPER = 190 * 12;
+      const rni_apres = rni_avant - versementPER;
+      const parts = 1;
+
+      const res_avant = calculerImpot(rni_avant, parts, false, p);
+      const res_apres = calculerImpot(rni_apres, parts, false, p);
+      const economie = res_avant.impotNet - res_apres.impotNet;
+
+      return [
+        ['Étape', 'Calcul', 'Résultat'],
+        ['Revenu brut global', `${r} × 12`, formatEntier(rbg)],
+        ['RNI sans PER', `${formatEntier(rbg)} × 0,9`, formatEntier(rni_avant)],
+        ['Versement annuel PER', `${190} × 12`, formatEntier(versementPER)],
+        ['RNI avec PER', `${formatEntier(rni_avant)} − ${formatEntier(versementPER)}`, formatEntier(rni_apres)],
+        ['IRPP avant PER', `TMI ${res_avant.tmi}% — net après décote ${res_avant.decote > 0 ? `de ${formatEntier(res_avant.decote)}` : '(aucune)'}`, formatEntier(res_avant.impotNet)],
+        ['IRPP avec PER', `TMI ${res_apres.tmi}% — net après décote ${res_apres.decote > 0 ? `de ${formatEntier(res_apres.decote)}` : '(aucune)'}`, formatEntier(res_apres.impotNet)],
+        ['Économie d\'impôt', `${formatEntier(res_avant.impotNet)} − ${formatEntier(res_apres.impotNet)}`, formatEntier(economie)],
+      ];
+    }, y, p);
+
+  // ============= EXERCICE 5 — CRÉDIT D'IMPÔT FRAIS DE GARDE =============
+  doc.addPage();
+  pageNum++;
+  header(pageNum);
+  y = 32;
+  ajouterExercice(doc, 5, 'Crédit d\'impôt frais de garde d\'enfant',
+    `Un couple marié dont le revenu net imposable est de 45 000 € (après abattement de 10 %) a dépensé 6 000 € en frais de garde pour son enfant au cours de l'année. Le foyer compte 2,5 parts fiscales.\n\nLes frais de garde bénéficient d'un crédit d'impôt de 50 %. Calcule le montant final de leur impôt.`,
+    () => {
+      const rni = 45000;
+      const parts = 2.5;
+      const fraisGarde = 6000;
+      const tauxCredit = 0.50;
+
+      const res = calculerImpot(rni, parts, true, p);
+      const credit = fraisGarde * tauxCredit;
+      const impotFinal = res.impotNet - credit;
+
+      return [
+        ['Étape', 'Calcul', 'Résultat'],
+        ['Revenu net imposable', '(donnée)', formatEntier(rni)],
+        ['Quotient familial', `${formatEntier(rni)} ÷ ${parts}`, formatEntier(res.qf)],
+        ['TMI', `Quotient familial → tranche ${res.tmi}%`, `${res.tmi} %`],
+        ['IRPP brut', `(${formatEntier(rni)} × 0,11) − (${parts} × ${p.constantes.cst11.toFixed(2)})`, formatEntier(res.impotBrut)],
+        ['Décote', res.decote > 0 ? `${p.decote.forfCouple} − ${p.decote.taux}% × ${formatEntier(res.impotBrut)}` : 'pas applicable',
+          res.decote > 0 ? formatEntier(res.decote) : '0 €'],
+        ['IRPP avant crédit d\'impôt', '—', formatEntier(res.impotNet)],
+        ['Crédit d\'impôt frais de garde', `${formatEntier(fraisGarde)} × 50%`, formatEntier(credit)],
+        ['IRPP final', `${formatEntier(res.impotNet)} − ${formatEntier(credit)}`,
+          impotFinal < 0 ? `${formatEntier(impotFinal)} (remboursé)` : formatEntier(impotFinal)],
+      ];
+    }, y, p);
+
+  // FOOTER sur toutes les pages
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    footer(i);
+  }
+
+  doc.save(`TMK-Exercices-Fiscalite-${p.annee}.pdf`);
+  showToast('Exercices téléchargés');
+}
+
+// Helper pour ajouter un exercice avec son corrigé
+function ajouterExercice(doc, num, titre, enonce, calculFn, y, p) {
+  const PRUNE = [140, 30, 112];
+  const PRUNE_DARK = [94, 19, 73];
+  const GRIS = [60, 60, 60];
+  const OR = [201, 169, 97];
+  const SOFT = [244, 238, 241];
+
+  // Numéro d'exercice
+  doc.setFillColor(...PRUNE);
+  doc.circle(20, y + 4, 5, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(11);
+  doc.text(String(num), 20, y + 5.5, { align: 'center' });
+
+  // Titre
+  doc.setTextColor(...PRUNE_DARK);
+  doc.setFontSize(13);
+  doc.text(`Exercice ${num} — ${titre}`, 30, y + 6);
+
+  y += 14;
+
+  // Énoncé
+  doc.setFillColor(...SOFT);
+  const lines = doc.splitTextToSize(enonce, 175);
+  const enonceHeight = lines.length * 4.5 + 6;
+  doc.rect(14, y, 182, enonceHeight, 'F');
+  doc.setFillColor(...OR);
+  doc.rect(14, y, 2, enonceHeight, 'F');
+  doc.setTextColor(...GRIS);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9.5);
+  doc.text(lines, 20, y + 6);
+
+  y += enonceHeight + 6;
+
+  // Bandeau "Correction"
+  doc.setFillColor(...PRUNE);
+  doc.rect(14, y, 182, 7, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('CORRECTION DÉTAILLÉE', 20, y + 5);
+
+  y += 7;
+
+  // Tableau du calcul
+  const data = calculFn();
+  doc.autoTable({
+    startY: y,
+    margin: { left: 14, right: 14 },
+    head: [data[0]],
+    body: data.slice(1),
+    theme: 'plain',
+    styles: { font: 'helvetica', fontSize: 9, cellPadding: 2.5, lineColor: [220,220,220], lineWidth: 0.1 },
+    headStyles: { fillColor: SOFT, textColor: PRUNE, fontStyle: 'bold', fontSize: 9 },
+    columnStyles: {
+      0: { fontStyle: 'bold', textColor: PRUNE_DARK, cellWidth: 50 },
+      2: { halign: 'right', fontStyle: 'bold', textColor: GRIS, cellWidth: 35 },
+    },
+    alternateRowStyles: { fillColor: [251, 248, 250] },
+    didParseCell: function(data) {
+      // Mettre en évidence la dernière ligne (résultat final)
+      if (data.row.index === data.table.body.length - 1) {
+        data.cell.styles.fillColor = [PRUNE_DARK[0], PRUNE_DARK[1], PRUNE_DARK[2]];
+        data.cell.styles.textColor = [255,255,255];
+        data.cell.styles.fontStyle = 'bold';
+      }
+    },
+  });
+}
+
+// Initialisation
+updateAll();
+</script>
+</body>
+</html>

@@ -670,7 +670,7 @@ body{
 // =======================================================
 const SUPABASE_URL = 'https://ibkvyjlglwufxvzxnysa.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xUfZHSOHf4TnBRRyzU_qJA_TcXIMSKX';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentRecordId = null;
 
@@ -692,7 +692,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const errorBox = document.getElementById('loginError');
   errorBox.classList.remove('show');
   showLoader('Connexion…');
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
   hideLoader();
   if (error) {
     errorBox.textContent = 'Identifiants incorrects ou problème de connexion.';
@@ -704,7 +704,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
 async function seDeconnecter() {
   showLoader('Déconnexion…');
-  await supabase.auth.signOut();
+  await db.auth.signOut();
   hideLoader();
   document.getElementById('app').classList.remove('show');
   document.getElementById('loginScreen').style.display = 'flex';
@@ -713,7 +713,7 @@ async function seDeconnecter() {
 
 async function checkSession() {
   showLoader('Vérification de la session…');
-  const { data } = await supabase.auth.getSession();
+  const { data } = await db.auth.getSession();
   hideLoader();
   if (data.session) {
     initApp(data.session.user);
@@ -732,7 +732,7 @@ async function initApp(user) {
 // =======================================================
 async function chargerParametres() {
   showLoader('Chargement des paramètres fiscaux…');
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('parametres_fiscaux')
     .select('*')
     .eq('is_active', true)
@@ -849,7 +849,7 @@ async function enregistrer() {
   // - L'année saisie correspond à un enregistrement existant → UPDATE
   // - L'année saisie est nouvelle → INSERT
   // On regarde d'abord si une ligne existe pour cette année
-  const { data: existing } = await supabase
+  const { data: existing } = await db
     .from('parametres_fiscaux')
     .select('id')
     .eq('annee', payload.annee)
@@ -857,14 +857,14 @@ async function enregistrer() {
 
   let result;
   if (existing) {
-    result = await supabase
+    result = await db
       .from('parametres_fiscaux')
       .update(payload)
       .eq('id', existing.id)
       .select()
       .single();
   } else {
-    result = await supabase
+    result = await db
       .from('parametres_fiscaux')
       .insert(payload)
       .select()

@@ -310,6 +310,72 @@ body{
 }
 .tranche-row .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-bottom:3px;display:block}
 
+/* ============== ACCORDÉON ============== */
+.accordion{
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  margin-bottom:12px;
+  overflow:hidden;
+  background:white;
+}
+.accordion-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  background:var(--bg-soft);
+  cursor:pointer;
+  user-select:none;
+  transition:background 0.15s ease;
+  border:none;
+  width:100%;
+  font-family:'Inter',sans-serif;
+  text-align:left;
+}
+.accordion-head:hover{background:#EDE1E7}
+.accordion-head-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--tmk-prune);
+  letter-spacing:0.3px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.accordion-head-title::before{
+  content:'';
+  width:6px;height:6px;
+  background:var(--tmk-prune);
+  border-radius:50%;
+  flex-shrink:0;
+}
+.accordion-chevron{
+  color:var(--tmk-prune);
+  font-size:14px;
+  transition:transform 0.2s ease;
+}
+.accordion.open .accordion-chevron{transform:rotate(180deg)}
+.accordion-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.25s ease, padding 0.25s ease;
+  padding:0 18px;
+}
+.accordion.open .accordion-body{
+  max-height:1200px;
+  padding:18px;
+}
+.accordion-help{
+  font-size:12px;
+  color:var(--text-muted);
+  margin-bottom:14px;
+  line-height:1.55;
+  padding:10px 12px;
+  background:var(--bg-soft);
+  border-radius:var(--radius-sm);
+  border-left:3px solid var(--tmk-prune-light);
+}
+
 /* SIDEBAR */
 .sidebar{position:sticky;top:24px}
 @media(max-width:960px){.sidebar{position:static}}
@@ -608,19 +674,144 @@ body{
           <div class="card-num">5</div>
           <div>
             <div class="card-title">Abattements et déductions</div>
-            <div class="card-subtitle">Paramètres divers utiles aux exercices</div>
+            <div class="card-subtitle">Paramètres par catégorie — cliquer sur un bloc pour le déplier</div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Abattement frais professionnels (%)</label>
-            <input type="number" id="abattementFP" step="0.01">
-          </div>
-          <div class="form-field">
-            <label>Plafond pension alimentaire enfant majeur (€)</label>
-            <input type="number" id="plafondPension">
+
+        <!-- ▸ DIVERS (ancien contenu, déplié par défaut) -->
+        <div class="accordion open" id="acc-divers">
+          <button type="button" class="accordion-head" onclick="toggleAcc('acc-divers')">
+            <span class="accordion-head-title">Frais professionnels & pension enfant majeur</span>
+            <span class="accordion-chevron">▾</span>
+          </button>
+          <div class="accordion-body">
+            <div class="form-row">
+              <div class="form-field">
+                <label>Abattement frais professionnels (%)</label>
+                <input type="number" id="abattementFP" step="0.01">
+              </div>
+              <div class="form-field">
+                <label>Plafond pension alimentaire enfant majeur (€)</label>
+                <input type="number" id="plafondPension">
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- ▸ ABATTEMENT 10 % SALAIRES -->
+        <div class="accordion" id="acc-sal">
+          <button type="button" class="accordion-head" onclick="toggleAcc('acc-sal')">
+            <span class="accordion-head-title">Abattement 10 % — Salaires</span>
+            <span class="accordion-chevron">▾</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-help">
+              Abattement automatique appliqué sur les salaires, encadré par un plancher et un plafond fixés chaque année.
+            </div>
+            <div class="form-row three">
+              <div class="form-field">
+                <label>Taux (%)</label>
+                <input type="number" id="abatSalTaux" step="0.01">
+              </div>
+              <div class="form-field">
+                <label>Plancher (€)</label>
+                <input type="number" id="abatSalPlancher">
+              </div>
+              <div class="form-field">
+                <label>Plafond / personne (€)</label>
+                <input type="number" id="abatSalPlafond">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ▸ ABATTEMENT 10 % PENSIONS -->
+        <div class="accordion" id="acc-pension">
+          <button type="button" class="accordion-head" onclick="toggleAcc('acc-pension')">
+            <span class="accordion-head-title">Abattement 10 % — Pensions de retraite</span>
+            <span class="accordion-chevron">▾</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-help">
+              Abattement appliqué sur les pensions de retraite, avec un plancher par retraité et un plafond global par foyer fiscal.
+            </div>
+            <div class="form-row three">
+              <div class="form-field">
+                <label>Taux (%)</label>
+                <input type="number" id="abatPensionTaux" step="0.01">
+              </div>
+              <div class="form-field">
+                <label>Plancher / retraité (€)</label>
+                <input type="number" id="abatPensionPlancher">
+              </div>
+              <div class="form-field">
+                <label>Plafond / foyer (€)</label>
+                <input type="number" id="abatPensionPlafond">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ▸ ABATTEMENT ÂGE / INVALIDITÉ -->
+        <div class="accordion" id="acc-age">
+          <button type="button" class="accordion-head" onclick="toggleAcc('acc-age')">
+            <span class="accordion-head-title">Abattement spécial — Personnes +65 ans ou invalides</span>
+            <span class="accordion-chevron">▾</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-help">
+              Abattement à deux niveaux (art. 157 bis CGI) : un montant pour les revenus modestes, un montant réduit pour les revenus intermédiaires, et plus rien au-delà du seuil haut.
+            </div>
+
+            <div class="subsection"><div class="subsection-title">Niveau 1 — Revenu net global modeste</div></div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Montant de l'abattement (€)</label>
+                <input type="number" id="abatAgeMontantHaut">
+              </div>
+              <div class="form-field">
+                <label>Si revenu net global inférieur à (€)</label>
+                <input type="number" id="abatAgeSeuilBas">
+              </div>
+            </div>
+
+            <div class="subsection"><div class="subsection-title">Niveau 2 — Revenu net global intermédiaire</div></div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Montant de l'abattement (€)</label>
+                <input type="number" id="abatAgeMontantBas">
+              </div>
+              <div class="form-field">
+                <label>Plafond haut (au-delà : aucun abattement) (€)</label>
+                <input type="number" id="abatAgeSeuilHaut">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ▸ TRAÇABILITÉ -->
+        <div class="accordion" id="acc-src">
+          <button type="button" class="accordion-head" onclick="toggleAcc('acc-src')">
+            <span class="accordion-head-title">Traçabilité (source & date)</span>
+            <span class="accordion-chevron">▾</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-help">
+              Informations affichées en bas de la fiche stagiaire. À renseigner lors de la mise à jour annuelle.
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Source officielle</label>
+                <input type="text" id="abatSource" placeholder="ex : impots.gouv.fr — revenus 2025">
+              </div>
+              <div class="form-field">
+                <label>Date de mise à jour des barèmes</label>
+                <input type="date" id="abatMajLe">
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
 
@@ -673,6 +864,13 @@ const SUPABASE_KEY = 'sb_publishable_xUfZHSOHf4TnBRRyzU_qJA_TcXIMSKX';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentRecordId = null;
+
+// =======================================================
+// ACCORDÉON
+// =======================================================
+function toggleAcc(id){
+  document.getElementById(id).classList.toggle('open');
+}
 
 // =======================================================
 // AUTH
@@ -762,6 +960,21 @@ async function chargerParametres() {
   document.getElementById('plafondInvalidite').value = data.plafond_qf_invalidite;
   document.getElementById('abattementFP').value = data.abattement_fp_taux;
   document.getElementById('plafondPension').value = data.plafond_pension_enfant_majeur;
+
+  // ----- NOUVEAUX CHAMPS (barèmes "Revenu imposable & RFR") -----
+  document.getElementById('abatSalTaux').value      = data.abat_sal_taux       ?? '';
+  document.getElementById('abatSalPlancher').value  = data.abat_sal_plancher   ?? '';
+  document.getElementById('abatSalPlafond').value   = data.abat_sal_plafond    ?? '';
+  document.getElementById('abatPensionTaux').value     = data.abat_pension_taux     ?? '';
+  document.getElementById('abatPensionPlancher').value = data.abat_pension_plancher ?? '';
+  document.getElementById('abatPensionPlafond').value  = data.abat_pension_plafond  ?? '';
+  document.getElementById('abatAgeMontantHaut').value = data.abat_age_montant_haut ?? '';
+  document.getElementById('abatAgeMontantBas').value  = data.abat_age_montant_bas  ?? '';
+  document.getElementById('abatAgeSeuilBas').value    = data.abat_age_seuil_bas    ?? '';
+  document.getElementById('abatAgeSeuilHaut').value   = data.abat_age_seuil_haut   ?? '';
+  document.getElementById('abatSource').value = data.abat_source ?? '';
+  document.getElementById('abatMajLe').value  = data.abat_maj_le ? String(data.abat_maj_le).slice(0,10) : '';
+
   // Date de mise à jour
   if (data.updated_at) {
     const d = new Date(data.updated_at);
@@ -815,6 +1028,18 @@ function formatEur(n) {
   return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
 
+// Helpers pour les nouveaux champs (vide → null en base, pour ne pas envoyer NaN)
+function numOrNull(id) {
+  const v = document.getElementById(id).value;
+  if (v === '' || v === null) return null;
+  const n = Number(v);
+  return isNaN(n) ? null : n;
+}
+function strOrNull(id) {
+  const v = document.getElementById(id).value;
+  return (v === '' || v === null) ? null : v;
+}
+
 // =======================================================
 // ENREGISTREMENT
 // =======================================================
@@ -842,6 +1067,21 @@ async function enregistrer() {
     plafond_qf_invalidite: parseInt(document.getElementById('plafondInvalidite').value),
     abattement_fp_taux: parseFloat(document.getElementById('abattementFP').value),
     plafond_pension_enfant_majeur: parseInt(document.getElementById('plafondPension').value),
+
+    // ----- NOUVEAUX CHAMPS -----
+    abat_sal_taux:        numOrNull('abatSalTaux'),
+    abat_sal_plancher:    numOrNull('abatSalPlancher'),
+    abat_sal_plafond:     numOrNull('abatSalPlafond'),
+    abat_pension_taux:    numOrNull('abatPensionTaux'),
+    abat_pension_plancher:numOrNull('abatPensionPlancher'),
+    abat_pension_plafond: numOrNull('abatPensionPlafond'),
+    abat_age_montant_haut:numOrNull('abatAgeMontantHaut'),
+    abat_age_montant_bas: numOrNull('abatAgeMontantBas'),
+    abat_age_seuil_bas:   numOrNull('abatAgeSeuilBas'),
+    abat_age_seuil_haut:  numOrNull('abatAgeSeuilHaut'),
+    abat_source:          strOrNull('abatSource'),
+    abat_maj_le:          strOrNull('abatMajLe'),
+
     is_active: true
   };
 

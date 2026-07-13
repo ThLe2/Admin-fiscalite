@@ -3,487 +3,164 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TMK Performances — Admin Fiscalité du particulier</title>
+<title>TMK Performances — Admin Paramètres des formations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --tmk-prune: #8C1E70;
-  --tmk-prune-dark: #5E1349;
-  --tmk-prune-light: #B83A93;
-  --tmk-charbon: #283C28;
-  --tmk-gris: #3C3C3C;
-  --tmk-or: #C9A961;
-  --bg: #FAF7F5;
-  --bg-card: #FFFFFF;
-  --bg-soft: #F4EEF1;
-  --border: #E8DCE3;
-  --text: #2A2024;
-  --text-muted: #6B5B62;
-  --shadow-sm: 0 1px 2px rgba(140, 30, 112, 0.06);
-  --shadow: 0 4px 16px rgba(140, 30, 112, 0.08), 0 1px 3px rgba(140, 30, 112, 0.06);
-  --shadow-lg: 0 16px 40px rgba(140, 30, 112, 0.12);
-  --radius-sm: 6px;
-  --radius: 12px;
-  --radius-lg: 20px;
+  --tmk-prune:#8C1E70; --tmk-prune-dark:#5E1349; --tmk-prune-light:#B83A93;
+  --tmk-charbon:#283C28; --tmk-gris:#3C3C3C; --tmk-or:#C9A961;
+  --bg:#FAF7F5; --bg-card:#FFFFFF; --bg-soft:#F4EEF1; --border:#E8DCE3;
+  --text:#2A2024; --text-muted:#6B5B62;
+  --shadow-sm:0 1px 2px rgba(140,30,112,.06);
+  --shadow:0 4px 16px rgba(140,30,112,.08),0 1px 3px rgba(140,30,112,.06);
+  --shadow-lg:0 16px 40px rgba(140,30,112,.12);
+  --radius-sm:6px; --radius:12px; --radius-lg:20px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  font-family: 'Inter', -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.5;
-  min-height: 100vh;
-  background-image:
-    radial-gradient(circle at 20% 0%, rgba(140, 30, 112, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 80% 100%, rgba(40, 60, 40, 0.03) 0%, transparent 40%);
-}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;
+  background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transparent 40%),radial-gradient(circle at 80% 100%,rgba(40,60,40,.03),transparent 40%);}
 
-/* ============== LOGIN PAGE ============== */
-.login-screen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-}
-.login-card{
-  background:white;
-  border-radius:var(--radius-lg);
-  padding:48px 40px;
-  max-width:420px;
-  width:100%;
-  box-shadow:var(--shadow-lg);
-  border:1px solid var(--border);
-}
-.login-brand{
-  text-align:center;
-  margin-bottom:32px;
-}
-.login-brand-mark{
-  width:56px;
-  height:56px;
-  background:linear-gradient(135deg,var(--tmk-prune) 0%,var(--tmk-prune-dark) 100%);
-  border-radius:14px;
-  margin:0 auto 16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-family:'Fraunces',serif;
-  font-weight:600;
-  font-size:24px;
-  box-shadow:0 6px 18px rgba(140,30,112,0.25);
-}
-.login-brand-name{
-  font-family:'Fraunces',serif;
-  font-size:22px;
-  font-weight:600;
-  color:var(--tmk-charbon);
-  letter-spacing:-0.01em;
-}
-.login-brand-sub{
-  font-size:12px;
-  color:var(--text-muted);
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  margin-top:4px;
-}
-.login-title{
-  font-family:'Fraunces',serif;
-  font-size:18px;
-  font-weight:500;
-  color:var(--tmk-charbon);
-  margin-bottom:6px;
-  text-align:center;
-}
-.login-sub{
-  font-size:13px;
-  color:var(--text-muted);
-  text-align:center;
-  margin-bottom:24px;
-}
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:#fff;border-radius:var(--radius-lg);padding:48px 40px;max-width:420px;width:100%;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
+.login-brand{text-align:center;margin-bottom:32px}
+.login-brand-mark{width:56px;height:56px;background:linear-gradient(135deg,var(--tmk-prune),var(--tmk-prune-dark));border-radius:14px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:24px;box-shadow:0 6px 18px rgba(140,30,112,.25)}
+.login-brand-name{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--tmk-charbon)}
+.login-brand-sub{font-size:12px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.login-title{font-family:'Fraunces',serif;font-size:18px;font-weight:500;color:var(--tmk-charbon);margin-bottom:6px;text-align:center}
+.login-sub{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:24px}
 .login-field{margin-bottom:14px}
-.login-field label{
-  display:block;
-  font-size:11px;
-  font-weight:600;
-  color:var(--text-muted);
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-  margin-bottom:6px;
-}
-.login-field input{
-  width:100%;
-  padding:12px 14px;
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);
-  font-family:'Inter',sans-serif;
-  font-size:14px;
-  background:white;
-  transition:all 0.15s ease;
-  color:var(--text);
-}
-.login-field input:focus{
-  outline:none;
-  border-color:var(--tmk-prune);
-  box-shadow:0 0 0 3px rgba(140,30,112,0.1);
-}
-.login-error{
-  background:#FFEEEE;
-  color:#A02020;
-  padding:10px 14px;
-  border-radius:var(--radius-sm);
-  font-size:13px;
-  margin-bottom:14px;
-  border-left:3px solid #A02020;
-  display:none;
-}
+.login-field label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.login-field input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;color:var(--text)}
+.login-field input:focus{outline:none;border-color:var(--tmk-prune);box-shadow:0 0 0 3px rgba(140,30,112,.1)}
+.login-error{background:#FFEEEE;color:#A02020;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:14px;border-left:3px solid #A02020;display:none}
 .login-error.show{display:block}
 
-/* ============== APP MAIN ============== */
+/* APP */
 .app{max-width:1280px;margin:0 auto;padding:24px;display:none}
 .app.show{display:block}
-
-.header{
-  background: linear-gradient(135deg, var(--tmk-prune) 0%, var(--tmk-prune-dark) 100%);
-  border-radius: var(--radius-lg);
-  padding: 32px 40px;
-  margin-bottom: 24px;
-  color: white;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
-}
-.header::before{
-  content:'';
-  position:absolute;
-  top:-50%;
-  right:-10%;
-  width:400px;
-  height:400px;
-  background: radial-gradient(circle, rgba(201, 169, 97, 0.18) 0%, transparent 70%);
-  border-radius:50%;
-}
-.header-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  position:relative;
-  z-index:1;
-  flex-wrap:wrap;
-  gap:16px;
-}
+.header{background:linear-gradient(135deg,var(--tmk-prune),var(--tmk-prune-dark));border-radius:var(--radius-lg);padding:32px 40px;margin-bottom:20px;color:#fff;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(201,169,97,.18),transparent 70%);border-radius:50%}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;flex-wrap:wrap;gap:16px}
 .header-content{flex:1;min-width:280px}
-.header-badge{
-  display:inline-block;
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  color:var(--tmk-or);
-  margin-bottom:8px;
-}
-.header h1{
-  font-family:'Fraunces',serif;
-  font-weight:600;
-  font-size:28px;
-  letter-spacing:-0.02em;
-  line-height:1.2;
-  margin-bottom:6px;
-}
-.header p{opacity:0.92;font-size:14px;max-width:600px}
-.header-user{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  gap:6px;
-  font-size:13px;
-}
-.header-user-email{opacity:0.85}
-.btn-logout{
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.25);
-  color:white;
-  padding:8px 14px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:12px;
-  font-weight:500;
-  transition:all 0.15s ease;
-  font-family:'Inter',sans-serif;
-}
-.btn-logout:hover{background:rgba(255,255,255,0.25)}
+.header-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tmk-or);margin-bottom:8px}
+.header h1{font-family:'Fraunces',serif;font-weight:600;font-size:28px;letter-spacing:-.02em;line-height:1.2;margin-bottom:6px}
+.header p{opacity:.92;font-size:14px;max-width:600px}
+.header-user{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:13px}
+.header-user-email{opacity:.85}
+.btn-logout{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;font-family:inherit}
+.btn-logout:hover{background:rgba(255,255,255,.25)}
 
-.grid{
-  display:grid;
-  grid-template-columns: 1fr 320px;
-  gap:24px;
-  align-items:start;
-}
+/* ONGLETS */
+.tabs{display:flex;gap:4px;background:var(--bg-soft);padding:5px;border-radius:var(--radius);margin-bottom:20px;flex-wrap:wrap}
+.tab{flex:1;min-width:130px;padding:12px 16px;border:none;background:transparent;font-family:inherit;font-size:14px;font-weight:600;color:var(--text-muted);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s ease;position:relative}
+.tab:hover{color:var(--tmk-prune)}
+.tab.active{background:#fff;color:var(--tmk-prune-dark);box-shadow:var(--shadow)}
+.tab .soon{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tmk-or);margin-left:6px;vertical-align:middle}
+.panel{display:none}
+.panel.active{display:block}
+
+.grid{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
 @media(max-width:960px){.grid{grid-template-columns:1fr}}
-
-.card{
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px 28px;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow-sm);
-}
-.card-header{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:20px;
-  padding-bottom:14px;
-  border-bottom:1px solid var(--border);
-}
-.card-num{
-  width:30px;height:30px;
-  background:var(--tmk-prune);
-  color:white;
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:600;font-size:13px;flex-shrink:0;
-}
-.card-title{
-  font-family:'Fraunces',serif;
-  font-size:19px;
-  font-weight:600;
-  color:var(--tmk-charbon);
-  letter-spacing:-0.01em;
-}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow-sm)}
+.card-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.card-num{width:30px;height:30px;background:var(--tmk-prune);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex-shrink:0}
+.card-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--tmk-charbon)}
 .card-subtitle{font-size:12px;color:var(--text-muted);margin-top:2px}
-
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
 .form-row.three{grid-template-columns:1fr 1fr 1fr}
 .form-row.full{grid-template-columns:1fr}
 @media(max-width:600px){.form-row,.form-row.three{grid-template-columns:1fr}}
 .form-field{display:flex;flex-direction:column;gap:5px}
-.form-field label{
-  font-size:11px;font-weight:600;color:var(--text-muted);
-  text-transform:uppercase;letter-spacing:0.5px;
-}
-.form-field input{
-  padding:10px 13px;
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);
-  font-family:'Inter',sans-serif;
-  font-size:14px;
-  font-variant-numeric:tabular-nums;
-  background:white;
-  transition:all 0.15s ease;
-  color:var(--text);
-}
-.form-field input:focus{
-  outline:none;
-  border-color:var(--tmk-prune);
-  box-shadow:0 0 0 3px rgba(140, 30, 112, 0.1);
-}
+.form-field label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.form-field input{padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;font-variant-numeric:tabular-nums;background:#fff;color:var(--text)}
+.form-field input:focus{outline:none;border-color:var(--tmk-prune);box-shadow:0 0 0 3px rgba(140,30,112,.1)}
 .form-field input:hover:not(:focus){border-color:var(--tmk-prune-light)}
 .form-field input:read-only{background:#f5f0f3;color:var(--text-muted);cursor:not-allowed}
-
-.subsection{margin: 20px 0 12px;padding-bottom:6px;border-bottom:1px dashed var(--border)}
-.subsection-title{
-  font-size:11px;font-weight:700;color: var(--tmk-prune);
-  text-transform:uppercase;letter-spacing:1.5px;
-}
-
-.tranche-row{
-  display:grid;
-  grid-template-columns: 70px 1fr 1fr;
-  gap:12px;align-items:center;margin-bottom:8px;
-  padding:10px 14px;background:var(--bg-soft);border-radius:var(--radius-sm);
-}
-.tranche-row .tmi-badge{
-  background:var(--tmk-prune);color:white;padding:4px 10px;
-  border-radius:20px;font-weight:600;font-size:13px;text-align:center;
-}
-.tranche-row input{
-  padding:8px 10px;border:1px solid var(--border);border-radius:4px;
-  font-size:13px;font-family:'Inter',sans-serif;
-  font-variant-numeric:tabular-nums;background:white;
-}
+.subsection{margin:20px 0 12px;padding-bottom:6px;border-bottom:1px dashed var(--border)}
+.subsection-title{font-size:11px;font-weight:700;color:var(--tmk-prune);text-transform:uppercase;letter-spacing:1.5px}
+.tranche-row{display:grid;grid-template-columns:70px 1fr 1fr;gap:12px;align-items:center;margin-bottom:8px;padding:10px 14px;background:var(--bg-soft);border-radius:var(--radius-sm)}
+.tranche-row .tmi-badge{background:var(--tmk-prune);color:#fff;padding:4px 10px;border-radius:20px;font-weight:600;font-size:13px;text-align:center}
+.tranche-row input{padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit;font-variant-numeric:tabular-nums;background:#fff}
 .tranche-row .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-bottom:3px;display:block}
 
-/* ============== ACCORDÉON ============== */
-.accordion{
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-  margin-bottom:12px;
-  overflow:hidden;
-  background:white;
-}
-.accordion-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:14px 18px;
-  background:var(--bg-soft);
-  cursor:pointer;
-  user-select:none;
-  transition:background 0.15s ease;
-  border:none;
-  width:100%;
-  font-family:'Inter',sans-serif;
-  text-align:left;
-}
+/* ACCORDÉON */
+.accordion{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;overflow:hidden;background:#fff}
+.accordion-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg-soft);cursor:pointer;user-select:none;transition:background .15s ease;border:none;width:100%;font-family:inherit;text-align:left}
 .accordion-head:hover{background:#EDE1E7}
-.accordion-head-title{
-  font-size:13px;
-  font-weight:600;
-  color:var(--tmk-prune);
-  letter-spacing:0.3px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.accordion-head-title::before{
-  content:'';
-  width:6px;height:6px;
-  background:var(--tmk-prune);
-  border-radius:50%;
-  flex-shrink:0;
-}
-.accordion-chevron{
-  color:var(--tmk-prune);
-  font-size:14px;
-  transition:transform 0.2s ease;
-}
+.accordion-head-title{font-size:13px;font-weight:600;color:var(--tmk-prune);letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+.accordion-head-title::before{content:'';width:6px;height:6px;background:var(--tmk-prune);border-radius:50%;flex-shrink:0}
+.accordion-chevron{color:var(--tmk-prune);font-size:14px;transition:transform .2s ease}
 .accordion.open .accordion-chevron{transform:rotate(180deg)}
-.accordion-body{
-  max-height:0;
-  overflow:hidden;
-  transition:max-height 0.25s ease, padding 0.25s ease;
-  padding:0 18px;
-}
-.accordion.open .accordion-body{
-  max-height:1200px;
-  padding:18px;
-}
-.accordion-help{
-  font-size:12px;
-  color:var(--text-muted);
-  margin-bottom:14px;
-  line-height:1.55;
-  padding:10px 12px;
-  background:var(--bg-soft);
-  border-radius:var(--radius-sm);
-  border-left:3px solid var(--tmk-prune-light);
-}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .25s ease,padding .25s ease;padding:0 18px}
+.accordion.open .accordion-body{max-height:1200px;padding:18px}
+.accordion-help{font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.55;padding:10px 12px;background:var(--bg-soft);border-radius:var(--radius-sm);border-left:3px solid var(--tmk-prune-light)}
 
 /* SIDEBAR */
 .sidebar{position:sticky;top:24px}
 @media(max-width:960px){.sidebar{position:static}}
-.sidebar-card{
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:22px;
-  box-shadow:var(--shadow);
-}
-.sidebar-card h3{
-  font-family:'Fraunces',serif;font-size:17px;font-weight:600;
-  color:var(--tmk-charbon);margin-bottom:6px;
-}
+.sidebar-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.sidebar-card h3{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--tmk-charbon);margin-bottom:6px}
 .sidebar-card p{font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.6}
-
-.btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;padding:13px 18px;border:none;border-radius:var(--radius-sm);
-  font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all 0.2s ease;text-decoration:none;margin-bottom:8px;
-}
-.btn-primary{
-  background:var(--tmk-prune);color:white;
-  box-shadow:0 4px 12px rgba(140, 30, 112, 0.25);
-}
-.btn-primary:hover:not(:disabled){background:var(--tmk-prune-dark);transform:translateY(-1px);box-shadow:0 6px 16px rgba(140, 30, 112, 0.35)}
-.btn-primary:disabled{opacity:0.5;cursor:not-allowed}
-.btn-ghost{background:transparent;color:var(--tmk-prune);border:1.5px solid var(--tmk-prune)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 18px;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s ease;text-decoration:none;margin-bottom:8px}
+.btn-primary{background:var(--tmk-prune);color:#fff;box-shadow:0 4px 12px rgba(140,30,112,.25)}
+.btn-primary:hover:not(:disabled){background:var(--tmk-prune-dark);transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:#fff;color:var(--tmk-prune-dark);border:1.5px solid var(--tmk-prune)}
 .btn-ghost:hover{background:var(--bg-soft)}
-
-.year-banner{
-  background: linear-gradient(135deg, var(--tmk-or) 0%, #b8965a 100%);
-  color:white;padding:14px 18px;border-radius:var(--radius-sm);
-  margin-bottom:18px;display:flex;align-items:center;gap:12px;
-}
+.year-banner{background:linear-gradient(135deg,var(--tmk-or),#b8965a);color:#fff;padding:14px 18px;border-radius:var(--radius-sm);margin-bottom:18px;display:flex;align-items:center;gap:12px}
 .year-banner-icon{font-size:24px}
-.year-banner-content{flex:1}
-.year-banner-label{font-size:10px;opacity:0.9;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.year-banner-label{font-size:10px;opacity:.9;text-transform:uppercase;letter-spacing:1px;font-weight:600}
 .year-banner-value{font-family:'Fraunces',serif;font-size:22px;font-weight:600;line-height:1}
-
-.computed{
-  margin-top:18px;padding:12px 14px;background:var(--bg-soft);
-  border-radius:var(--radius-sm);border-left:3px solid var(--tmk-prune);
-}
+.computed{margin-top:18px;padding:12px 14px;background:var(--bg-soft);border-radius:var(--radius-sm);border-left:3px solid var(--tmk-prune)}
 .computed-title{font-size:10px;font-weight:700;color:var(--tmk-prune);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-.computed-line{
-  display:flex;justify-content:space-between;padding:3px 0;
-  font-size:12px;font-variant-numeric:tabular-nums;
-}
+.computed-line{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;font-variant-numeric:tabular-nums}
 .computed-line span:first-child{color:var(--text-muted)}
 .computed-line span:last-child{color:var(--tmk-charbon);font-weight:600}
+.note{background:#FFF8E1;border-left:3px solid var(--tmk-or);padding:11px 14px;border-radius:var(--radius-sm);margin:14px 0;font-size:12px;color:var(--tmk-charbon);line-height:1.5}
+.last-update{font-size:11px;color:var(--text-muted);margin-top:14px;padding:10px 12px;background:var(--bg-soft);border-radius:var(--radius-sm)}
+.last-update strong{color:var(--tmk-charbon)}
 
-.note{
-  background:#FFF8E1;border-left:3px solid var(--tmk-or);
-  padding:11px 14px;border-radius:var(--radius-sm);margin:14px 0;
-  font-size:12px;color:var(--tmk-charbon);line-height:1.5;
-}
+/* RETRAITE */
+.pass-row{display:grid;grid-template-columns:120px 1fr auto;gap:12px;align-items:center;margin-bottom:8px;padding:8px 12px;background:var(--bg-soft);border-radius:var(--radius-sm)}
+.pass-row .yr{font-weight:600;color:var(--tmk-prune-dark);font-variant-numeric:tabular-nums}
+.pass-row input{padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:inherit;font-variant-numeric:tabular-nums;background:#fff}
+.pass-row .del{background:transparent;border:none;color:var(--tmk-prune-light);cursor:pointer;font-size:18px;padding:0 6px}
+.addrow{display:grid;grid-template-columns:120px 1fr auto;gap:12px;align-items:end;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border)}
+.mini-lab{font-size:10px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-bottom:3px;display:block}
+.actionbar{position:sticky;bottom:0;background:rgba(250,247,245,.94);border-top:1px solid var(--border);padding:14px 4px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:8px}
+.actionbar .btn{width:auto;margin:0}
+.lastup{font-size:12px;color:var(--text-muted)}
+.lastup strong{color:var(--tmk-charbon)}
 
-.toast{
-  position:fixed;bottom:24px;right:24px;
-  background:var(--tmk-charbon);color:white;
-  padding:14px 20px;border-radius:var(--radius-sm);
-  box-shadow:var(--shadow-lg);font-size:14px;
-  opacity:0;transform:translateY(20px);
-  transition:all 0.3s ease;pointer-events:none;z-index:1000;
-}
+/* PLACEHOLDER (Santé / Prévoyance) */
+.placeholder{background:var(--bg-card);border:1px dashed var(--tmk-prune-light);border-radius:var(--radius);padding:40px;text-align:center;box-shadow:var(--shadow-sm)}
+.placeholder .ic{font-size:40px;margin-bottom:12px}
+.placeholder h3{font-family:'Fraunces',serif;font-size:20px;color:var(--tmk-charbon);margin-bottom:8px}
+.placeholder p{font-size:13px;color:var(--text-muted);max-width:520px;margin:0 auto 6px;line-height:1.6}
+.placeholder code{background:var(--bg-soft);padding:2px 7px;border-radius:5px;color:var(--tmk-prune-dark);font-size:12px}
+
+/* DIVERS */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--tmk-charbon);color:#fff;padding:14px 20px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);font-size:14px;opacity:0;transform:translateY(20px);transition:all .3s ease;pointer-events:none;z-index:1000}
 .toast.show{opacity:1;transform:translateY(0)}
-.toast.success{background:var(--tmk-charbon);border-left:4px solid #6BCB77}
+.toast.success{border-left:4px solid #6BCB77}
 .toast.error{background:#5E1349;border-left:4px solid #FF6B6B}
-
-.loader{
-  display:none;
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(250,247,245,0.9);
-  z-index:1000;align-items:center;justify-content:center;
-  flex-direction:column;gap:14px;
-}
+.loader{display:none;position:fixed;inset:0;background:rgba(250,247,245,.9);z-index:1000;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .loader.show{display:flex}
-.loader-spinner{
-  width:42px;height:42px;
-  border:3px solid var(--bg-soft);
-  border-top-color:var(--tmk-prune);
-  border-radius:50%;
-  animation:spin 0.8s linear infinite;
-}
+.loader-spinner{width:42px;height:42px;border:3px solid var(--bg-soft);border-top-color:var(--tmk-prune);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-text{font-size:13px;color:var(--text-muted)}
-
 .footer-info{text-align:center;margin-top:32px;padding:18px;font-size:11px;color:var(--text-muted)}
 .footer-info strong{color:var(--tmk-prune);font-weight:600}
-
-.last-update{
-  font-size:11px;color:var(--text-muted);
-  margin-top:14px;padding:10px 12px;
-  background:var(--bg-soft);border-radius:var(--radius-sm);
-  display:flex;align-items:center;gap:6px;
-}
-.last-update strong{color:var(--tmk-charbon)}
 </style>
 </head>
 <body>
 
-<!-- LOADER -->
-<div class="loader" id="loader">
-  <div class="loader-spinner"></div>
-  <div class="loader-text" id="loaderText">Chargement…</div>
-</div>
+<div class="loader" id="loader"><div class="loader-spinner"></div><div class="loader-text" id="loaderText">Chargement…</div></div>
 
 <!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
@@ -493,18 +170,12 @@ body{
       <div class="login-brand-name">TMK Performances</div>
       <div class="login-brand-sub">Espace Formateur</div>
     </div>
-    <div class="login-title">Droit et environnement fiscal du particulier</div>
-    <div class="login-sub">Connecte-toi pour mettre à jour les données fiscales</div>
+    <div class="login-title">Paramètres des formations</div>
+    <div class="login-sub">Connecte-toi pour mettre à jour les données de formation.</div>
     <div class="login-error" id="loginError"></div>
     <form id="loginForm">
-      <div class="login-field">
-        <label>Email</label>
-        <input type="email" id="loginEmail" required autocomplete="username">
-      </div>
-      <div class="login-field">
-        <label>Mot de passe</label>
-        <input type="password" id="loginPassword" required autocomplete="current-password">
-      </div>
+      <div class="login-field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
+      <div class="login-field"><label>Mot de passe</label><input type="password" id="loginPassword" required autocomplete="current-password"></div>
       <button type="submit" class="btn btn-primary" style="margin-top:8px">Se connecter</button>
     </form>
   </div>
@@ -515,9 +186,9 @@ body{
   <header class="header">
     <div class="header-row">
       <div class="header-content">
-        <div class="header-badge">Espace Formateur · Module fiscal</div>
-        <h1>Droit et environnement fiscal du particulier</h1>
-        <p>Mise à jour des paramètres fiscaux annuels. Toute modification est immédiatement répercutée sur les fiches consultées par les stagiaires.</p>
+        <div class="header-badge">Espace Formateur · Paramètres</div>
+        <h1>Paramètres des formations</h1>
+        <p>Fiscalité, retraite, santé, prévoyance — mise à jour centralisée. Toute modification est répercutée sur les fiches et simulateurs des stagiaires.</p>
       </div>
       <div class="header-user">
         <div class="header-user-email" id="userEmail">—</div>
@@ -526,442 +197,317 @@ body{
     </div>
   </header>
 
-  <div class="grid">
-    <main>
-      <!-- SECTION 1 : ANNÉE -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-num">1</div>
-          <div>
+  <!-- ONGLETS -->
+  <div class="tabs">
+    <button class="tab active" data-tab="fiscalite" onclick="switchTab('fiscalite')">Fiscalité</button>
+    <button class="tab" data-tab="retraite" onclick="switchTab('retraite')">Retraite</button>
+    <button class="tab" data-tab="sante" onclick="switchTab('sante')">Santé <span class="soon">à venir</span></button>
+    <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance <span class="soon">à venir</span></button>
+  </div>
+
+  <!-- ============ PANEL FISCALITÉ ============ -->
+  <div class="panel active" id="panel-fiscalite">
+    <div class="grid">
+      <main>
+        <div class="card">
+          <div class="card-header"><div class="card-num">1</div><div>
             <div class="card-title">Année d'imposition</div>
-            <div class="card-subtitle">Précise l'année du barème (ex : 2026 sur revenus 2025)</div>
+            <div class="card-subtitle">Précise l'année du barème (ex : 2026 sur revenus 2025)</div></div></div>
+          <div class="form-row">
+            <div class="form-field"><label>Année du barème</label><input type="number" id="annee" min="2020" max="2099"></div>
+            <div class="form-field"><label>Année des revenus concernés</label><input type="number" id="anneeRevenus" min="2019" max="2098"></div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Année du barème</label>
-            <input type="number" id="annee" min="2020" max="2099">
-          </div>
-          <div class="form-field">
-            <label>Année des revenus concernés</label>
-            <input type="number" id="anneeRevenus" min="2019" max="2098">
-          </div>
-        </div>
-      </div>
 
-      <!-- SECTION 2 : BARÈME -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-num">2</div>
-          <div>
+        <div class="card">
+          <div class="card-header"><div class="card-num">2</div><div>
             <div class="card-title">Barème progressif de l'IRPP</div>
-            <div class="card-subtitle">Seuils de quotient familial et taux marginaux d'imposition</div>
-          </div>
+            <div class="card-subtitle">Seuils de quotient familial et taux marginaux d'imposition</div></div></div>
+          <div class="tranche-row"><div class="tmi-badge">0 %</div><div class="form-field"><span class="label">Jusqu'à</span><input type="number" id="seuil1"></div><div></div></div>
+          <div class="tranche-row"><div class="tmi-badge">11 %</div><div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil1b" readonly></div><div class="form-field"><span class="label">À</span><input type="number" id="seuil2"></div></div>
+          <div class="tranche-row"><div class="tmi-badge">30 %</div><div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil2b" readonly></div><div class="form-field"><span class="label">À</span><input type="number" id="seuil3"></div></div>
+          <div class="tranche-row"><div class="tmi-badge">41 %</div><div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil3b" readonly></div><div class="form-field"><span class="label">À</span><input type="number" id="seuil4"></div></div>
+          <div class="tranche-row"><div class="tmi-badge">45 %</div><div class="form-field"><span class="label">À partir de (auto)</span><input type="number" id="seuil4b" readonly></div><div></div></div>
+          <div class="note">Les bornes basses se mettent à jour automatiquement (+1 €). Les <strong>constantes des formules de calcul rapide</strong> sont calculées automatiquement et affichées dans l'encart de droite.</div>
         </div>
 
-        <div class="tranche-row">
-          <div class="tmi-badge">0 %</div>
-          <div class="form-field"><span class="label">Jusqu'à</span><input type="number" id="seuil1"></div>
-          <div></div>
-        </div>
-        <div class="tranche-row">
-          <div class="tmi-badge">11 %</div>
-          <div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil1b" readonly></div>
-          <div class="form-field"><span class="label">À</span><input type="number" id="seuil2"></div>
-        </div>
-        <div class="tranche-row">
-          <div class="tmi-badge">30 %</div>
-          <div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil2b" readonly></div>
-          <div class="form-field"><span class="label">À</span><input type="number" id="seuil3"></div>
-        </div>
-        <div class="tranche-row">
-          <div class="tmi-badge">41 %</div>
-          <div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil3b" readonly></div>
-          <div class="form-field"><span class="label">À</span><input type="number" id="seuil4"></div>
-        </div>
-        <div class="tranche-row">
-          <div class="tmi-badge">45 %</div>
-          <div class="form-field"><span class="label">À partir de (auto)</span><input type="number" id="seuil4b" readonly></div>
-          <div></div>
-        </div>
-
-        <div class="note">
-          Les bornes basses se mettent à jour automatiquement (+1 €). Les <strong>constantes des formules de calcul rapide</strong> sont calculées automatiquement et affichées dans l'encart de droite.
-        </div>
-      </div>
-
-      <!-- SECTION 3 : DÉCOTE -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-num">3</div>
-          <div>
+        <div class="card">
+          <div class="card-header"><div class="card-num">3</div><div>
             <div class="card-title">Décote</div>
-            <div class="card-subtitle">Réduction d'impôt automatique pour les faibles revenus imposables</div>
+            <div class="card-subtitle">Réduction d'impôt automatique pour les faibles revenus imposables</div></div></div>
+          <div class="subsection"><div class="subsection-title">Déclaration individuelle</div></div>
+          <div class="form-row">
+            <div class="form-field"><label>Seuil d'application (IR brut &lt;)</label><input type="number" id="decoteSeuilIndiv"></div>
+            <div class="form-field"><label>Constante forfaitaire</label><input type="number" id="decoteForfIndiv"></div>
+          </div>
+          <div class="subsection"><div class="subsection-title">Déclaration commune</div></div>
+          <div class="form-row">
+            <div class="form-field"><label>Seuil d'application (IR brut &lt;)</label><input type="number" id="decoteSeuilCouple"></div>
+            <div class="form-field"><label>Constante forfaitaire</label><input type="number" id="decoteForfCouple"></div>
+          </div>
+          <div class="form-row full">
+            <div class="form-field"><label>Taux à déduire (%)</label><input type="number" id="decoteTaux" step="0.01"></div>
           </div>
         </div>
 
-        <div class="subsection"><div class="subsection-title">Déclaration individuelle</div></div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Seuil d'application (IR brut &lt;)</label>
-            <input type="number" id="decoteSeuilIndiv">
-          </div>
-          <div class="form-field">
-            <label>Constante forfaitaire</label>
-            <input type="number" id="decoteForfIndiv">
-          </div>
-        </div>
-
-        <div class="subsection"><div class="subsection-title">Déclaration commune</div></div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Seuil d'application (IR brut &lt;)</label>
-            <input type="number" id="decoteSeuilCouple">
-          </div>
-          <div class="form-field">
-            <label>Constante forfaitaire</label>
-            <input type="number" id="decoteForfCouple">
-          </div>
-        </div>
-
-        <div class="form-row full">
-          <div class="form-field">
-            <label>Taux à déduire (%)</label>
-            <input type="number" id="decoteTaux" step="0.01">
-          </div>
-        </div>
-      </div>
-
-      <!-- SECTION 4 : QUOTIENT FAMILIAL -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-num">4</div>
-          <div>
+        <div class="card">
+          <div class="card-header"><div class="card-num">4</div><div>
             <div class="card-title">Plafonnement du quotient familial</div>
-            <div class="card-subtitle">Limites annuelles de l'avantage fiscal procuré par les demi-parts</div>
+            <div class="card-subtitle">Limites annuelles de l'avantage fiscal procuré par les demi-parts</div></div></div>
+          <div class="form-row three">
+            <div class="form-field"><label>Cas général (par demi-part)</label><input type="number" id="plafondQF"></div>
+            <div class="form-field"><label>Quart de part (garde alternée)</label><input type="number" id="plafondQFQuart"></div>
+            <div class="form-field"><label>Parent isolé (1ère part / 1er enfant)</label><input type="number" id="plafondParentIsole"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Pers. ayant élevé un enfant ≥ 5 ans</label><input type="number" id="plafondVeuf"></div>
+            <div class="form-field"><label>Anciens combattants / CMI invalidité</label><input type="number" id="plafondInvalidite"></div>
           </div>
         </div>
 
-        <div class="form-row three">
-          <div class="form-field">
-            <label>Cas général (par demi-part)</label>
-            <input type="number" id="plafondQF">
-          </div>
-          <div class="form-field">
-            <label>Quart de part (garde alternée)</label>
-            <input type="number" id="plafondQFQuart">
-          </div>
-          <div class="form-field">
-            <label>Parent isolé (1ère part / 1er enfant)</label>
-            <input type="number" id="plafondParentIsole">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Pers. ayant élevé un enfant ≥ 5 ans</label>
-            <input type="number" id="plafondVeuf">
-          </div>
-          <div class="form-field">
-            <label>Anciens combattants / CMI invalidité</label>
-            <input type="number" id="plafondInvalidite">
-          </div>
-        </div>
-      </div>
-
-      <!-- SECTION 5 : ABATTEMENTS -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-num">5</div>
-          <div>
+        <div class="card">
+          <div class="card-header"><div class="card-num">5</div><div>
             <div class="card-title">Abattements et déductions</div>
-            <div class="card-subtitle">Paramètres par catégorie — cliquer sur un bloc pour le déplier</div>
-          </div>
-        </div>
+            <div class="card-subtitle">Paramètres par catégorie — cliquer sur un bloc pour le déplier</div></div></div>
 
-        <!-- ▸ DIVERS (ancien contenu, déplié par défaut) -->
-        <div class="accordion open" id="acc-divers">
-          <button type="button" class="accordion-head" onclick="toggleAcc('acc-divers')">
-            <span class="accordion-head-title">Frais professionnels & pension enfant majeur</span>
-            <span class="accordion-chevron">▾</span>
-          </button>
-          <div class="accordion-body">
-            <div class="form-row">
-              <div class="form-field">
-                <label>Abattement frais professionnels (%)</label>
-                <input type="number" id="abattementFP" step="0.01">
-              </div>
-              <div class="form-field">
-                <label>Plafond pension alimentaire enfant majeur (€)</label>
-                <input type="number" id="plafondPension">
+          <div class="accordion open" id="acc-divers">
+            <button type="button" class="accordion-head" onclick="toggleAcc('acc-divers')">
+              <span class="accordion-head-title">Frais professionnels &amp; pension enfant majeur</span><span class="accordion-chevron">▾</span></button>
+            <div class="accordion-body">
+              <div class="form-row">
+                <div class="form-field"><label>Abattement frais professionnels (%)</label><input type="number" id="abattementFP" step="0.01"></div>
+                <div class="form-field"><label>Plafond pension alimentaire enfant majeur (€)</label><input type="number" id="plafondPension"></div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- ▸ ABATTEMENT 10 % SALAIRES -->
-        <div class="accordion" id="acc-sal">
-          <button type="button" class="accordion-head" onclick="toggleAcc('acc-sal')">
-            <span class="accordion-head-title">Abattement 10 % — Salaires</span>
-            <span class="accordion-chevron">▾</span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-help">
-              Abattement automatique appliqué sur les salaires, encadré par un plancher et un plafond fixés chaque année.
-            </div>
-            <div class="form-row three">
-              <div class="form-field">
-                <label>Taux (%)</label>
-                <input type="number" id="abatSalTaux" step="0.01">
-              </div>
-              <div class="form-field">
-                <label>Plancher (€)</label>
-                <input type="number" id="abatSalPlancher">
-              </div>
-              <div class="form-field">
-                <label>Plafond / personne (€)</label>
-                <input type="number" id="abatSalPlafond">
+          <div class="accordion" id="acc-sal">
+            <button type="button" class="accordion-head" onclick="toggleAcc('acc-sal')">
+              <span class="accordion-head-title">Abattement 10 % — Salaires</span><span class="accordion-chevron">▾</span></button>
+            <div class="accordion-body">
+              <div class="accordion-help">Abattement automatique appliqué sur les salaires, encadré par un plancher et un plafond fixés chaque année.</div>
+              <div class="form-row three">
+                <div class="form-field"><label>Taux (%)</label><input type="number" id="abatSalTaux" step="0.01"></div>
+                <div class="form-field"><label>Plancher (€)</label><input type="number" id="abatSalPlancher"></div>
+                <div class="form-field"><label>Plafond / personne (€)</label><input type="number" id="abatSalPlafond"></div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- ▸ ABATTEMENT 10 % PENSIONS -->
-        <div class="accordion" id="acc-pension">
-          <button type="button" class="accordion-head" onclick="toggleAcc('acc-pension')">
-            <span class="accordion-head-title">Abattement 10 % — Pensions de retraite</span>
-            <span class="accordion-chevron">▾</span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-help">
-              Abattement appliqué sur les pensions de retraite, avec un plancher par retraité et un plafond global par foyer fiscal.
+          <div class="accordion" id="acc-pension">
+            <button type="button" class="accordion-head" onclick="toggleAcc('acc-pension')">
+              <span class="accordion-head-title">Abattement 10 % — Pensions de retraite</span><span class="accordion-chevron">▾</span></button>
+            <div class="accordion-body">
+              <div class="accordion-help">Abattement appliqué sur les pensions de retraite, avec un plancher par retraité et un plafond global par foyer fiscal.</div>
+              <div class="form-row three">
+                <div class="form-field"><label>Taux (%)</label><input type="number" id="abatPensionTaux" step="0.01"></div>
+                <div class="form-field"><label>Plancher / retraité (€)</label><input type="number" id="abatPensionPlancher"></div>
+                <div class="form-field"><label>Plafond / foyer (€)</label><input type="number" id="abatPensionPlafond"></div>
+              </div>
             </div>
-            <div class="form-row three">
-              <div class="form-field">
-                <label>Taux (%)</label>
-                <input type="number" id="abatPensionTaux" step="0.01">
+          </div>
+
+          <div class="accordion" id="acc-age">
+            <button type="button" class="accordion-head" onclick="toggleAcc('acc-age')">
+              <span class="accordion-head-title">Abattement spécial — Personnes +65 ans ou invalides</span><span class="accordion-chevron">▾</span></button>
+            <div class="accordion-body">
+              <div class="accordion-help">Abattement à deux niveaux (art. 157 bis CGI) : un montant pour les revenus modestes, un montant réduit pour les revenus intermédiaires, et plus rien au-delà du seuil haut.</div>
+              <div class="subsection"><div class="subsection-title">Niveau 1 — Revenu net global modeste</div></div>
+              <div class="form-row">
+                <div class="form-field"><label>Montant de l'abattement (€)</label><input type="number" id="abatAgeMontantHaut"></div>
+                <div class="form-field"><label>Si revenu net global inférieur à (€)</label><input type="number" id="abatAgeSeuilBas"></div>
               </div>
-              <div class="form-field">
-                <label>Plancher / retraité (€)</label>
-                <input type="number" id="abatPensionPlancher">
+              <div class="subsection"><div class="subsection-title">Niveau 2 — Revenu net global intermédiaire</div></div>
+              <div class="form-row">
+                <div class="form-field"><label>Montant de l'abattement (€)</label><input type="number" id="abatAgeMontantBas"></div>
+                <div class="form-field"><label>Plafond haut (au-delà : aucun abattement) (€)</label><input type="number" id="abatAgeSeuilHaut"></div>
               </div>
-              <div class="form-field">
-                <label>Plafond / foyer (€)</label>
-                <input type="number" id="abatPensionPlafond">
+            </div>
+          </div>
+
+          <div class="accordion" id="acc-src">
+            <button type="button" class="accordion-head" onclick="toggleAcc('acc-src')">
+              <span class="accordion-head-title">Traçabilité (source &amp; date)</span><span class="accordion-chevron">▾</span></button>
+            <div class="accordion-body">
+              <div class="accordion-help">Informations affichées en bas de la fiche stagiaire. À renseigner lors de la mise à jour annuelle.</div>
+              <div class="form-row">
+                <div class="form-field"><label>Source officielle</label><input type="text" id="abatSource" placeholder="ex : impots.gouv.fr — revenus 2025"></div>
+                <div class="form-field"><label>Date de mise à jour des barèmes</label><input type="date" id="abatMajLe"></div>
               </div>
             </div>
           </div>
         </div>
+      </main>
 
-        <!-- ▸ ABATTEMENT ÂGE / INVALIDITÉ -->
-        <div class="accordion" id="acc-age">
-          <button type="button" class="accordion-head" onclick="toggleAcc('acc-age')">
-            <span class="accordion-head-title">Abattement spécial — Personnes +65 ans ou invalides</span>
-            <span class="accordion-chevron">▾</span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-help">
-              Abattement à deux niveaux (art. 157 bis CGI) : un montant pour les revenus modestes, un montant réduit pour les revenus intermédiaires, et plus rien au-delà du seuil haut.
-            </div>
-
-            <div class="subsection"><div class="subsection-title">Niveau 1 — Revenu net global modeste</div></div>
-            <div class="form-row">
-              <div class="form-field">
-                <label>Montant de l'abattement (€)</label>
-                <input type="number" id="abatAgeMontantHaut">
-              </div>
-              <div class="form-field">
-                <label>Si revenu net global inférieur à (€)</label>
-                <input type="number" id="abatAgeSeuilBas">
-              </div>
-            </div>
-
-            <div class="subsection"><div class="subsection-title">Niveau 2 — Revenu net global intermédiaire</div></div>
-            <div class="form-row">
-              <div class="form-field">
-                <label>Montant de l'abattement (€)</label>
-                <input type="number" id="abatAgeMontantBas">
-              </div>
-              <div class="form-field">
-                <label>Plafond haut (au-delà : aucun abattement) (€)</label>
-                <input type="number" id="abatAgeSeuilHaut">
-              </div>
-            </div>
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <div class="year-banner">
+            <div class="year-banner-icon">📅</div>
+            <div><div class="year-banner-label">Barème en cours</div><div class="year-banner-value" id="afficheAnnee">—</div></div>
+          </div>
+          <h3>Enregistrer les modifications</h3>
+          <p>Une fois les paramètres saisis, enregistre-les sur Supabase pour mettre à jour automatiquement les fiches stagiaires.</p>
+          <button class="btn btn-primary" id="btnSaveFisc" onclick="enregistrerFiscalite()">💾 Enregistrer la fiscalité</button>
+          <div class="last-update"><span>Dernière màj : <strong id="lastUpdateValue">—</strong></span></div>
+          <div class="computed">
+            <div class="computed-title">Constantes calculées (auto)</div>
+            <div class="computed-line"><span>TMI 11 %</span><span id="cst11">—</span></div>
+            <div class="computed-line"><span>TMI 30 %</span><span id="cst30">—</span></div>
+            <div class="computed-line"><span>TMI 41 %</span><span id="cst41">—</span></div>
+            <div class="computed-line"><span>TMI 45 %</span><span id="cst45">—</span></div>
           </div>
         </div>
-
-        <!-- ▸ TRAÇABILITÉ -->
-        <div class="accordion" id="acc-src">
-          <button type="button" class="accordion-head" onclick="toggleAcc('acc-src')">
-            <span class="accordion-head-title">Traçabilité (source & date)</span>
-            <span class="accordion-chevron">▾</span>
-          </button>
-          <div class="accordion-body">
-            <div class="accordion-help">
-              Informations affichées en bas de la fiche stagiaire. À renseigner lors de la mise à jour annuelle.
-            </div>
-            <div class="form-row">
-              <div class="form-field">
-                <label>Source officielle</label>
-                <input type="text" id="abatSource" placeholder="ex : impots.gouv.fr — revenus 2025">
-              </div>
-              <div class="form-field">
-                <label>Date de mise à jour des barèmes</label>
-                <input type="date" id="abatMajLe">
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </main>
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="sidebar-card">
-        <div class="year-banner">
-          <div class="year-banner-icon">📅</div>
-          <div class="year-banner-content">
-            <div class="year-banner-label">Barème en cours</div>
-            <div class="year-banner-value" id="afficheAnnee">—</div>
-          </div>
-        </div>
-
-        <h3>Enregistrer les modifications</h3>
-        <p>Une fois les paramètres saisis, enregistre-les sur Supabase pour mettre à jour automatiquement les fiches stagiaires.</p>
-
-        <button class="btn btn-primary" id="btnSave" onclick="enregistrer()">
-          💾 Enregistrer les paramètres
-        </button>
-
-        <div class="last-update" id="lastUpdate">
-          <span>Dernière màj : <strong id="lastUpdateValue">—</strong></span>
-        </div>
-
-        <div class="computed">
-          <div class="computed-title">Constantes calculées (auto)</div>
-          <div class="computed-line"><span>TMI 11 %</span><span id="cst11">—</span></div>
-          <div class="computed-line"><span>TMI 30 %</span><span id="cst30">—</span></div>
-          <div class="computed-line"><span>TMI 41 %</span><span id="cst41">—</span></div>
-          <div class="computed-line"><span>TMI 45 %</span><span id="cst45">—</span></div>
-        </div>
-      </div>
-    </aside>
+      </aside>
+    </div>
   </div>
 
-  <div class="footer-info">
-    <strong>TMK Performances</strong> · Droit et environnement fiscal du particulier · Espace formateur
+  <!-- ============ PANEL RETRAITE ============ -->
+  <div class="panel" id="panel-retraite">
+    <div class="card">
+      <div class="card-header"><div class="card-num">1</div><div>
+        <div class="card-title">Plafond annuel de la Sécurité sociale (PASS)</div>
+        <div class="card-subtitle">Une valeur par année civile. Modifiable, et ajout possible d'une nouvelle année.</div></div></div>
+      <div id="passList"></div>
+      <div class="addrow">
+        <div><span class="mini-lab">Nouvelle année</span><input type="number" id="newYear" min="1990" max="2100" placeholder="2027"></div>
+        <div><span class="mini-lab">Montant annuel (€)</span><input type="number" id="newAmount" min="0" step="1" placeholder="ex. 49000"></div>
+        <button class="btn btn-ghost" type="button" onclick="ajouterAnnee()">+ Ajouter</button>
+      </div>
+      <div class="note">Dans le calcul du SAM, chaque salaire est plafonné au PASS de <strong>son année de versement</strong> — d'où l'intérêt de conserver l'historique.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">2</div><div>
+        <div class="card-title">SMIC &amp; conversion des salaires</div>
+        <div class="card-subtitle">Valeurs officielles, révisées en cours d'année selon l'inflation.</div></div></div>
+      <div class="form-row">
+        <div class="form-field"><label>SMIC mensuel brut (€)</label><input type="number" id="smic" step="0.01"></div>
+        <div class="form-field"><label>Coefficient net → brut (brut = net / …)</label><input type="number" id="coeff" step="0.001"></div>
+      </div>
+      <div class="note">SMIC officiel au 1<sup>er</sup> juin 2026 : <strong>1&nbsp;867,02&nbsp;€</strong> brut mensuel (arrêté du 22 mai 2026). À réviser à chaque revalorisation.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">3</div><div>
+        <div class="card-title">Durée de cotisation par défaut</div>
+        <div class="card-subtitle">Durée retenue dans les exercices en l'absence de précision.</div></div></div>
+      <div class="form-row">
+        <div class="form-field"><label>Durée (années)</label><input type="number" id="dureeAnnees" step="0.5"></div>
+        <div class="form-field"><label>Durée (trimestres)</label><input type="number" id="dureeTrim" step="1"></div>
+      </div>
+      <div class="note">Par défaut : <strong>43 ans</strong>, soit <strong>172 trimestres</strong>.</div>
+    </div>
+
+    <div class="actionbar">
+      <div class="lastup">Dernière mise à jour : <strong id="lastUpdateRetraite">—</strong></div>
+      <button class="btn btn-primary" id="btnSaveRetraite" onclick="enregistrerRetraite()">💾 Enregistrer la retraite</button>
+    </div>
   </div>
+
+  <!-- ============ PANEL SANTÉ ============ -->
+  <div class="panel" id="panel-sante">
+    <div class="placeholder">
+      <div class="ic">🩺</div>
+      <h3>Module Santé — en préparation</h3>
+      <p>Cet onglet accueillera les paramètres du module santé (complémentaire santé, tickets modérateurs, plafonds de remboursement, forfaits…).</p>
+      <p>Table Supabase pressentie : <code>parametres_sante</code>, sur le même modèle clé/valeur que la retraite.</p>
+    </div>
+  </div>
+
+  <!-- ============ PANEL PRÉVOYANCE ============ -->
+  <div class="panel" id="panel-prevoyance">
+    <div class="placeholder">
+      <div class="ic">🛡️</div>
+      <h3>Module Prévoyance — en préparation</h3>
+      <p>Cet onglet accueillera les paramètres du module prévoyance (capitaux décès, rentes, franchises, taux de cotisation, plafonds…).</p>
+      <p>Table Supabase pressentie : <code>parametres_prevoyance</code>, sur le même modèle clé/valeur.</p>
+    </div>
+  </div>
+
+  <div class="footer-info"><strong>TMK Performances</strong> · Paramètres des formations · Espace formateur</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// =======================================================
-// CONFIG SUPABASE
-// =======================================================
+// ===================== CONFIG SUPABASE (partagée) =====================
 const SUPABASE_URL = 'https://ibkvyjlglwufxvzxnysa.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xUfZHSOHf4TnBRRyzU_qJA_TcXIMSKX';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentRecordId = null;
+let currentRecordId = null;   // fiscalité
+let passData = {};            // retraite : { annee: montant }
 
-// =======================================================
-// ACCORDÉON
-// =======================================================
-function toggleAcc(id){
-  document.getElementById(id).classList.toggle('open');
-}
+// ===================== HELPERS PARTAGÉS =====================
+function showLoader(t='Chargement…'){document.getElementById('loaderText').textContent=t;document.getElementById('loader').classList.add('show')}
+function hideLoader(){document.getElementById('loader').classList.remove('show')}
+function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast '+type,2800)}
+function numOrNull(id){const v=document.getElementById(id).value;if(v===''||v===null)return null;const n=Number(v);return isNaN(n)?null:n}
+function strOrNull(id){const v=document.getElementById(id).value;return(v===''||v===null)?null:v}
+function fmtDate(iso){const d=new Date(iso);return d.toLocaleDateString('fr-FR')+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
 
-// =======================================================
-// AUTH
-// =======================================================
-function showLoader(text='Chargement…') {
-  document.getElementById('loaderText').textContent = text;
-  document.getElementById('loader').classList.add('show');
+// ===================== ONGLETS =====================
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
 }
-function hideLoader() {
-  document.getElementById('loader').classList.remove('show');
-}
+function toggleAcc(id){document.getElementById(id).classList.toggle('open')}
 
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+// ===================== AUTH =====================
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  const errorBox = document.getElementById('loginError');
-  errorBox.classList.remove('show');
+  const email=document.getElementById('loginEmail').value, password=document.getElementById('loginPassword').value;
+  const err=document.getElementById('loginError'); err.classList.remove('show');
   showLoader('Connexion…');
-  const { data, error } = await db.auth.signInWithPassword({ email, password });
+  const {data,error}=await db.auth.signInWithPassword({email,password});
   hideLoader();
-  if (error) {
-    errorBox.textContent = 'Identifiants incorrects ou problème de connexion.';
-    errorBox.classList.add('show');
-    return;
-  }
+  if(error){err.textContent='Identifiants incorrects ou problème de connexion.';err.classList.add('show');return;}
   initApp(data.user);
 });
-
-async function seDeconnecter() {
-  showLoader('Déconnexion…');
-  await db.auth.signOut();
-  hideLoader();
+async function seDeconnecter(){
+  showLoader('Déconnexion…'); await db.auth.signOut(); hideLoader();
   document.getElementById('app').classList.remove('show');
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginPassword').value='';
 }
-
-async function checkSession() {
+async function checkSession(){
   showLoader('Vérification de la session…');
-  const { data } = await db.auth.getSession();
-  hideLoader();
-  if (data.session) {
-    initApp(data.session.user);
-  }
+  const {data}=await db.auth.getSession(); hideLoader();
+  if(data.session) initApp(data.session.user);
 }
-
-async function initApp(user) {
-  document.getElementById('loginScreen').style.display = 'none';
+async function initApp(user){
+  document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').classList.add('show');
-  document.getElementById('userEmail').textContent = user.email;
-  await chargerParametres();
+  document.getElementById('userEmail').textContent=user.email;
+  await chargerFiscalite();
+  await chargerRetraite();
 }
 
-// =======================================================
-// CHARGEMENT DES PARAMÈTRES DEPUIS SUPABASE
-// =======================================================
-async function chargerParametres() {
+// ===================== FISCALITÉ : chargement =====================
+async function chargerFiscalite(){
   showLoader('Chargement des paramètres fiscaux…');
-  const { data, error } = await db
-    .from('parametres_fiscaux')
-    .select('*')
-    .eq('is_active', true)
-    .single();
+  const {data,error}=await db.from('parametres_fiscaux').select('*').eq('is_active',true).single();
   hideLoader();
-  if (error) {
-    showToast('Erreur de chargement', 'error');
-    return;
-  }
-  currentRecordId = data.id;
-  // Remplir le formulaire
-  document.getElementById('annee').value = data.annee;
-  document.getElementById('anneeRevenus').value = data.annee_revenus;
-  document.getElementById('seuil1').value = data.bareme_seuil_0;
-  document.getElementById('seuil2').value = data.bareme_seuil_11;
-  document.getElementById('seuil3').value = data.bareme_seuil_30;
-  document.getElementById('seuil4').value = data.bareme_seuil_41;
-  document.getElementById('decoteSeuilIndiv').value = data.decote_seuil_indiv;
-  document.getElementById('decoteForfIndiv').value = data.decote_forfait_indiv;
-  document.getElementById('decoteSeuilCouple').value = data.decote_seuil_couple;
-  document.getElementById('decoteForfCouple').value = data.decote_forfait_couple;
-  document.getElementById('decoteTaux').value = data.decote_taux;
-  document.getElementById('plafondQF').value = data.plafond_qf_demi;
-  document.getElementById('plafondQFQuart').value = data.plafond_qf_quart;
-  document.getElementById('plafondParentIsole').value = data.plafond_qf_parent_isole;
-  document.getElementById('plafondVeuf').value = data.plafond_qf_veuf;
-  document.getElementById('plafondInvalidite').value = data.plafond_qf_invalidite;
-  document.getElementById('abattementFP').value = data.abattement_fp_taux;
-  document.getElementById('plafondPension').value = data.plafond_pension_enfant_majeur;
-
-  // ----- NOUVEAUX CHAMPS (barèmes "Revenu imposable & RFR") -----
+  if(error){showToast('Erreur de chargement (fiscalité)','error');return;}
+  currentRecordId=data.id;
+  document.getElementById('annee').value=data.annee;
+  document.getElementById('anneeRevenus').value=data.annee_revenus;
+  document.getElementById('seuil1').value=data.bareme_seuil_0;
+  document.getElementById('seuil2').value=data.bareme_seuil_11;
+  document.getElementById('seuil3').value=data.bareme_seuil_30;
+  document.getElementById('seuil4').value=data.bareme_seuil_41;
+  document.getElementById('decoteSeuilIndiv').value=data.decote_seuil_indiv;
+  document.getElementById('decoteForfIndiv').value=data.decote_forfait_indiv;
+  document.getElementById('decoteSeuilCouple').value=data.decote_seuil_couple;
+  document.getElementById('decoteForfCouple').value=data.decote_forfait_couple;
+  document.getElementById('decoteTaux').value=data.decote_taux;
+  document.getElementById('plafondQF').value=data.plafond_qf_demi;
+  document.getElementById('plafondQFQuart').value=data.plafond_qf_quart;
+  document.getElementById('plafondParentIsole').value=data.plafond_qf_parent_isole;
+  document.getElementById('plafondVeuf').value=data.plafond_qf_veuf;
+  document.getElementById('plafondInvalidite').value=data.plafond_qf_invalidite;
+  document.getElementById('abattementFP').value=data.abattement_fp_taux;
+  document.getElementById('plafondPension').value=data.plafond_pension_enfant_majeur;
   document.getElementById('abatSalTaux').value      = data.abat_sal_taux       ?? '';
   document.getElementById('abatSalPlancher').value  = data.abat_sal_plancher   ?? '';
   document.getElementById('abatSalPlafond').value   = data.abat_sal_plafond    ?? '';
@@ -974,169 +520,149 @@ async function chargerParametres() {
   document.getElementById('abatAgeSeuilHaut').value   = data.abat_age_seuil_haut   ?? '';
   document.getElementById('abatSource').value = data.abat_source ?? '';
   document.getElementById('abatMajLe').value  = data.abat_maj_le ? String(data.abat_maj_le).slice(0,10) : '';
-
-  // Date de mise à jour
-  if (data.updated_at) {
-    const d = new Date(data.updated_at);
-    document.getElementById('lastUpdateValue').textContent = 
-      d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-  }
+  if(data.updated_at) document.getElementById('lastUpdateValue').textContent = fmtDate(data.updated_at);
   updateAll();
 }
 
-// =======================================================
-// CALCULS DYNAMIQUES
-// =======================================================
-const inputs = document.querySelectorAll('input[type="number"]');
-inputs.forEach(input => input.addEventListener('input', updateAll));
-
-function updateAll() {
-  const v1 = parseInt(document.getElementById('seuil1').value) || 0;
-  const v2 = parseInt(document.getElementById('seuil2').value) || 0;
-  const v3 = parseInt(document.getElementById('seuil3').value) || 0;
-  const v4 = parseInt(document.getElementById('seuil4').value) || 0;
-  document.getElementById('seuil1b').value = v1 + 1;
-  document.getElementById('seuil2b').value = v2 + 1;
-  document.getElementById('seuil3b').value = v3 + 1;
-  document.getElementById('seuil4b').value = v4 + 1;
-
-  document.getElementById('afficheAnnee').textContent = document.getElementById('annee').value || '—';
-
-  const c = computeConstants();
-  document.getElementById('cst11').textContent = formatEur(c.cst11);
-  document.getElementById('cst30').textContent = formatEur(c.cst30);
-  document.getElementById('cst41').textContent = formatEur(c.cst41);
-  document.getElementById('cst45').textContent = formatEur(c.cst45);
+// ===================== FISCALITÉ : calculs dynamiques =====================
+document.querySelectorAll('#panel-fiscalite input[type="number"]').forEach(i=>i.addEventListener('input',updateAll));
+function updateAll(){
+  const v1=parseInt(document.getElementById('seuil1').value)||0;
+  const v2=parseInt(document.getElementById('seuil2').value)||0;
+  const v3=parseInt(document.getElementById('seuil3').value)||0;
+  const v4=parseInt(document.getElementById('seuil4').value)||0;
+  document.getElementById('seuil1b').value=v1+1;
+  document.getElementById('seuil2b').value=v2+1;
+  document.getElementById('seuil3b').value=v3+1;
+  document.getElementById('seuil4b').value=v4+1;
+  document.getElementById('afficheAnnee').textContent=document.getElementById('annee').value||'—';
+  const c=computeConstants();
+  document.getElementById('cst11').textContent=formatEur(c.cst11);
+  document.getElementById('cst30').textContent=formatEur(c.cst30);
+  document.getElementById('cst41').textContent=formatEur(c.cst41);
+  document.getElementById('cst45').textContent=formatEur(c.cst45);
 }
-
-function computeConstants() {
-  const s1 = parseInt(document.getElementById('seuil1').value) || 0;
-  const s2 = parseInt(document.getElementById('seuil2').value) || 0;
-  const s3 = parseInt(document.getElementById('seuil3').value) || 0;
-  const s4 = parseInt(document.getElementById('seuil4').value) || 0;
-  const cst11 = s1 * 0.11;
-  const impot_a_s2 = (s2 - s1) * 0.11;
-  const cst30 = s2 * 0.30 - impot_a_s2;
-  const impot_a_s3 = impot_a_s2 + (s3 - s2) * 0.30;
-  const cst41 = s3 * 0.41 - impot_a_s3;
-  const impot_a_s4 = impot_a_s3 + (s4 - s3) * 0.41;
-  const cst45 = s4 * 0.45 - impot_a_s4;
-  return { cst11, cst30, cst41, cst45 };
+function computeConstants(){
+  const s1=parseInt(document.getElementById('seuil1').value)||0;
+  const s2=parseInt(document.getElementById('seuil2').value)||0;
+  const s3=parseInt(document.getElementById('seuil3').value)||0;
+  const s4=parseInt(document.getElementById('seuil4').value)||0;
+  const cst11=s1*0.11;
+  const impot_a_s2=(s2-s1)*0.11;
+  const cst30=s2*0.30-impot_a_s2;
+  const impot_a_s3=impot_a_s2+(s3-s2)*0.30;
+  const cst41=s3*0.41-impot_a_s3;
+  const impot_a_s4=impot_a_s3+(s4-s3)*0.41;
+  const cst45=s4*0.45-impot_a_s4;
+  return {cst11,cst30,cst41,cst45};
 }
+function formatEur(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}
 
-function formatEur(n) {
-  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
-}
-
-// Helpers pour les nouveaux champs (vide → null en base, pour ne pas envoyer NaN)
-function numOrNull(id) {
-  const v = document.getElementById(id).value;
-  if (v === '' || v === null) return null;
-  const n = Number(v);
-  return isNaN(n) ? null : n;
-}
-function strOrNull(id) {
-  const v = document.getElementById(id).value;
-  return (v === '' || v === null) ? null : v;
-}
-
-// =======================================================
-// ENREGISTREMENT
-// =======================================================
-async function enregistrer() {
-  const btn = document.getElementById('btnSave');
-  btn.disabled = true;
-  btn.textContent = 'Enregistrement…';
-
-  const payload = {
-    annee: parseInt(document.getElementById('annee').value),
-    annee_revenus: parseInt(document.getElementById('anneeRevenus').value),
-    bareme_seuil_0: parseInt(document.getElementById('seuil1').value),
-    bareme_seuil_11: parseInt(document.getElementById('seuil2').value),
-    bareme_seuil_30: parseInt(document.getElementById('seuil3').value),
-    bareme_seuil_41: parseInt(document.getElementById('seuil4').value),
-    decote_seuil_indiv: parseInt(document.getElementById('decoteSeuilIndiv').value),
-    decote_forfait_indiv: parseInt(document.getElementById('decoteForfIndiv').value),
-    decote_seuil_couple: parseInt(document.getElementById('decoteSeuilCouple').value),
-    decote_forfait_couple: parseInt(document.getElementById('decoteForfCouple').value),
-    decote_taux: parseFloat(document.getElementById('decoteTaux').value),
-    plafond_qf_demi: parseInt(document.getElementById('plafondQF').value),
-    plafond_qf_quart: parseInt(document.getElementById('plafondQFQuart').value),
-    plafond_qf_parent_isole: parseInt(document.getElementById('plafondParentIsole').value),
-    plafond_qf_veuf: parseInt(document.getElementById('plafondVeuf').value),
-    plafond_qf_invalidite: parseInt(document.getElementById('plafondInvalidite').value),
-    abattement_fp_taux: parseFloat(document.getElementById('abattementFP').value),
-    plafond_pension_enfant_majeur: parseInt(document.getElementById('plafondPension').value),
-
-    // ----- NOUVEAUX CHAMPS -----
-    abat_sal_taux:        numOrNull('abatSalTaux'),
-    abat_sal_plancher:    numOrNull('abatSalPlancher'),
-    abat_sal_plafond:     numOrNull('abatSalPlafond'),
-    abat_pension_taux:    numOrNull('abatPensionTaux'),
+// ===================== FISCALITÉ : enregistrement =====================
+async function enregistrerFiscalite(){
+  const btn=document.getElementById('btnSaveFisc'); btn.disabled=true; btn.textContent='Enregistrement…';
+  const payload={
+    annee:parseInt(document.getElementById('annee').value),
+    annee_revenus:parseInt(document.getElementById('anneeRevenus').value),
+    bareme_seuil_0:parseInt(document.getElementById('seuil1').value),
+    bareme_seuil_11:parseInt(document.getElementById('seuil2').value),
+    bareme_seuil_30:parseInt(document.getElementById('seuil3').value),
+    bareme_seuil_41:parseInt(document.getElementById('seuil4').value),
+    decote_seuil_indiv:parseInt(document.getElementById('decoteSeuilIndiv').value),
+    decote_forfait_indiv:parseInt(document.getElementById('decoteForfIndiv').value),
+    decote_seuil_couple:parseInt(document.getElementById('decoteSeuilCouple').value),
+    decote_forfait_couple:parseInt(document.getElementById('decoteForfCouple').value),
+    decote_taux:parseFloat(document.getElementById('decoteTaux').value),
+    plafond_qf_demi:parseInt(document.getElementById('plafondQF').value),
+    plafond_qf_quart:parseInt(document.getElementById('plafondQFQuart').value),
+    plafond_qf_parent_isole:parseInt(document.getElementById('plafondParentIsole').value),
+    plafond_qf_veuf:parseInt(document.getElementById('plafondVeuf').value),
+    plafond_qf_invalidite:parseInt(document.getElementById('plafondInvalidite').value),
+    abattement_fp_taux:parseFloat(document.getElementById('abattementFP').value),
+    plafond_pension_enfant_majeur:parseInt(document.getElementById('plafondPension').value),
+    abat_sal_taux:numOrNull('abatSalTaux'),
+    abat_sal_plancher:numOrNull('abatSalPlancher'),
+    abat_sal_plafond:numOrNull('abatSalPlafond'),
+    abat_pension_taux:numOrNull('abatPensionTaux'),
     abat_pension_plancher:numOrNull('abatPensionPlancher'),
-    abat_pension_plafond: numOrNull('abatPensionPlafond'),
+    abat_pension_plafond:numOrNull('abatPensionPlafond'),
     abat_age_montant_haut:numOrNull('abatAgeMontantHaut'),
-    abat_age_montant_bas: numOrNull('abatAgeMontantBas'),
-    abat_age_seuil_bas:   numOrNull('abatAgeSeuilBas'),
-    abat_age_seuil_haut:  numOrNull('abatAgeSeuilHaut'),
-    abat_source:          strOrNull('abatSource'),
-    abat_maj_le:          strOrNull('abatMajLe'),
-
-    is_active: true
+    abat_age_montant_bas:numOrNull('abatAgeMontantBas'),
+    abat_age_seuil_bas:numOrNull('abatAgeSeuilBas'),
+    abat_age_seuil_haut:numOrNull('abatAgeSeuilHaut'),
+    abat_source:strOrNull('abatSource'),
+    abat_maj_le:strOrNull('abatMajLe'),
+    is_active:true
   };
-
-  // On a deux cas :
-  // - L'année saisie correspond à un enregistrement existant → UPDATE
-  // - L'année saisie est nouvelle → INSERT
-  // On regarde d'abord si une ligne existe pour cette année
-  const { data: existing } = await db
-    .from('parametres_fiscaux')
-    .select('id')
-    .eq('annee', payload.annee)
-    .maybeSingle();
-
+  const {data:existing}=await db.from('parametres_fiscaux').select('id').eq('annee',payload.annee).maybeSingle();
   let result;
-  if (existing) {
-    result = await db
-      .from('parametres_fiscaux')
-      .update(payload)
-      .eq('id', existing.id)
-      .select()
-      .single();
-  } else {
-    result = await db
-      .from('parametres_fiscaux')
-      .insert(payload)
-      .select()
-      .single();
-  }
-
-  btn.disabled = false;
-  btn.innerHTML = '💾 Enregistrer les paramètres';
-
-  if (result.error) {
-    showToast('Erreur : ' + result.error.message, 'error');
-    return;
-  }
-  currentRecordId = result.data.id;
-  if (result.data.updated_at) {
-    const d = new Date(result.data.updated_at);
-    document.getElementById('lastUpdateValue').textContent = 
-      d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-  }
-  showToast('Paramètres enregistrés ✓');
+  if(existing){ result=await db.from('parametres_fiscaux').update(payload).eq('id',existing.id).select().single(); }
+  else{ result=await db.from('parametres_fiscaux').insert(payload).select().single(); }
+  btn.disabled=false; btn.innerHTML='💾 Enregistrer la fiscalité';
+  if(result.error){showToast('Erreur : '+result.error.message,'error');return;}
+  currentRecordId=result.data.id;
+  if(result.data.updated_at) document.getElementById('lastUpdateValue').textContent=fmtDate(result.data.updated_at);
+  showToast('Fiscalité enregistrée ✓');
 }
 
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast ' + type, 2800);
+// ===================== RETRAITE : chargement =====================
+async function chargerRetraite(){
+  let maj=null;
+  const pass=await db.from('pass_annuel').select('annee,montant_eur,updated_at').order('annee',{ascending:false});
+  if(!pass.error && pass.data){
+    passData={}; pass.data.forEach(r=>passData[r.annee]=Number(r.montant_eur));
+    pass.data.forEach(r=>{if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at});
+  }
+  renderPass();
+  const par=await db.from('parametres_parcours').select('cle,valeur,updated_at');
+  if(par.error){showToast('Erreur de chargement (retraite)','error');return;}
+  const m={}; par.data.forEach(r=>{m[r.cle]=Number(r.valeur); if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at});
+  document.getElementById('smic').value        = m.smic_mensuel_brut ?? '';
+  document.getElementById('coeff').value       = m.coeff_net_vers_brut ?? '';
+  document.getElementById('dureeAnnees').value = m.duree_cotisation_annees ?? '';
+  document.getElementById('dureeTrim').value   = m.duree_cotisation_trimestres ?? '';
+  if(maj) document.getElementById('lastUpdateRetraite').textContent = fmtDate(maj);
+}
+function renderPass(){
+  const annees=Object.keys(passData).map(Number).sort((a,b)=>b-a);
+  document.getElementById('passList').innerHTML = annees.map(a=>`
+    <div class="pass-row"><span class="yr">PASS ${a}</span>
+      <input type="number" min="0" step="1" value="${passData[a]}" data-year="${a}">
+      <button class="del" type="button" title="Retirer" onclick="retirerAnnee(${a})">✕</button></div>`).join('')
+    || '<p style="color:var(--text-muted);font-size:13px">Aucune valeur — ajoutez une année ci-dessous.</p>';
+  document.querySelectorAll('#passList input').forEach(inp=>{
+    inp.addEventListener('input',e=>{passData[Number(e.target.dataset.year)]=Number(e.target.value)||0});
+  });
+}
+function ajouterAnnee(){
+  const y=parseInt(document.getElementById('newYear').value), a=parseFloat(document.getElementById('newAmount').value);
+  if(!y||isNaN(a)){showToast('Renseignez une année et un montant valides','error');return;}
+  passData[y]=a; document.getElementById('newYear').value=''; document.getElementById('newAmount').value=''; renderPass();
+}
+function retirerAnnee(y){delete passData[y]; renderPass();}
+
+// ===================== RETRAITE : enregistrement =====================
+async function enregistrerRetraite(){
+  const btn=document.getElementById('btnSaveRetraite'); btn.disabled=true; btn.textContent='Enregistrement…';
+  const now=new Date().toISOString();
+  try{
+    const params=[
+      {cle:'smic_mensuel_brut',valeur:numOrNull('smic'),unite:'€',libelle:'SMIC mensuel brut',updated_at:now},
+      {cle:'coeff_net_vers_brut',valeur:numOrNull('coeff'),unite:'',libelle:'Coefficient net vers brut',updated_at:now},
+      {cle:'duree_cotisation_annees',valeur:numOrNull('dureeAnnees'),unite:'ans',libelle:'Durée de cotisation par défaut',updated_at:now},
+      {cle:'duree_cotisation_trimestres',valeur:numOrNull('dureeTrim'),unite:'trimestres',libelle:'Durée de cotisation par défaut',updated_at:now},
+    ].filter(p=>p.valeur!==null);
+    const r1=await db.from('parametres_parcours').upsert(params,{onConflict:'cle'});
+    if(r1.error) throw r1.error;
+    const passRows=Object.keys(passData).map(Number).map(a=>({annee:a,montant_eur:Math.round(passData[a]),updated_at:now}));
+    if(passRows.length){ const r2=await db.from('pass_annuel').upsert(passRows,{onConflict:'annee'}); if(r2.error) throw r2.error; }
+    document.getElementById('lastUpdateRetraite').textContent=fmtDate(now);
+    showToast('Retraite enregistrée ✓');
+  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la retraite'; }
 }
 
-// =======================================================
-// INIT
-// =======================================================
+// ===================== INIT =====================
 checkSession();
 </script>
 </body>

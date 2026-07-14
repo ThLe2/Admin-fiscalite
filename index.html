@@ -154,6 +154,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .loader-spinner{width:42px;height:42px;border:3px solid var(--bg-soft);border-top-color:var(--tmk-prune);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-text{font-size:13px;color:var(--text-muted)}
+.dr-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.dr-table th{background:var(--bg-soft);color:var(--tmk-prune-dark);font-weight:600;padding:8px 6px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);}
+.dr-table td{padding:4px 5px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.dr-table td.num{text-align:center;color:var(--text-muted);font-weight:600;}
+.dr-table input{width:100%;padding:6px 7px;border:1px solid var(--border);border-radius:5px;font-family:inherit;font-size:12.5px;background:#fff;color:var(--text);}
+.dr-table input:focus{outline:none;border-color:var(--tmk-prune);box-shadow:0 0 0 2px rgba(140,30,112,.1);}
+.dr-table input.mini{text-align:center;font-variant-numeric:tabular-nums;}
+.dr-table .del{background:transparent;border:none;color:var(--tmk-prune-light);cursor:pointer;font-size:16px;padding:2px 4px;}
 .footer-info{text-align:center;margin-top:32px;padding:18px;font-size:11px;color:var(--text-muted)}
 .footer-info strong{color:var(--tmk-prune);font-weight:600}
 </style>
@@ -201,6 +209,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   <div class="tabs">
     <button class="tab active" data-tab="fiscalite" onclick="switchTab('fiscalite')">Fiscalité</button>
     <button class="tab" data-tab="retraite" onclick="switchTab('retraite')">Retraite</button>
+    <button class="tab" data-tab="duree-ref" onclick="switchTab('duree-ref')">Durée de réf.</button>
     <button class="tab" data-tab="sante" onclick="switchTab('sante')">Santé <span class="soon">à venir</span></button>
     <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance <span class="soon">à venir</span></button>
   </div>
@@ -404,6 +413,39 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     </div>
   </div>
 
+  <!-- ============ PANEL DURÉE DE RÉFÉRENCE ============ -->
+  <div class="panel" id="panel-duree-ref">
+    <div class="card">
+      <div class="card-header"><div class="card-num">1</div><div>
+        <div class="card-title">Durée de référence par génération</div>
+        <div class="card-subtitle">Régime général. Âge légal, durée requise (trimestres) et source. « Réf. 2023 » = valeur « au lieu de » (laisser vide si inchangé).</div></div></div>
+      <div style="overflow-x:auto;">
+        <table class="dr-table">
+          <thead><tr>
+            <th style="width:36px;">#</th>
+            <th style="min-width:150px;">Génération</th>
+            <th>Âge légal</th>
+            <th>Âge réf. 2023</th>
+            <th style="width:70px;">Trim.</th>
+            <th style="width:80px;">Trim. réf.</th>
+            <th>Âge taux plein</th>
+            <th style="min-width:180px;">Source</th>
+            <th style="width:34px;"></th>
+          </tr></thead>
+          <tbody id="dureeRefBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;">
+        <button class="btn btn-ghost" type="button" style="width:auto;" onclick="ajouterLigneDuree()">+ Ajouter une génération</button>
+      </div>
+      <div class="note">La <strong>source</strong> de chaque ligne évite les interprétations : renseignez la référence officielle (ex. « Circulaire Cnav 2026-07, annexe 1 »). Ces valeurs sont lues en direct par le tableau et les supports stagiaires.</div>
+    </div>
+    <div class="actionbar">
+      <div class="lastup">Dernière mise à jour : <strong id="lastUpdateDuree">—</strong></div>
+      <button class="btn btn-primary" id="btnSaveDuree" onclick="enregistrerDureeRef()">💾 Enregistrer la durée de référence</button>
+    </div>
+  </div>
+
   <!-- ============ PANEL SANTÉ ============ -->
   <div class="panel" id="panel-sante">
     <div class="placeholder">
@@ -481,6 +523,7 @@ async function initApp(user){
   document.getElementById('userEmail').textContent=user.email;
   await chargerFiscalite();
   await chargerRetraite();
+  await chargerDureeRef();
 }
 
 // ===================== FISCALITÉ : chargement =====================
@@ -660,6 +703,78 @@ async function enregistrerRetraite(){
     showToast('Retraite enregistrée ✓');
   }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
   finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la retraite'; }
+}
+
+// ===================== DURÉE DE RÉFÉRENCE =====================
+let dureeRows = [];
+let dureeOriginalIds = new Set();
+const SOURCE_DEFAUT = "Circulaire Cnav 2026-07 du 05/03/2026, annexe 1";
+
+async function chargerDureeRef(){
+  const {data,error}=await db.from('duree_reference').select('*').order('id',{ascending:true});
+  if(error){showToast('Erreur de chargement (durée de référence)','error');return;}
+  dureeRows = (data||[]).map(r=>({...r}));
+  dureeOriginalIds = new Set(dureeRows.map(r=>r.id));
+  let maj=null; (data||[]).forEach(r=>{if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at;});
+  if(maj) document.getElementById('lastUpdateDuree').textContent = fmtDate(maj);
+  renderDureeRef();
+}
+
+function esc(v){ return (v===null||v===undefined)?'':String(v).replace(/"/g,'&quot;'); }
+function renderDureeRef(){
+  const body=document.getElementById('dureeRefBody');
+  body.innerHTML = dureeRows.map((r,i)=>`
+    <tr>
+      <td class="num">${r.id}</td>
+      <td><input value="${esc(r.generation)}" data-i="${i}" data-f="generation"></td>
+      <td><input value="${esc(r.age_legal)}" data-i="${i}" data-f="age_legal"></td>
+      <td><input value="${esc(r.age_legal_ref)}" data-i="${i}" data-f="age_legal_ref" placeholder="—"></td>
+      <td><input class="mini" type="number" value="${esc(r.trimestres)}" data-i="${i}" data-f="trimestres"></td>
+      <td><input class="mini" type="number" value="${esc(r.trimestres_ref)}" data-i="${i}" data-f="trimestres_ref" placeholder="—"></td>
+      <td><input value="${esc(r.age_taux_plein)}" data-i="${i}" data-f="age_taux_plein"></td>
+      <td><input value="${esc(r.source)}" data-i="${i}" data-f="source"></td>
+      <td><button class="del" type="button" title="Supprimer" onclick="supprimerLigneDuree(${i})">✕</button></td>
+    </tr>`).join('');
+  body.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input',e=>{
+      const i=+e.target.dataset.i, f=e.target.dataset.f; let v=e.target.value;
+      if(f==='trimestres'||f==='trimestres_ref') v = (v===''?null:Number(v));
+      else if(f==='age_legal_ref') v = (v===''?null:v);
+      dureeRows[i][f]=v;
+    });
+  });
+}
+function ajouterLigneDuree(){
+  const maxId = dureeRows.reduce((m,r)=>Math.max(m,Number(r.id)||0),0);
+  dureeRows.push({id:maxId+1,generation:'',age_legal:'',age_legal_ref:null,trimestres:0,trimestres_ref:null,age_taux_plein:'67 ans',source:SOURCE_DEFAUT});
+  renderDureeRef();
+}
+function supprimerLigneDuree(i){ dureeRows.splice(i,1); renderDureeRef(); }
+
+async function enregistrerDureeRef(){
+  const btn=document.getElementById('btnSaveDuree'); btn.disabled=true; btn.textContent='Enregistrement…';
+  const now=new Date().toISOString();
+  try{
+    const rows = dureeRows
+      .filter(r=>r.generation && r.generation.trim()!=='')
+      .map(r=>({
+        id:Number(r.id), generation:r.generation, age_legal:r.age_legal,
+        age_legal_ref:(r.age_legal_ref===''?null:r.age_legal_ref),
+        trimestres:Number(r.trimestres)||0,
+        trimestres_ref:(r.trimestres_ref===''||r.trimestres_ref===null||r.trimestres_ref===undefined)?null:Number(r.trimestres_ref),
+        age_taux_plein:r.age_taux_plein||'67 ans', source:r.source||SOURCE_DEFAUT, updated_at:now
+      }));
+    const r1=await db.from('duree_reference').upsert(rows,{onConflict:'id'});
+    if(r1.error) throw r1.error;
+    // supprimer les lignes retirées
+    const currentIds=new Set(rows.map(r=>r.id));
+    const toDelete=[...dureeOriginalIds].filter(id=>!currentIds.has(id));
+    if(toDelete.length){ const r2=await db.from('duree_reference').delete().in('id',toDelete); if(r2.error) throw r2.error; }
+    dureeOriginalIds=new Set(rows.map(r=>r.id));
+    document.getElementById('lastUpdateDuree').textContent=fmtDate(now);
+    showToast('Durée de référence enregistrée ✓');
+  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la durée de référence'; }
 }
 
 // ===================== INIT =====================

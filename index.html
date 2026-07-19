@@ -502,6 +502,13 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
     <div class="card">
       <div class="card-header"><div class="card-num">7</div><div>
+        <div class="card-title">Dépendance</div>
+        <div class="card-subtitle">Plafonds APA par GIR, seuil, âge et APA d'urgence.</div></div></div>
+      <div id="prevGroup-dep"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">8</div><div>
         <div class="card-title">Traçabilité</div>
         <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div></div></div>
       <div class="form-row">
@@ -887,10 +894,18 @@ const PREVOYANCE_PARAMS = [
   {cle:'at_rente_orphelin_double', label:'Rente AT/MP orphelin (double)',  unite:'',       group:'dec'},
   {cle:'pension_orphelin_taux',    label:'Pension orphelin : taux',        unite:'',       group:'dec'},
   {cle:'pension_orphelin_plancher',label:'Pension orphelin : plancher',    unite:'€',      group:'dec'},
+  // Dépendance
+  {cle:'apa_plafond_gir1',         label:'APA plafond GIR 1',              unite:'€',      group:'dep'},
+  {cle:'apa_plafond_gir2',         label:'APA plafond GIR 2',              unite:'€',      group:'dep'},
+  {cle:'apa_plafond_gir3',         label:'APA plafond GIR 3',              unite:'€',      group:'dep'},
+  {cle:'apa_plafond_gir4',         label:'APA plafond GIR 4',              unite:'€',      group:'dep'},
+  {cle:'apa_seuil_versement',      label:'APA seuil de non-versement',     unite:'€',      group:'dep'},
+  {cle:'apa_age_min',              label:'APA âge minimal',                unite:'ans',    group:'dep'},
+  {cle:'apa_urgence_coef',         label:'APA urgence (× plafond GIR 1)',  unite:'',       group:'dep'},
 ];
 
 function renderPrevoyanceFields(){
-  const groups={ref:[],mal:[],mens:[],at:[],inv:[],dec:[]};
+  const groups={ref:[],mal:[],mens:[],at:[],inv:[],dec:[],dep:[]};
   PREVOYANCE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
   Object.keys(groups).forEach(g=>{
     const cont=document.getElementById('prevGroup-'+g); if(!cont) return;

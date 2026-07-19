@@ -211,7 +211,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <button class="tab" data-tab="retraite" onclick="switchTab('retraite')">Retraite</button>
     <button class="tab" data-tab="duree-ref" onclick="switchTab('duree-ref')">Durée de réf.</button>
     <button class="tab" data-tab="sante" onclick="switchTab('sante')">Santé <span class="soon">à venir</span></button>
-    <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance <span class="soon">à venir</span></button>
+    <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance</button>
   </div>
 
   <!-- ============ PANEL FISCALITÉ ============ -->
@@ -458,11 +458,49 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
   <!-- ============ PANEL PRÉVOYANCE ============ -->
   <div class="panel" id="panel-prevoyance">
-    <div class="placeholder">
-      <div class="ic">🛡️</div>
-      <h3>Module Prévoyance — en préparation</h3>
-      <p>Cet onglet accueillera les paramètres du module prévoyance (capitaux décès, rentes, franchises, taux de cotisation, plafonds…).</p>
-      <p>Table Supabase pressentie : <code>parametres_prevoyance</code>, sur le même modèle clé/valeur.</p>
+    <div class="card">
+      <div class="card-header"><div class="card-num">1</div><div>
+        <div class="card-title">Références générales</div>
+        <div class="card-subtitle">SMIC et plafonds de la Sécurité sociale — bases communes aux calculs.</div></div></div>
+      <div id="prevGroup-ref"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">2</div><div>
+        <div class="card-title">IJ maladie (vie normale)</div>
+        <div class="card-subtitle">Taux, diviseur, plafonds et carence de l'indemnité journalière maladie.</div></div></div>
+      <div id="prevGroup-mal"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">3</div><div>
+        <div class="card-title">Loi de mensualisation</div>
+        <div class="card-subtitle">Taux du complément employeur, carences et ancienneté minimale.</div></div></div>
+      <div id="prevGroup-mens"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">4</div><div>
+        <div class="card-title">IJ accident du travail / MP</div>
+        <div class="card-subtitle">Taux, diviseur, plafonds et gain journalier net de l'IJ AT/MP.</div></div></div>
+      <div id="prevGroup-at"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">5</div><div>
+        <div class="card-title">Traçabilité</div>
+        <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div></div></div>
+      <div class="form-row">
+        <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="prevDateEffet"></div>
+        <div class="form-field"><label>&nbsp;</label>
+          <div class="note" style="margin:0">Si renseignée, cette date est écrite sur tous les paramètres enregistrés (sert au bandeau « à jour au… » des supports). Laisser vide pour ne pas y toucher.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actionbar">
+      <div class="lastup">Dernière mise à jour : <strong id="lastUpdatePrevoyance">—</strong></div>
+      <button class="btn btn-primary" id="btnSavePrevoyance" onclick="enregistrerPrevoyance()">💾 Enregistrer la prévoyance</button>
     </div>
   </div>
 
@@ -524,6 +562,7 @@ async function initApp(user){
   await chargerFiscalite();
   await chargerRetraite();
   await chargerDureeRef();
+  await chargerPrevoyance();
 }
 
 // ===================== FISCALITÉ : chargement =====================
@@ -777,7 +816,95 @@ async function enregistrerDureeRef(){
   finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la durée de référence'; }
 }
 
+// ===================== PRÉVOYANCE =====================
+const PREVOYANCE_PARAMS = [
+  // Références générales
+  {cle:'smic_horaire',            label:'SMIC horaire brut',              unite:'€',      group:'ref'},
+  {cle:'smic_mensuel',            label:'SMIC mensuel brut (35 h)',       unite:'€',      group:'ref'},
+  {cle:'pmss',                    label:'Plafond mensuel Sécu (PMSS)',    unite:'€',      group:'ref'},
+  {cle:'pass',                    label:'Plafond annuel Sécu (PASS)',     unite:'€',      group:'ref'},
+  // IJ maladie
+  {cle:'ij_mal_taux',             label:'Taux IJ (× SJB)',                unite:'',       group:'mal'},
+  {cle:'ij_mal_diviseur',         label:'Diviseur SJB (3 mois)',          unite:'',       group:'mal'},
+  {cle:'ij_mal_coef_plafond',     label:'Plafond salaire retenu',         unite:'× SMIC', group:'mal'},
+  {cle:'ij_mal_plafond_salaire',  label:'Salaire mensuel plafonné',       unite:'€',      group:'mal'},
+  {cle:'ij_mal_montant_max',      label:'IJ journalière max',             unite:'€',      group:'mal'},
+  {cle:'ij_mal_carence',          label:'Carence Sécu',                   unite:'jours',  group:'mal'},
+  {cle:'ij_mal_duree_max',        label:'Durée max (sur 3 ans)',          unite:'jours',  group:'mal'},
+  // Mensualisation
+  {cle:'mens_taux1',              label:'Taux 1re période',               unite:'',       group:'mens'},
+  {cle:'mens_taux2',              label:'Taux 2e période',                unite:'',       group:'mens'},
+  {cle:'mens_carence_maladie',    label:'Carence maladie',                unite:'jours',  group:'mens'},
+  {cle:'mens_carence_atmp',       label:'Carence AT/MP',                  unite:'jours',  group:'mens'},
+  {cle:'mens_anciennete_min',     label:'Ancienneté minimale',            unite:'ans',    group:'mens'},
+  // IJ AT/MP
+  {cle:'at_taux1',                label:'Taux j.1–28',                    unite:'',       group:'at'},
+  {cle:'at_taux2',                label:'Taux dès j.29',                  unite:'',       group:'at'},
+  {cle:'at_diviseur_sjr',         label:'Diviseur SJR',                   unite:'',       group:'at'},
+  {cle:'at_sjr_plafond',          label:'SJR plafonné',                   unite:'€',      group:'at'},
+  {cle:'at_coef_gain_net',        label:'Coef gain journalier net',       unite:'',       group:'at'},
+  {cle:'at_ij_max_1_28',          label:'IJ max j.1–28',                  unite:'€',      group:'at'},
+  {cle:'at_ij_max_29',            label:'IJ max dès j.29',                unite:'€',      group:'at'},
+  {cle:'at_carence',              label:'Carence Sécu',                   unite:'jours',  group:'at'},
+];
+
+function renderPrevoyanceFields(){
+  const groups={ref:[],mal:[],mens:[],at:[]};
+  PREVOYANCE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
+  Object.keys(groups).forEach(g=>{
+    const cont=document.getElementById('prevGroup-'+g); if(!cont) return;
+    const items=groups[g]; let html='';
+    for(let i=0;i<items.length;i+=2){
+      html+='<div class="form-row">';
+      for(let j=i;j<Math.min(i+2,items.length);j++){
+        const p=items[j];
+        const step = p.unite==='€' ? '0.01' : (p.unite==='jours'||p.unite==='ans') ? '1' : '0.0001';
+        const u = p.unite ? ' ('+p.unite+')' : '';
+        html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${step}" id="prev_${p.cle}"></div>`;
+      }
+      html+='</div>';
+    }
+    cont.innerHTML=html;
+  });
+}
+
+async function chargerPrevoyance(){
+  const {data,error}=await db.from('parametres_prevoyance').select('cle,valeur,date_effet,updated_at');
+  if(error){
+    showToast('Table prévoyance introuvable — lancez parametres_prevoyance.sql','error');
+    return;
+  }
+  let maj=null, eff=null;
+  data.forEach(r=>{
+    const el=document.getElementById('prev_'+r.cle);
+    if(el) el.value = r.valeur;
+    if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
+    if(r.date_effet && (!eff || r.date_effet>eff)) eff=r.date_effet;
+  });
+  if(maj) document.getElementById('lastUpdatePrevoyance').textContent = fmtDate(maj);
+  if(eff) document.getElementById('prevDateEffet').value = String(eff).slice(0,10);
+}
+
+async function enregistrerPrevoyance(){
+  const btn=document.getElementById('btnSavePrevoyance'); btn.disabled=true; btn.textContent='Enregistrement…';
+  const now=new Date().toISOString();
+  try{
+    const params=PREVOYANCE_PARAMS.map(p=>({
+      cle:p.cle, valeur:numOrNull('prev_'+p.cle), unite:p.unite, libelle:p.label, updated_at:now
+    })).filter(p=>p.valeur!==null);
+    const dateEffet=strOrNull('prevDateEffet');
+    if(dateEffet) params.forEach(p=>p.date_effet=dateEffet);
+    if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
+    const r=await db.from('parametres_prevoyance').upsert(params,{onConflict:'cle'});
+    if(r.error) throw r.error;
+    document.getElementById('lastUpdatePrevoyance').textContent=fmtDate(now);
+    showToast('Prévoyance enregistrée ✓');
+  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la prévoyance'; }
+}
+
 // ===================== INIT =====================
+renderPrevoyanceFields();
 checkSession();
 </script>
 </body>

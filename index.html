@@ -495,6 +495,13 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
     <div class="card">
       <div class="card-header"><div class="card-num">6</div><div>
+        <div class="card-title">Décès</div>
+        <div class="card-subtitle">Capital décès, veuvage, réversion et rentes AT/MP.</div></div></div>
+      <div id="prevGroup-dec"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">7</div><div>
         <div class="card-title">Traçabilité</div>
         <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div></div></div>
       <div class="form-row">
@@ -864,10 +871,26 @@ const PREVOYANCE_PARAMS = [
   {cle:'inv_mtp_taux',            label:'MTP (% de la pension)',          unite:'',       group:'inv'},
   {cle:'inv_cat3_min',            label:'Pension min cat. 3 (MTP incl.)', unite:'€',      group:'inv'},
   {cle:'inv_cat3_max',            label:'Pension max cat. 3 (MTP incl.)', unite:'€',      group:'inv'},
+  // Décès
+  {cle:'deces_capital_forfait',    label:'Capital décès forfaitaire',      unite:'€',      group:'dec'},
+  {cle:'veuvage_montant',          label:'Allocation veuvage (max/mois)',  unite:'€',      group:'dec'},
+  {cle:'veuvage_plafond',          label:'Veuvage : plafond ressources',   unite:'€',      group:'dec'},
+  {cle:'veuvage_age_max',          label:'Veuvage : âge max',              unite:'ans',    group:'dec'},
+  {cle:'veuvage_duree_max',        label:'Veuvage : durée max',            unite:'mois',   group:'dec'},
+  {cle:'reversion_taux',           label:'Réversion : taux',               unite:'',       group:'dec'},
+  {cle:'reversion_age_min',        label:'Réversion : âge minimal',        unite:'ans',    group:'dec'},
+  {cle:'reversion_plafond_seul',   label:'Réversion : plafond (seul)',     unite:'€',      group:'dec'},
+  {cle:'reversion_plafond_couple', label:'Réversion : plafond (couple)',   unite:'€',      group:'dec'},
+  {cle:'at_rente_conjoint',        label:'Rente AT/MP conjoint',           unite:'',       group:'dec'},
+  {cle:'at_rente_orphelin',        label:'Rente AT/MP orphelin (1er/2e)',  unite:'',       group:'dec'},
+  {cle:'at_rente_orphelin_sup',    label:'Rente AT/MP orphelin (3e+)',     unite:'',       group:'dec'},
+  {cle:'at_rente_orphelin_double', label:'Rente AT/MP orphelin (double)',  unite:'',       group:'dec'},
+  {cle:'pension_orphelin_taux',    label:'Pension orphelin : taux',        unite:'',       group:'dec'},
+  {cle:'pension_orphelin_plancher',label:'Pension orphelin : plancher',    unite:'€',      group:'dec'},
 ];
 
 function renderPrevoyanceFields(){
-  const groups={ref:[],mal:[],mens:[],at:[],inv:[]};
+  const groups={ref:[],mal:[],mens:[],at:[],inv:[],dec:[]};
   PREVOYANCE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
   Object.keys(groups).forEach(g=>{
     const cont=document.getElementById('prevGroup-'+g); if(!cont) return;
@@ -876,7 +899,7 @@ function renderPrevoyanceFields(){
       html+='<div class="form-row">';
       for(let j=i;j<Math.min(i+2,items.length);j++){
         const p=items[j];
-        const step = p.unite==='€' ? '0.01' : (p.unite==='jours'||p.unite==='ans'||p.unite==='années') ? '1' : '0.0001';
+        const step = p.unite==='€' ? '0.01' : (p.unite==='jours'||p.unite==='ans'||p.unite==='années'||p.unite==='mois') ? '1' : '0.0001';
         const u = p.unite ? ' ('+p.unite+')' : '';
         html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${step}" id="prev_${p.cle}"></div>`;
       }

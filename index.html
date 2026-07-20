@@ -1025,9 +1025,13 @@ const TNS_PARAMS=[
   // Prestations
   {cle:'tns_presta_ij_max',        label:'IJ maladie max / jour',              unite:'€', group:'presta'},
   {cle:'tns_presta_ij_seuil_zero', label:'IJ = 0 si revenu moyen <',           unite:'€', group:'presta'},
-  {cle:'tns_presta_inv_taux',      label:'Invalidité totale (% du revenu moyen)', unite:'%', group:'presta'},
-  {cle:'tns_presta_inv_totale_min',   label:'Invalidité totale : min mensuel',    unite:'€', group:'presta'},
-  {cle:'tns_presta_inv_partielle_min',label:'Incapacité partielle : min mensuel', unite:'€', group:'presta'},
+  {cle:'tns_presta_inv_partielle_taux',label:'Invalidité partielle PIPM (% du revenu)', unite:'%', group:'presta'},
+  {cle:'tns_presta_inv_partielle_min',label:'PIPM : min mensuel',                unite:'€', group:'presta'},
+  {cle:'tns_presta_inv_partielle_max',label:'PIPM : max mensuel',                unite:'€', group:'presta'},
+  {cle:'tns_presta_inv_taux',      label:'Invalidité totale PITD (% du revenu)', unite:'%', group:'presta'},
+  {cle:'tns_presta_inv_totale_min',   label:'PITD : min mensuel',                unite:'€', group:'presta'},
+  {cle:'tns_presta_inv_totale_max',   label:'PITD : max mensuel',                unite:'€', group:'presta'},
+  {cle:'tns_presta_inv_mtp',       label:'Majoration tierce personne (MTP)',   unite:'€', group:'presta'},
   {cle:'tns_presta_deces_actif',   label:'Capital décès (actif)',              unite:'€', group:'presta'},
   {cle:'tns_presta_deces_retraite',label:'Capital décès (retraité)',           unite:'€', group:'presta'},
 ];

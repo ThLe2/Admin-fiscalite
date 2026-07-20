@@ -212,6 +212,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <button class="tab" data-tab="duree-ref" onclick="switchTab('duree-ref')">Durée de réf.</button>
     <button class="tab" data-tab="sante" onclick="switchTab('sante')">Santé <span class="soon">à venir</span></button>
     <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance</button>
+    <button class="tab" data-tab="tns" onclick="switchTab('tns')">TNS</button>
   </div>
 
   <!-- ============ PANEL FISCALITÉ ============ -->
@@ -525,6 +526,47 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     </div>
   </div>
 
+  <!-- ============ PANEL TNS ============ -->
+  <div class="panel" id="panel-tns">
+    <div class="card">
+      <div class="card-header"><div class="card-num">1</div><div>
+        <div class="card-title">Plafonds (PASS)</div>
+        <div class="card-subtitle">Plafond annuel de la Sécurité sociale de l'année et de l'année précédente (rappel).</div></div></div>
+      <div id="tnsGroup-pass"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">2</div><div>
+        <div class="card-title">Cotisations</div>
+        <div class="card-subtitle">Taux des branches (barème SSI) + minimum retraite et forfaits CFP. Taux en %.</div></div></div>
+      <div id="tnsGroup-cot"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">3</div><div>
+        <div class="card-title">Prestations du régime obligatoire</div>
+        <div class="card-subtitle">IJ maladie, pensions d'invalidité et capital décès (barème SSI).</div></div></div>
+      <div id="tnsGroup-presta"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">4</div><div>
+        <div class="card-title">Traçabilité</div>
+        <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div></div></div>
+      <div class="form-row">
+        <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="tnsDateEffet"></div>
+        <div class="form-field"><label>&nbsp;</label>
+          <div class="note" style="margin:0">Si renseignée, cette date est écrite sur <strong>tous</strong> les paramètres enregistrés. Laisser vide pour conserver les dates existantes — utile pour préserver le PASS N-1.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actionbar">
+      <div class="lastup">Dernière mise à jour : <strong id="lastUpdateTns">—</strong></div>
+      <button class="btn btn-primary" id="btnSaveTns" onclick="enregistrerTns()">💾 Enregistrer les TNS</button>
+    </div>
+  </div>
+
   <div class="footer-info"><strong>TMK Performances</strong> · Paramètres des formations · Espace formateur</div>
 </div>
 
@@ -584,6 +626,7 @@ async function initApp(user){
   await chargerRetraite();
   await chargerDureeRef();
   await chargerPrevoyance();
+  await chargerTns();
 }
 
 // ===================== FISCALITÉ : chargement =====================
@@ -959,8 +1002,92 @@ async function enregistrerPrevoyance(){
   finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la prévoyance'; }
 }
 
+// ===================== TNS (parametres_tns) =====================
+const TNS_PARAMS=[
+  // Plafonds (PASS)
+  {cle:'tns_pass',                 label:'PASS (année en cours)',              unite:'€', group:'pass'},
+  {cle:'tns_pass_n1',              label:'PASS (année N-1)',                   unite:'€', group:'pass'},
+  // Cotisations
+  {cle:'tns_ij_taux',              label:'Indemnités journalières (≤ 5 PASS)', unite:'%', group:'cot'},
+  {cle:'tns_invdeces_taux',        label:'Invalidité-décès (≤ 1 PASS)',        unite:'%', group:'cot'},
+  {cle:'tns_retraite_base_t1',     label:'Retraite de base (≤ 1 PASS)',        unite:'%', group:'cot'},
+  {cle:'tns_retraite_base_t2',     label:'Retraite de base (au-delà 1 PASS)',  unite:'%', group:'cot'},
+  {cle:'tns_retraite_comp_t1',     label:'Retraite comp. (≤ 1 PASS)',          unite:'%', group:'cot'},
+  {cle:'tns_retraite_comp_t2',     label:'Retraite comp. (1 à 4 PASS)',        unite:'%', group:'cot'},
+  {cle:'tns_maladie1_taux_max',    label:'Maladie-maternité (taux max)',       unite:'%', group:'cot'},
+  {cle:'tns_maladie1_taux_sup3',   label:'Maladie (au-delà 3 PASS)',           unite:'%', group:'cot'},
+  {cle:'tns_allocfam_taux_max',    label:'Allocations familiales (taux max)',  unite:'%', group:'cot'},
+  {cle:'tns_csg_taux',             label:'CSG',                                unite:'%', group:'cot'},
+  {cle:'tns_crds_taux',            label:'CRDS',                               unite:'%', group:'cot'},
+  {cle:'tns_retraite_min_assiette',label:'Minimum retraite (assiette)',        unite:'€', group:'cot'},
+  {cle:'tns_cfp_artisan',          label:'CFP artisan (forfait)',              unite:'€', group:'cot'},
+  {cle:'tns_cfp_commercant',       label:'CFP commerçant / PL (forfait)',      unite:'€', group:'cot'},
+  // Prestations
+  {cle:'tns_presta_ij_max',        label:'IJ maladie max / jour',              unite:'€', group:'presta'},
+  {cle:'tns_presta_ij_seuil_zero', label:'IJ = 0 si revenu moyen <',           unite:'€', group:'presta'},
+  {cle:'tns_presta_inv_taux',      label:'Invalidité totale (% du revenu moyen)', unite:'%', group:'presta'},
+  {cle:'tns_presta_inv_totale_min',   label:'Invalidité totale : min mensuel',    unite:'€', group:'presta'},
+  {cle:'tns_presta_inv_partielle_min',label:'Incapacité partielle : min mensuel', unite:'€', group:'presta'},
+  {cle:'tns_presta_deces_actif',   label:'Capital décès (actif)',              unite:'€', group:'presta'},
+  {cle:'tns_presta_deces_retraite',label:'Capital décès (retraité)',           unite:'€', group:'presta'},
+];
+
+function renderTnsFields(){
+  const groups={pass:[],cot:[],presta:[]};
+  TNS_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
+  Object.keys(groups).forEach(g=>{
+    const cont=document.getElementById('tnsGroup-'+g); if(!cont) return;
+    const items=groups[g]; let html='';
+    for(let i=0;i<items.length;i+=2){
+      html+='<div class="form-row">';
+      for(let j=i;j<Math.min(i+2,items.length);j++){
+        const p=items[j];
+        const step = (p.unite==='€'||p.unite==='%') ? '0.01' : '0.0001';
+        const u = p.unite ? ' ('+p.unite+')' : '';
+        html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${step}" id="tnsf_${p.cle}"></div>`;
+      }
+      html+='</div>';
+    }
+    cont.innerHTML=html;
+  });
+}
+
+async function chargerTns(){
+  const {data,error}=await db.from('parametres_tns').select('cle,valeur,date_effet,updated_at');
+  if(error){
+    showToast('Table TNS introuvable — lancez parametres_tns.sql','error');
+    return;
+  }
+  let maj=null;
+  data.forEach(r=>{
+    const el=document.getElementById('tnsf_'+r.cle);
+    if(el) el.value = r.valeur;
+    if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
+  });
+  if(maj) document.getElementById('lastUpdateTns').textContent = fmtDate(maj);
+}
+
+async function enregistrerTns(){
+  const btn=document.getElementById('btnSaveTns'); btn.disabled=true; btn.textContent='Enregistrement…';
+  const now=new Date().toISOString();
+  try{
+    const params=TNS_PARAMS.map(p=>({
+      cle:p.cle, valeur:numOrNull('tnsf_'+p.cle), unite:p.unite, libelle:p.label, updated_at:now
+    })).filter(p=>p.valeur!==null);
+    const dateEffet=strOrNull('tnsDateEffet');
+    if(dateEffet) params.forEach(p=>p.date_effet=dateEffet);
+    if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
+    const r=await db.from('parametres_tns').upsert(params,{onConflict:'cle'});
+    if(r.error) throw r.error;
+    document.getElementById('lastUpdateTns').textContent=fmtDate(now);
+    showToast('Paramètres TNS enregistrés ✓');
+  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer les TNS'; }
+}
+
 // ===================== INIT =====================
 renderPrevoyanceFields();
+renderTnsFields();
 checkSession();
 </script>
 </body>

@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TMK Performances — Admin Paramètres des formations</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMK Performances — Admin Paramètres des formations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
 :root{
-  --tmk-prune:#8C1E70; --tmk-prune-dark:#5E1349; --tmk-prune-light:#B83A93;
-  --tmk-charbon:#283C28; --tmk-gris:#3C3C3C; --tmk-or:#C9A961;
-  --bg:#FAF7F5; --bg-card:#FFFFFF; --bg-soft:#F4EEF1; --border:#E8DCE3;
-  --text:#2A2024; --text-muted:#6B5B62;
-  --shadow-sm:0 1px 2px rgba(140,30,112,.06);
-  --shadow:0 4px 16px rgba(140,30,112,.08),0 1px 3px rgba(140,30,112,.06);
-  --shadow-lg:0 16px 40px rgba(140,30,112,.12);
-  --radius-sm:6px; --radius:12px; --radius-lg:20px;
+--tmk-prune:#8C1E70; --tmk-prune-dark:#5E1349; --tmk-prune-light:#B83A93;
+--tmk-charbon:#283C28; --tmk-gris:#3C3C3C; --tmk-or:#C9A961;
+--bg:#FAF7F5; --bg-card:#FFFFFF; --bg-soft:#F4EEF1; --border:#E8DCE3;
+--text:#2A2024; --text-muted:#6B5B62;
+--shadow-sm:0 1px 2px rgba(140,30,112,.06);
+--shadow:0 4px 16px rgba(140,30,112,.08),0 1px 3px rgba(140,30,112,.06);
+--shadow-lg:0 16px 40px rgba(140,30,112,.12);
+--radius-sm:6px; --radius:12px; --radius-lg:20px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;
-  background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transparent 40%),radial-gradient(circle at 80% 100%,rgba(40,60,40,.03),transparent 40%);}
-
+background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transparent 40%),radial-gradient(circle at 80% 100%,rgba(40,60,40,.03),transparent 40%);}
 /* LOGIN */
 .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
 .login-card{background:#fff;border-radius:var(--radius-lg);padding:48px 40px;max-width:420px;width:100%;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
@@ -39,7 +39,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .login-field input:focus{outline:none;border-color:var(--tmk-prune);box-shadow:0 0 0 3px rgba(140,30,112,.1)}
 .login-error{background:#FFEEEE;color:#A02020;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:14px;border-left:3px solid #A02020;display:none}
 .login-error.show{display:block}
-
 /* APP */
 .app{max-width:1280px;margin:0 auto;padding:24px;display:none}
 .app.show{display:block}
@@ -54,7 +53,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .header-user-email{opacity:.85}
 .btn-logout{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;font-family:inherit}
 .btn-logout:hover{background:rgba(255,255,255,.25)}
-
 /* ONGLETS */
 .tabs{display:flex;gap:4px;background:var(--bg-soft);padding:5px;border-radius:var(--radius);margin-bottom:20px;flex-wrap:wrap}
 .tab{flex:1;min-width:130px;padding:12px 16px;border:none;background:transparent;font-family:inherit;font-size:14px;font-weight:600;color:var(--text-muted);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s ease;position:relative}
@@ -63,7 +61,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tab .soon{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tmk-or);margin-left:6px;vertical-align:middle}
 .panel{display:none}
 .panel.active{display:block}
-
 .grid{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
 @media(max-width:960px){.grid{grid-template-columns:1fr}}
 .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow-sm)}
@@ -87,7 +84,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tranche-row .tmi-badge{background:var(--tmk-prune);color:#fff;padding:4px 10px;border-radius:20px;font-weight:600;font-size:13px;text-align:center}
 .tranche-row input{padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit;font-variant-numeric:tabular-nums;background:#fff}
 .tranche-row .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-bottom:3px;display:block}
-
 /* ACCORDÉON */
 .accordion{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;overflow:hidden;background:#fff}
 .accordion-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg-soft);cursor:pointer;user-select:none;transition:background .15s ease;border:none;width:100%;font-family:inherit;text-align:left}
@@ -99,7 +95,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .accordion-body{max-height:0;overflow:hidden;transition:max-height .25s ease,padding .25s ease;padding:0 18px}
 .accordion.open .accordion-body{max-height:1200px;padding:18px}
 .accordion-help{font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.55;padding:10px 12px;background:var(--bg-soft);border-radius:var(--radius-sm);border-left:3px solid var(--tmk-prune-light)}
-
 /* SIDEBAR */
 .sidebar{position:sticky;top:24px}
 @media(max-width:960px){.sidebar{position:static}}
@@ -124,7 +119,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .note{background:#FFF8E1;border-left:3px solid var(--tmk-or);padding:11px 14px;border-radius:var(--radius-sm);margin:14px 0;font-size:12px;color:var(--tmk-charbon);line-height:1.5}
 .last-update{font-size:11px;color:var(--text-muted);margin-top:14px;padding:10px 12px;background:var(--bg-soft);border-radius:var(--radius-sm)}
 .last-update strong{color:var(--tmk-charbon)}
-
 /* RETRAITE */
 .pass-row{display:grid;grid-template-columns:120px 1fr auto;gap:12px;align-items:center;margin-bottom:8px;padding:8px 12px;background:var(--bg-soft);border-radius:var(--radius-sm)}
 .pass-row .yr{font-weight:600;color:var(--tmk-prune-dark);font-variant-numeric:tabular-nums}
@@ -136,14 +130,12 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .actionbar .btn{width:auto;margin:0}
 .lastup{font-size:12px;color:var(--text-muted)}
 .lastup strong{color:var(--tmk-charbon)}
-
 /* PLACEHOLDER (Santé / Prévoyance) */
 .placeholder{background:var(--bg-card);border:1px dashed var(--tmk-prune-light);border-radius:var(--radius);padding:40px;text-align:center;box-shadow:var(--shadow-sm)}
 .placeholder .ic{font-size:40px;margin-bottom:12px}
 .placeholder h3{font-family:'Fraunces',serif;font-size:20px;color:var(--tmk-charbon);margin-bottom:8px}
 .placeholder p{font-size:13px;color:var(--text-muted);max-width:520px;margin:0 auto 6px;line-height:1.6}
 .placeholder code{background:var(--bg-soft);padding:2px 7px;border-radius:5px;color:var(--tmk-prune-dark);font-size:12px}
-
 /* DIVERS */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--tmk-charbon);color:#fff;padding:14px 20px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);font-size:14px;opacity:0;transform:translateY(20px);transition:all .3s ease;pointer-events:none;z-index:1000}
 .toast.show{opacity:1;transform:translateY(0)}
@@ -166,421 +158,618 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .footer-info strong{color:var(--tmk-prune);font-weight:600}
 </style>
 </head>
+
 <body>
-
-<div class="loader" id="loader"><div class="loader-spinner"></div><div class="loader-text" id="loaderText">Chargement…</div></div>
-
-<!-- LOGIN -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <div class="login-brand">
-      <div class="login-brand-mark">T</div>
-      <div class="login-brand-name">TMK Performances</div>
-      <div class="login-brand-sub">Espace Formateur</div>
-    </div>
-    <div class="login-title">Paramètres des formations</div>
-    <div class="login-sub">Connecte-toi pour mettre à jour les données de formation.</div>
-    <div class="login-error" id="loginError"></div>
-    <form id="loginForm">
-      <div class="login-field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
-      <div class="login-field"><label>Mot de passe</label><input type="password" id="loginPassword" required autocomplete="current-password"></div>
-      <button type="submit" class="btn btn-primary" style="margin-top:8px">Se connecter</button>
-    </form>
+  <div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text" id="loaderText">Chargement…</div>
   </div>
-</div>
-
-<!-- APP -->
-<div class="app" id="app">
-  <header class="header">
-    <div class="header-row">
-      <div class="header-content">
-        <div class="header-badge">Espace Formateur · Paramètres</div>
-        <h1>Paramètres des formations</h1>
-        <p>Fiscalité, retraite, santé, prévoyance — mise à jour centralisée. Toute modification est répercutée sur les fiches et simulateurs des stagiaires.</p>
+  <!-- LOGIN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-brand-mark">T</div>
+        <div class="login-brand-name">TMK Performances</div>
+        <div class="login-brand-sub">Espace Formateur</div>
       </div>
-      <div class="header-user">
-        <div class="header-user-email" id="userEmail">—</div>
-        <button class="btn-logout" onclick="seDeconnecter()">Se déconnecter</button>
-      </div>
+      <div class="login-title">Paramètres des formations</div>
+      <div class="login-sub">Connecte-toi pour mettre à jour les données de formation.</div>
+      <div class="login-error" id="loginError"></div>
+      <form id="loginForm">
+        <div class="login-field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
+        <div class="login-field"><label>Mot de passe</label><input type="password" id="loginPassword" required autocomplete="current-password"></div>
+        <button type="submit" class="btn btn-primary" style="margin-top:8px">Se connecter</button>
+      </form>
     </div>
-  </header>
-
-  <!-- ONGLETS -->
-  <div class="tabs">
-    <button class="tab active" data-tab="fiscalite" onclick="switchTab('fiscalite')">Fiscalité</button>
-    <button class="tab" data-tab="retraite" onclick="switchTab('retraite')">Retraite</button>
-    <button class="tab" data-tab="duree-ref" onclick="switchTab('duree-ref')">Durée de réf.</button>
-    <button class="tab" data-tab="sante" onclick="switchTab('sante')">Santé <span class="soon">à venir</span></button>
-    <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance</button>
-    <button class="tab" data-tab="tns" onclick="switchTab('tns')">TNS</button>
   </div>
-
-  <!-- ============ PANEL FISCALITÉ ============ -->
-  <div class="panel active" id="panel-fiscalite">
-    <div class="grid">
-      <main>
-        <div class="card">
-          <div class="card-header"><div class="card-num">1</div><div>
-            <div class="card-title">Année d'imposition</div>
-            <div class="card-subtitle">Précise l'année du barème (ex : 2026 sur revenus 2025)</div></div></div>
-          <div class="form-row">
-            <div class="form-field"><label>Année du barème</label><input type="number" id="annee" min="2020" max="2099"></div>
-            <div class="form-field"><label>Année des revenus concernés</label><input type="number" id="anneeRevenus" min="2019" max="2098"></div>
-          </div>
+  <!-- APP -->
+  <div class="app" id="app">
+    <header class="header">
+      <div class="header-row">
+        <div class="header-content">
+          <div class="header-badge">Espace Formateur · Paramètres</div>
+          <h1>Paramètres des formations</h1>
+          <p>Fiscalité, retraite, santé, prévoyance — mise à jour centralisée. Toute modification est répercutée sur les fiches et simulateurs des stagiaires.</p>
         </div>
-
-        <div class="card">
-          <div class="card-header"><div class="card-num">2</div><div>
-            <div class="card-title">Barème progressif de l'IRPP</div>
-            <div class="card-subtitle">Seuils de quotient familial et taux marginaux d'imposition</div></div></div>
-          <div class="tranche-row"><div class="tmi-badge">0 %</div><div class="form-field"><span class="label">Jusqu'à</span><input type="number" id="seuil1"></div><div></div></div>
-          <div class="tranche-row"><div class="tmi-badge">11 %</div><div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil1b" readonly></div><div class="form-field"><span class="label">À</span><input type="number" id="seuil2"></div></div>
-          <div class="tranche-row"><div class="tmi-badge">30 %</div><div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil2b" readonly></div><div class="form-field"><span class="label">À</span><input type="number" id="seuil3"></div></div>
-          <div class="tranche-row"><div class="tmi-badge">41 %</div><div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil3b" readonly></div><div class="form-field"><span class="label">À</span><input type="number" id="seuil4"></div></div>
-          <div class="tranche-row"><div class="tmi-badge">45 %</div><div class="form-field"><span class="label">À partir de (auto)</span><input type="number" id="seuil4b" readonly></div><div></div></div>
-          <div class="note">Les bornes basses se mettent à jour automatiquement (+1 €). Les <strong>constantes des formules de calcul rapide</strong> sont calculées automatiquement et affichées dans l'encart de droite.</div>
+        <div class="header-user">
+          <div class="header-user-email" id="userEmail">—</div>
+          <button class="btn-logout" onclick="seDeconnecter()">Se déconnecter</button>
         </div>
-
-        <div class="card">
-          <div class="card-header"><div class="card-num">3</div><div>
-            <div class="card-title">Décote</div>
-            <div class="card-subtitle">Réduction d'impôt automatique pour les faibles revenus imposables</div></div></div>
-          <div class="subsection"><div class="subsection-title">Déclaration individuelle</div></div>
-          <div class="form-row">
-            <div class="form-field"><label>Seuil d'application (IR brut &lt;)</label><input type="number" id="decoteSeuilIndiv"></div>
-            <div class="form-field"><label>Constante forfaitaire</label><input type="number" id="decoteForfIndiv"></div>
+      </div>
+    </header>
+    <!-- ONGLETS -->
+    <div class="tabs">
+      <button class="tab active" data-tab="fiscalite" onclick="switchTab('fiscalite')">Fiscalité</button>
+      <button class="tab" data-tab="retraite" onclick="switchTab('retraite')">Retraite</button>
+      <button class="tab" data-tab="duree-ref" onclick="switchTab('duree-ref')">Durée de réf.</button>
+      <button class="tab" data-tab="sante" onclick="switchTab('sante')">Santé</button>
+      <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance</button>
+      <button class="tab" data-tab="tns" onclick="switchTab('tns')">TNS</button>
+    </div>
+    <!-- ============ PANEL FISCALITÉ ============ -->
+    <div class="panel active" id="panel-fiscalite">
+      <div class="grid">
+        <main>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-num">1</div>
+              <div>
+                <div class="card-title">Année d'imposition</div>
+                <div class="card-subtitle">Précise l'année du barème (ex : 2026 sur revenus 2025)</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Année du barème</label><input type="number" id="annee" min="2020" max="2099"></div>
+              <div class="form-field"><label>Année des revenus concernés</label><input type="number" id="anneeRevenus" min="2019" max="2098"></div>
+            </div>
           </div>
-          <div class="subsection"><div class="subsection-title">Déclaration commune</div></div>
-          <div class="form-row">
-            <div class="form-field"><label>Seuil d'application (IR brut &lt;)</label><input type="number" id="decoteSeuilCouple"></div>
-            <div class="form-field"><label>Constante forfaitaire</label><input type="number" id="decoteForfCouple"></div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-num">2</div>
+              <div>
+                <div class="card-title">Barème progressif de l'IRPP</div>
+                <div class="card-subtitle">Seuils de quotient familial et taux marginaux d'imposition</div>
+              </div>
+            </div>
+            <div class="tranche-row">
+              <div class="tmi-badge">0 %</div>
+              <div class="form-field"><span class="label">Jusqu'à</span><input type="number" id="seuil1"></div>
+              <div></div>
+            </div>
+            <div class="tranche-row">
+              <div class="tmi-badge">11 %</div>
+              <div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil1b" readonly></div>
+              <div class="form-field"><span class="label">À</span><input type="number" id="seuil2"></div>
+            </div>
+            <div class="tranche-row">
+              <div class="tmi-badge">30 %</div>
+              <div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil2b" readonly></div>
+              <div class="form-field"><span class="label">À</span><input type="number" id="seuil3"></div>
+            </div>
+            <div class="tranche-row">
+              <div class="tmi-badge">41 %</div>
+              <div class="form-field"><span class="label">De (auto)</span><input type="number" id="seuil3b" readonly></div>
+              <div class="form-field"><span class="label">À</span><input type="number" id="seuil4"></div>
+            </div>
+            <div class="tranche-row">
+              <div class="tmi-badge">45 %</div>
+              <div class="form-field"><span class="label">À partir de (auto)</span><input type="number" id="seuil4b" readonly></div>
+              <div></div>
+            </div>
+            <div class="note">Les bornes basses se mettent à jour automatiquement (+1 €). Les <strong>constantes des formules de calcul rapide</strong> sont calculées automatiquement et affichées dans l'encart de droite.</div>
           </div>
-          <div class="form-row full">
-            <div class="form-field"><label>Taux à déduire (%)</label><input type="number" id="decoteTaux" step="0.01"></div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-num">3</div>
+              <div>
+                <div class="card-title">Décote</div>
+                <div class="card-subtitle">Réduction d'impôt automatique pour les faibles revenus imposables</div>
+              </div>
+            </div>
+            <div class="subsection">
+              <div class="subsection-title">Déclaration individuelle</div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Seuil d'application (IR brut &lt;)</label><input type="number" id="decoteSeuilIndiv"></div>
+              <div class="form-field"><label>Constante forfaitaire</label><input type="number" id="decoteForfIndiv"></div>
+            </div>
+            <div class="subsection">
+              <div class="subsection-title">Déclaration commune</div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Seuil d'application (IR brut &lt;)</label><input type="number" id="decoteSeuilCouple"></div>
+              <div class="form-field"><label>Constante forfaitaire</label><input type="number" id="decoteForfCouple"></div>
+            </div>
+            <div class="form-row full">
+              <div class="form-field"><label>Taux à déduire (%)</label><input type="number" id="decoteTaux" step="0.01"></div>
+            </div>
           </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header"><div class="card-num">4</div><div>
-            <div class="card-title">Plafonnement du quotient familial</div>
-            <div class="card-subtitle">Limites annuelles de l'avantage fiscal procuré par les demi-parts</div></div></div>
-          <div class="form-row three">
-            <div class="form-field"><label>Cas général (par demi-part)</label><input type="number" id="plafondQF"></div>
-            <div class="form-field"><label>Quart de part (garde alternée)</label><input type="number" id="plafondQFQuart"></div>
-            <div class="form-field"><label>Parent isolé (1ère part / 1er enfant)</label><input type="number" id="plafondParentIsole"></div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-num">4</div>
+              <div>
+                <div class="card-title">Plafonnement du quotient familial</div>
+                <div class="card-subtitle">Limites annuelles de l'avantage fiscal procuré par les demi-parts</div>
+              </div>
+            </div>
+            <div class="form-row three">
+              <div class="form-field"><label>Cas général (par demi-part)</label><input type="number" id="plafondQF"></div>
+              <div class="form-field"><label>Quart de part (garde alternée)</label><input type="number" id="plafondQFQuart"></div>
+              <div class="form-field"><label>Parent isolé (1ère part / 1er enfant)</label><input type="number" id="plafondParentIsole"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Pers. ayant élevé un enfant ≥ 5 ans</label><input type="number" id="plafondVeuf"></div>
+              <div class="form-field"><label>Anciens combattants / CMI invalidité</label><input type="number" id="plafondInvalidite"></div>
+            </div>
           </div>
-          <div class="form-row">
-            <div class="form-field"><label>Pers. ayant élevé un enfant ≥ 5 ans</label><input type="number" id="plafondVeuf"></div>
-            <div class="form-field"><label>Anciens combattants / CMI invalidité</label><input type="number" id="plafondInvalidite"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header"><div class="card-num">5</div><div>
-            <div class="card-title">Abattements et déductions</div>
-            <div class="card-subtitle">Paramètres par catégorie — cliquer sur un bloc pour le déplier</div></div></div>
-
-          <div class="accordion open" id="acc-divers">
-            <button type="button" class="accordion-head" onclick="toggleAcc('acc-divers')">
-              <span class="accordion-head-title">Frais professionnels &amp; pension enfant majeur</span><span class="accordion-chevron">▾</span></button>
-            <div class="accordion-body">
-              <div class="form-row">
-                <div class="form-field"><label>Abattement frais professionnels (%)</label><input type="number" id="abattementFP" step="0.01"></div>
-                <div class="form-field"><label>Plafond pension alimentaire enfant majeur (€)</label><input type="number" id="plafondPension"></div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-num">5</div>
+              <div>
+                <div class="card-title">Abattements et déductions</div>
+                <div class="card-subtitle">Paramètres par catégorie — cliquer sur un bloc pour le déplier</div>
+              </div>
+            </div>
+            <div class="accordion open" id="acc-divers">
+              <button type="button" class="accordion-head" onclick="toggleAcc('acc-divers')">
+                <span class="accordion-head-title">Frais professionnels &amp; pension enfant majeur</span><span class="accordion-chevron">▾</span></button>
+              <div class="accordion-body">
+                <div class="form-row">
+                  <div class="form-field"><label>Abattement frais professionnels (%)</label><input type="number" id="abattementFP" step="0.01"></div>
+                  <div class="form-field"><label>Plafond pension alimentaire enfant majeur (€)</label><input type="number" id="plafondPension"></div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion" id="acc-sal">
+              <button type="button" class="accordion-head" onclick="toggleAcc('acc-sal')">
+                <span class="accordion-head-title">Abattement 10 % — Salaires</span><span class="accordion-chevron">▾</span></button>
+              <div class="accordion-body">
+                <div class="accordion-help">Abattement automatique appliqué sur les salaires, encadré par un plancher et un plafond fixés chaque année.</div>
+                <div class="form-row three">
+                  <div class="form-field"><label>Taux (%)</label><input type="number" id="abatSalTaux" step="0.01"></div>
+                  <div class="form-field"><label>Plancher (€)</label><input type="number" id="abatSalPlancher"></div>
+                  <div class="form-field"><label>Plafond / personne (€)</label><input type="number" id="abatSalPlafond"></div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion" id="acc-pension">
+              <button type="button" class="accordion-head" onclick="toggleAcc('acc-pension')">
+                <span class="accordion-head-title">Abattement 10 % — Pensions de retraite</span><span class="accordion-chevron">▾</span></button>
+              <div class="accordion-body">
+                <div class="accordion-help">Abattement appliqué sur les pensions de retraite, avec un plancher par retraité et un plafond global par foyer fiscal.</div>
+                <div class="form-row three">
+                  <div class="form-field"><label>Taux (%)</label><input type="number" id="abatPensionTaux" step="0.01"></div>
+                  <div class="form-field"><label>Plancher / retraité (€)</label><input type="number" id="abatPensionPlancher"></div>
+                  <div class="form-field"><label>Plafond / foyer (€)</label><input type="number" id="abatPensionPlafond"></div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion" id="acc-age">
+              <button type="button" class="accordion-head" onclick="toggleAcc('acc-age')">
+                <span class="accordion-head-title">Abattement spécial — Personnes +65 ans ou invalides</span><span class="accordion-chevron">▾</span></button>
+              <div class="accordion-body">
+                <div class="accordion-help">Abattement à deux niveaux (art. 157 bis CGI) : un montant pour les revenus modestes, un montant réduit pour les revenus intermédiaires, et plus rien au-delà du seuil haut.</div>
+                <div class="subsection">
+                  <div class="subsection-title">Niveau 1 — Revenu net global modeste</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-field"><label>Montant de l'abattement (€)</label><input type="number" id="abatAgeMontantHaut"></div>
+                  <div class="form-field"><label>Si revenu net global inférieur à (€)</label><input type="number" id="abatAgeSeuilBas"></div>
+                </div>
+                <div class="subsection">
+                  <div class="subsection-title">Niveau 2 — Revenu net global intermédiaire</div>
+                </div>
+                <div class="form-row">
+                  <div class="form-field"><label>Montant de l'abattement (€)</label><input type="number" id="abatAgeMontantBas"></div>
+                  <div class="form-field"><label>Plafond haut (au-delà : aucun abattement) (€)</label><input type="number" id="abatAgeSeuilHaut"></div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion" id="acc-src">
+              <button type="button" class="accordion-head" onclick="toggleAcc('acc-src')">
+                <span class="accordion-head-title">Traçabilité (source &amp; date)</span><span class="accordion-chevron">▾</span></button>
+              <div class="accordion-body">
+                <div class="accordion-help">Informations affichées en bas de la fiche stagiaire. À renseigner lors de la mise à jour annuelle.</div>
+                <div class="form-row">
+                  <div class="form-field"><label>Source officielle</label><input type="text" id="abatSource" placeholder="ex : impots.gouv.fr — revenus 2025"></div>
+                  <div class="form-field"><label>Date de mise à jour des barèmes</label><input type="date" id="abatMajLe"></div>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="accordion" id="acc-sal">
-            <button type="button" class="accordion-head" onclick="toggleAcc('acc-sal')">
-              <span class="accordion-head-title">Abattement 10 % — Salaires</span><span class="accordion-chevron">▾</span></button>
-            <div class="accordion-body">
-              <div class="accordion-help">Abattement automatique appliqué sur les salaires, encadré par un plancher et un plafond fixés chaque année.</div>
-              <div class="form-row three">
-                <div class="form-field"><label>Taux (%)</label><input type="number" id="abatSalTaux" step="0.01"></div>
-                <div class="form-field"><label>Plancher (€)</label><input type="number" id="abatSalPlancher"></div>
-                <div class="form-field"><label>Plafond / personne (€)</label><input type="number" id="abatSalPlafond"></div>
+        </main>
+        <aside class="sidebar">
+          <div class="sidebar-card">
+            <div class="year-banner">
+              <div class="year-banner-icon">📅</div>
+              <div>
+                <div class="year-banner-label">Barème en cours</div>
+                <div class="year-banner-value" id="afficheAnnee">—</div>
               </div>
             </div>
-          </div>
-
-          <div class="accordion" id="acc-pension">
-            <button type="button" class="accordion-head" onclick="toggleAcc('acc-pension')">
-              <span class="accordion-head-title">Abattement 10 % — Pensions de retraite</span><span class="accordion-chevron">▾</span></button>
-            <div class="accordion-body">
-              <div class="accordion-help">Abattement appliqué sur les pensions de retraite, avec un plancher par retraité et un plafond global par foyer fiscal.</div>
-              <div class="form-row three">
-                <div class="form-field"><label>Taux (%)</label><input type="number" id="abatPensionTaux" step="0.01"></div>
-                <div class="form-field"><label>Plancher / retraité (€)</label><input type="number" id="abatPensionPlancher"></div>
-                <div class="form-field"><label>Plafond / foyer (€)</label><input type="number" id="abatPensionPlafond"></div>
-              </div>
+            <h3>Enregistrer les modifications</h3>
+            <p>Une fois les paramètres saisis, enregistre-les sur Supabase pour mettre à jour automatiquement les fiches stagiaires.</p>
+            <button class="btn btn-primary" id="btnSaveFisc" onclick="enregistrerFiscalite()">💾 Enregistrer la fiscalité</button>
+            <div class="last-update"><span>Dernière màj : <strong id="lastUpdateValue">—</strong></span></div>
+            <div class="computed">
+              <div class="computed-title">Constantes calculées (auto)</div>
+              <div class="computed-line"><span>TMI 11 %</span><span id="cst11">—</span></div>
+              <div class="computed-line"><span>TMI 30 %</span><span id="cst30">—</span></div>
+              <div class="computed-line"><span>TMI 41 %</span><span id="cst41">—</span></div>
+              <div class="computed-line"><span>TMI 45 %</span><span id="cst45">—</span></div>
             </div>
           </div>
-
-          <div class="accordion" id="acc-age">
-            <button type="button" class="accordion-head" onclick="toggleAcc('acc-age')">
-              <span class="accordion-head-title">Abattement spécial — Personnes +65 ans ou invalides</span><span class="accordion-chevron">▾</span></button>
-            <div class="accordion-body">
-              <div class="accordion-help">Abattement à deux niveaux (art. 157 bis CGI) : un montant pour les revenus modestes, un montant réduit pour les revenus intermédiaires, et plus rien au-delà du seuil haut.</div>
-              <div class="subsection"><div class="subsection-title">Niveau 1 — Revenu net global modeste</div></div>
-              <div class="form-row">
-                <div class="form-field"><label>Montant de l'abattement (€)</label><input type="number" id="abatAgeMontantHaut"></div>
-                <div class="form-field"><label>Si revenu net global inférieur à (€)</label><input type="number" id="abatAgeSeuilBas"></div>
-              </div>
-              <div class="subsection"><div class="subsection-title">Niveau 2 — Revenu net global intermédiaire</div></div>
-              <div class="form-row">
-                <div class="form-field"><label>Montant de l'abattement (€)</label><input type="number" id="abatAgeMontantBas"></div>
-                <div class="form-field"><label>Plafond haut (au-delà : aucun abattement) (€)</label><input type="number" id="abatAgeSeuilHaut"></div>
-              </div>
-            </div>
+        </aside>
+      </div>
+    </div>
+    <!-- ============ PANEL RETRAITE ============ -->
+    <div class="panel" id="panel-retraite">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">1</div>
+          <div>
+            <div class="card-title">Plafond annuel de la Sécurité sociale (PASS)</div>
+            <div class="card-subtitle">Une valeur par année civile. Modifiable, et ajout possible d'une nouvelle année.</div>
           </div>
+        </div>
+        <div id="passList"></div>
+        <div class="addrow">
+          <div><span class="mini-lab">Nouvelle année</span><input type="number" id="newYear" min="1990" max="2100" placeholder="2027"></div>
+          <div><span class="mini-lab">Montant annuel (€)</span><input type="number" id="newAmount" min="0" step="1" placeholder="ex. 49000"></div>
+          <button class="btn btn-ghost" type="button" onclick="ajouterAnnee()">+ Ajouter</button>
+        </div>
+        <div class="note">Dans le calcul du SAM, chaque salaire est plafonné au PASS de <strong>son année de versement</strong> — d'où l'intérêt de conserver l'historique.</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">2</div>
+          <div>
+            <div class="card-title">SMIC &amp; conversion des salaires</div>
+            <div class="card-subtitle">Valeurs officielles, révisées en cours d'année selon l'inflation.</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>SMIC mensuel brut (€)</label><input type="number" id="smic" step="0.01"></div>
+          <div class="form-field"><label>Coefficient net → brut (brut = net / …)</label><input type="number" id="coeff" step="0.001"></div>
+        </div>
+        <div class="note">SMIC officiel au 1<sup>er</sup> juin 2026 : <strong>1&nbsp;867,02&nbsp;€</strong> brut mensuel (arrêté du 22 mai 2026). À réviser à chaque revalorisation.</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">3</div>
+          <div>
+            <div class="card-title">Durée de cotisation par défaut</div>
+            <div class="card-subtitle">Durée retenue dans les exercices en l'absence de précision.</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Durée (années)</label><input type="number" id="dureeAnnees" step="0.5"></div>
+          <div class="form-field"><label>Durée (trimestres)</label><input type="number" id="dureeTrim" step="1"></div>
+        </div>
+        <div class="note">Par défaut : <strong>43 ans</strong>, soit <strong>172 trimestres</strong>.</div>
+      </div>
+      <div class="actionbar">
+        <div class="lastup">Dernière mise à jour : <strong id="lastUpdateRetraite">—</strong></div>
+        <button class="btn btn-primary" id="btnSaveRetraite" onclick="enregistrerRetraite()">💾 Enregistrer la retraite</button>
+      </div>
+    </div>
+    <!-- ============ PANEL DURÉE DE RÉFÉRENCE ============ -->
+    <div class="panel" id="panel-duree-ref">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">1</div>
+          <div>
+            <div class="card-title">Durée de référence par génération</div>
+            <div class="card-subtitle">Régime général. Âge légal, durée requise (trimestres) et source. « Réf. 2023 » = valeur « au lieu de » (laisser vide si inchangé).</div>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="dr-table">
+            <thead>
+              <tr>
+                <th style="width:36px;">#</th>
+                <th style="min-width:150px;">Génération</th>
+                <th>Âge légal</th>
+                <th>Âge réf. 2023</th>
+                <th style="width:70px;">Trim.</th>
+                <th style="width:80px;">Trim. réf.</th>
+                <th>Âge taux plein</th>
+                <th style="min-width:180px;">Source</th>
+                <th style="width:34px;"></th>
+              </tr>
+            </thead>
+            <tbody id="dureeRefBody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-ghost" type="button" style="width:auto;" onclick="ajouterLigneDuree()">+ Ajouter une génération</button>
+        </div>
+        <div class="note">La <strong>source</strong> de chaque ligne évite les interprétations : renseignez la référence officielle (ex. « Circulaire Cnav 2026-07, annexe 1 »). Ces valeurs sont lues en direct par le tableau et les supports stagiaires.</div>
+      </div>
+      <div class="actionbar">
+        <div class="lastup">Dernière mise à jour : <strong id="lastUpdateDuree">—</strong></div>
+        <button class="btn btn-primary" id="btnSaveDuree" onclick="enregistrerDureeRef()">💾 Enregistrer la durée de référence</button>
+      </div>
+    </div>
+    <!-- ============ PANEL SANTÉ ============ -->
+    <div class="panel" id="panel-sante">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">1</div>
+          <div>
+            <div class="card-title">Participations et franchises</div>
+            <div class="card-subtitle">Reste à charge obligatoire de l'assuré — jamais remboursable, même par un contrat responsable.</div>
+          </div>
+        </div>
+        <div id="santeGroup-part"></div>
+        <div class="note">Bloc le plus volatil de la table. Forfait journalier hospitalier et FPU relevés au 1<sup>er</sup> mars 2026 (arrêté du 27/02/2026), participation actes lourds portée à 32 € au 1<sup>er</sup> avril 2026 (décret n° 2026-228). Les plafonds annuels de 50 € font l'objet d'une annonce de doublement à 100 € — décret attendu.</div>
+      </div>
 
-          <div class="accordion" id="acc-src">
-            <button type="button" class="accordion-head" onclick="toggleAcc('acc-src')">
-              <span class="accordion-head-title">Traçabilité (source &amp; date)</span><span class="accordion-chevron">▾</span></button>
-            <div class="accordion-body">
-              <div class="accordion-help">Informations affichées en bas de la fiche stagiaire. À renseigner lors de la mise à jour annuelle.</div>
-              <div class="form-row">
-                <div class="form-field"><label>Source officielle</label><input type="text" id="abatSource" placeholder="ex : impots.gouv.fr — revenus 2025"></div>
-                <div class="form-field"><label>Date de mise à jour des barèmes</label><input type="date" id="abatMajLe"></div>
-              </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">2</div>
+          <div>
+            <div class="card-title">Parcours de soins</div>
+            <div class="card-subtitle">Taux de droit commun et pénalité applicable hors parcours.</div>
+          </div>
+        </div>
+        <div id="santeGroup-parc"></div>
+        <div class="note">Hors parcours, deux règles et non une : chez un médecin de <strong>secteur 1 ou OPTAM</strong>, remboursement = 70 % de la BR <strong>moins 10,60 €</strong> ; chez un <strong>secteur 2 non OPTAM</strong>, le taux tombe à 30 %. La majoration de 10,60 € est un montant fixe gelé depuis 2013, pas un pourcentage.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">3</div>
+          <div>
+            <div class="card-title">Bases de remboursement</div>
+            <div class="card-subtitle">La BR sert au calcul ; l'honoraire pratiqué ne sert qu'à mesurer le dépassement.</div>
+          </div>
+        </div>
+        <div id="santeGroup-br"></div>
+        <div class="note">L'adhésion à l'OPTAM aligne la base sur celle du secteur 1 — c'est tout l'enjeu du dispositif pour le client. La lettre-clé AMK permet de recalculer n'importe quelle cotation de kinésithérapie : BR = lettre-clé × coefficient.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">4</div>
+          <div>
+            <div class="card-title">Taux par nature de soins</div>
+            <div class="card-subtitle">Saisie en décimal : 0,60 pour 60 %.</div>
+          </div>
+        </div>
+        <div id="santeGroup-taux"></div>
+        <div class="note">Le taux dentaire est à <strong>60 %</strong> depuis le 15 octobre 2023 (décret n° 2023-701), et non plus 70 %. Exceptions : une vingtaine d'actes de chirurgie restent à 70 %, Alsace-Moselle 90 %, SNCF 75 %.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">5</div>
+          <div>
+            <div class="card-title">Médicaments</div>
+            <div class="card-subtitle">Taux selon le service médical rendu. Saisie en décimal.</div>
+          </div>
+        </div>
+        <div id="santeGroup-medic"></div>
+        <div class="note">Quel que soit le taux, la franchise de 1 € par boîte s'applique — et elle n'a pas de plafond journalier.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">6</div>
+          <div>
+            <div class="card-title">100 % santé — audiologie</div>
+            <div class="card-subtitle">Prix limites de vente et bases de remboursement par oreille.</div>
+          </div>
+        </div>
+        <div id="santeGroup-audio"></div>
+        <div class="note">La base est identique en classe I et en classe II : c'est le prix qui change, libre en classe II. Le remboursement de l'Assurance Maladie reste donc de 60 % de la base dans les deux cas.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">7</div>
+          <div>
+            <div class="card-title">100 % santé — optique et dentaire</div>
+            <div class="card-subtitle">Prix limites du panier sans reste à charge, et bases du panier libre.</div>
+          </div>
+        </div>
+        <div id="santeGroup-rac0"></div>
+        <div class="note">En optique, le plafond porte sur l'<strong>équipement complet</strong> (monture + deux verres) et varie selon la correction, d'où les bornes min et max. En dentaire, la couronne céramo-métallique n'est dans le panier 100 % santé que sur les <strong>dents visibles</strong> — sur une molaire, elle en sort.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">8</div>
+          <div>
+            <div class="card-title">Honoraires d'exemple</div>
+            <div class="card-subtitle">Valeurs de départ des calculateurs — aucune portée réglementaire.</div>
+          </div>
+        </div>
+        <div id="santeGroup-hono"></div>
+        <div class="note">Ces montants servent uniquement à préremplir les simulateurs pour faire apparaître le dépassement d'honoraires. Le stagiaire peut les modifier librement.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">9</div>
+          <div>
+            <div class="card-title">Traçabilité</div>
+            <div class="card-subtitle">Date d'effet — à n'appliquer que délibérément.</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="santeDateEffet"></div>
+          <div class="form-field"><label>&nbsp;</label>
+            <div class="note" style="margin:0">
+              <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px;text-transform:none;letter-spacing:0;font-weight:400;color:inherit">
+                <input type="checkbox" id="santeAppliquerDate" style="margin-top:2px">
+                <span>Appliquer cette date à <strong>tous</strong> les paramètres enregistrés. Décoché par défaut : contrairement à la prévoyance, les paramètres santé ont des dates d'effet différentes les unes des autres (15/10/2023, 15/05/2024, 01/03/2026, 01/04/2026…) qu'un enregistrement global écraserait.</span>
+              </label>
             </div>
           </div>
         </div>
-      </main>
+      </div>
 
-      <aside class="sidebar">
-        <div class="sidebar-card">
-          <div class="year-banner">
-            <div class="year-banner-icon">📅</div>
-            <div><div class="year-banner-label">Barème en cours</div><div class="year-banner-value" id="afficheAnnee">—</div></div>
-          </div>
-          <h3>Enregistrer les modifications</h3>
-          <p>Une fois les paramètres saisis, enregistre-les sur Supabase pour mettre à jour automatiquement les fiches stagiaires.</p>
-          <button class="btn btn-primary" id="btnSaveFisc" onclick="enregistrerFiscalite()">💾 Enregistrer la fiscalité</button>
-          <div class="last-update"><span>Dernière màj : <strong id="lastUpdateValue">—</strong></span></div>
-          <div class="computed">
-            <div class="computed-title">Constantes calculées (auto)</div>
-            <div class="computed-line"><span>TMI 11 %</span><span id="cst11">—</span></div>
-            <div class="computed-line"><span>TMI 30 %</span><span id="cst30">—</span></div>
-            <div class="computed-line"><span>TMI 41 %</span><span id="cst41">—</span></div>
-            <div class="computed-line"><span>TMI 45 %</span><span id="cst45">—</span></div>
+      <div class="actionbar">
+        <div class="lastup">Dernière mise à jour : <strong id="lastUpdateSante">—</strong></div>
+        <button class="btn btn-primary" id="btnSaveSante" onclick="enregistrerSante()">💾 Enregistrer la santé</button>
+      </div>
+    </div>
+
+    <!-- ============ PANEL PRÉVOYANCE ============ -->
+    <div class="panel" id="panel-prevoyance">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">1</div>
+          <div>
+            <div class="card-title">Références générales</div>
+            <div class="card-subtitle">SMIC et plafonds de la Sécurité sociale — bases communes aux calculs.</div>
           </div>
         </div>
-      </aside>
-    </div>
-  </div>
-
-  <!-- ============ PANEL RETRAITE ============ -->
-  <div class="panel" id="panel-retraite">
-    <div class="card">
-      <div class="card-header"><div class="card-num">1</div><div>
-        <div class="card-title">Plafond annuel de la Sécurité sociale (PASS)</div>
-        <div class="card-subtitle">Une valeur par année civile. Modifiable, et ajout possible d'une nouvelle année.</div></div></div>
-      <div id="passList"></div>
-      <div class="addrow">
-        <div><span class="mini-lab">Nouvelle année</span><input type="number" id="newYear" min="1990" max="2100" placeholder="2027"></div>
-        <div><span class="mini-lab">Montant annuel (€)</span><input type="number" id="newAmount" min="0" step="1" placeholder="ex. 49000"></div>
-        <button class="btn btn-ghost" type="button" onclick="ajouterAnnee()">+ Ajouter</button>
+        <div id="prevGroup-ref"></div>
       </div>
-      <div class="note">Dans le calcul du SAM, chaque salaire est plafonné au PASS de <strong>son année de versement</strong> — d'où l'intérêt de conserver l'historique.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">2</div><div>
-        <div class="card-title">SMIC &amp; conversion des salaires</div>
-        <div class="card-subtitle">Valeurs officielles, révisées en cours d'année selon l'inflation.</div></div></div>
-      <div class="form-row">
-        <div class="form-field"><label>SMIC mensuel brut (€)</label><input type="number" id="smic" step="0.01"></div>
-        <div class="form-field"><label>Coefficient net → brut (brut = net / …)</label><input type="number" id="coeff" step="0.001"></div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">2</div>
+          <div>
+            <div class="card-title">IJ maladie (vie normale)</div>
+            <div class="card-subtitle">Taux, diviseur, plafonds et carence de l'indemnité journalière maladie.</div>
+          </div>
+        </div>
+        <div id="prevGroup-mal"></div>
       </div>
-      <div class="note">SMIC officiel au 1<sup>er</sup> juin 2026 : <strong>1&nbsp;867,02&nbsp;€</strong> brut mensuel (arrêté du 22 mai 2026). À réviser à chaque revalorisation.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">3</div><div>
-        <div class="card-title">Durée de cotisation par défaut</div>
-        <div class="card-subtitle">Durée retenue dans les exercices en l'absence de précision.</div></div></div>
-      <div class="form-row">
-        <div class="form-field"><label>Durée (années)</label><input type="number" id="dureeAnnees" step="0.5"></div>
-        <div class="form-field"><label>Durée (trimestres)</label><input type="number" id="dureeTrim" step="1"></div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">3</div>
+          <div>
+            <div class="card-title">Loi de mensualisation</div>
+            <div class="card-subtitle">Taux du complément employeur, carences et ancienneté minimale.</div>
+          </div>
+        </div>
+        <div id="prevGroup-mens"></div>
       </div>
-      <div class="note">Par défaut : <strong>43 ans</strong>, soit <strong>172 trimestres</strong>.</div>
-    </div>
-
-    <div class="actionbar">
-      <div class="lastup">Dernière mise à jour : <strong id="lastUpdateRetraite">—</strong></div>
-      <button class="btn btn-primary" id="btnSaveRetraite" onclick="enregistrerRetraite()">💾 Enregistrer la retraite</button>
-    </div>
-  </div>
-
-  <!-- ============ PANEL DURÉE DE RÉFÉRENCE ============ -->
-  <div class="panel" id="panel-duree-ref">
-    <div class="card">
-      <div class="card-header"><div class="card-num">1</div><div>
-        <div class="card-title">Durée de référence par génération</div>
-        <div class="card-subtitle">Régime général. Âge légal, durée requise (trimestres) et source. « Réf. 2023 » = valeur « au lieu de » (laisser vide si inchangé).</div></div></div>
-      <div style="overflow-x:auto;">
-        <table class="dr-table">
-          <thead><tr>
-            <th style="width:36px;">#</th>
-            <th style="min-width:150px;">Génération</th>
-            <th>Âge légal</th>
-            <th>Âge réf. 2023</th>
-            <th style="width:70px;">Trim.</th>
-            <th style="width:80px;">Trim. réf.</th>
-            <th>Âge taux plein</th>
-            <th style="min-width:180px;">Source</th>
-            <th style="width:34px;"></th>
-          </tr></thead>
-          <tbody id="dureeRefBody"></tbody>
-        </table>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">4</div>
+          <div>
+            <div class="card-title">IJ accident du travail / MP</div>
+            <div class="card-subtitle">Taux, diviseur, plafonds et gain journalier net de l'IJ AT/MP.</div>
+          </div>
+        </div>
+        <div id="prevGroup-at"></div>
       </div>
-      <div style="margin-top:12px;">
-        <button class="btn btn-ghost" type="button" style="width:auto;" onclick="ajouterLigneDuree()">+ Ajouter une génération</button>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">5</div>
+          <div>
+            <div class="card-title">Invalidité</div>
+            <div class="card-subtitle">Taux, SAM, bornes de pension et majoration tierce personne.</div>
+          </div>
+        </div>
+        <div id="prevGroup-inv"></div>
       </div>
-      <div class="note">La <strong>source</strong> de chaque ligne évite les interprétations : renseignez la référence officielle (ex. « Circulaire Cnav 2026-07, annexe 1 »). Ces valeurs sont lues en direct par le tableau et les supports stagiaires.</div>
-    </div>
-    <div class="actionbar">
-      <div class="lastup">Dernière mise à jour : <strong id="lastUpdateDuree">—</strong></div>
-      <button class="btn btn-primary" id="btnSaveDuree" onclick="enregistrerDureeRef()">💾 Enregistrer la durée de référence</button>
-    </div>
-  </div>
-
-  <!-- ============ PANEL SANTÉ ============ -->
-  <div class="panel" id="panel-sante">
-    <div class="placeholder">
-      <div class="ic">🩺</div>
-      <h3>Module Santé — en préparation</h3>
-      <p>Cet onglet accueillera les paramètres du module santé (complémentaire santé, tickets modérateurs, plafonds de remboursement, forfaits…).</p>
-      <p>Table Supabase pressentie : <code>parametres_sante</code>, sur le même modèle clé/valeur que la retraite.</p>
-    </div>
-  </div>
-
-  <!-- ============ PANEL PRÉVOYANCE ============ -->
-  <div class="panel" id="panel-prevoyance">
-    <div class="card">
-      <div class="card-header"><div class="card-num">1</div><div>
-        <div class="card-title">Références générales</div>
-        <div class="card-subtitle">SMIC et plafonds de la Sécurité sociale — bases communes aux calculs.</div></div></div>
-      <div id="prevGroup-ref"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">2</div><div>
-        <div class="card-title">IJ maladie (vie normale)</div>
-        <div class="card-subtitle">Taux, diviseur, plafonds et carence de l'indemnité journalière maladie.</div></div></div>
-      <div id="prevGroup-mal"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">3</div><div>
-        <div class="card-title">Loi de mensualisation</div>
-        <div class="card-subtitle">Taux du complément employeur, carences et ancienneté minimale.</div></div></div>
-      <div id="prevGroup-mens"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">4</div><div>
-        <div class="card-title">IJ accident du travail / MP</div>
-        <div class="card-subtitle">Taux, diviseur, plafonds et gain journalier net de l'IJ AT/MP.</div></div></div>
-      <div id="prevGroup-at"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">5</div><div>
-        <div class="card-title">Invalidité</div>
-        <div class="card-subtitle">Taux, SAM, bornes de pension et majoration tierce personne.</div></div></div>
-      <div id="prevGroup-inv"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">6</div><div>
-        <div class="card-title">Décès</div>
-        <div class="card-subtitle">Capital décès, veuvage, réversion et rentes AT/MP.</div></div></div>
-      <div id="prevGroup-dec"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">7</div><div>
-        <div class="card-title">Dépendance</div>
-        <div class="card-subtitle">Plafonds APA par GIR, seuil, âge et APA d'urgence.</div></div></div>
-      <div id="prevGroup-dep"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">8</div><div>
-        <div class="card-title">Traçabilité</div>
-        <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div></div></div>
-      <div class="form-row">
-        <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="prevDateEffet"></div>
-        <div class="form-field"><label>&nbsp;</label>
-          <div class="note" style="margin:0">Si renseignée, cette date est écrite sur tous les paramètres enregistrés (sert au bandeau « à jour au… » des supports). Laisser vide pour ne pas y toucher.</div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">6</div>
+          <div>
+            <div class="card-title">Décès</div>
+            <div class="card-subtitle">Capital décès, veuvage, réversion et rentes AT/MP.</div>
+          </div>
+        </div>
+        <div id="prevGroup-dec"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">7</div>
+          <div>
+            <div class="card-title">Dépendance</div>
+            <div class="card-subtitle">Plafonds APA par GIR, seuil, âge et APA d'urgence.</div>
+          </div>
+        </div>
+        <div id="prevGroup-dep"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">8</div>
+          <div>
+            <div class="card-title">Traçabilité</div>
+            <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="prevDateEffet"></div>
+          <div class="form-field"><label>&nbsp;</label>
+            <div class="note" style="margin:0">Si renseignée, cette date est écrite sur tous les paramètres enregistrés (sert au bandeau « à jour au… » des supports). Laisser vide pour ne pas y toucher.</div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="actionbar">
-      <div class="lastup">Dernière mise à jour : <strong id="lastUpdatePrevoyance">—</strong></div>
-      <button class="btn btn-primary" id="btnSavePrevoyance" onclick="enregistrerPrevoyance()">💾 Enregistrer la prévoyance</button>
-    </div>
-  </div>
-
-  <!-- ============ PANEL TNS ============ -->
-  <div class="panel" id="panel-tns">
-    <div class="card">
-      <div class="card-header"><div class="card-num">1</div><div>
-        <div class="card-title">Plafonds (PASS)</div>
-        <div class="card-subtitle">Plafond annuel de la Sécurité sociale de l'année et de l'année précédente (rappel).</div></div></div>
-      <div id="tnsGroup-pass"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">2</div><div>
-        <div class="card-title">Cotisations</div>
-        <div class="card-subtitle">Taux des branches (barème SSI) + minimum retraite et forfaits CFP. Taux en %.</div></div></div>
-      <div id="tnsGroup-cot"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">3</div><div>
-        <div class="card-title">Prestations du régime obligatoire</div>
-        <div class="card-subtitle">IJ maladie, pensions d'invalidité et capital décès (barème SSI).</div></div></div>
-      <div id="tnsGroup-presta"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-num">4</div><div>
-        <div class="card-title">Traçabilité</div>
-        <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div></div></div>
-      <div class="form-row">
-        <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="tnsDateEffet"></div>
-        <div class="form-field"><label>&nbsp;</label>
-          <div class="note" style="margin:0">Si renseignée, cette date est écrite sur <strong>tous</strong> les paramètres enregistrés. Laisser vide pour conserver les dates existantes — utile pour préserver le PASS N-1.</div>
-        </div>
+      <div class="actionbar">
+        <div class="lastup">Dernière mise à jour : <strong id="lastUpdatePrevoyance">—</strong></div>
+        <button class="btn btn-primary" id="btnSavePrevoyance" onclick="enregistrerPrevoyance()">💾 Enregistrer la prévoyance</button>
       </div>
     </div>
-
-    <div class="actionbar">
-      <div class="lastup">Dernière mise à jour : <strong id="lastUpdateTns">—</strong></div>
-      <button class="btn btn-primary" id="btnSaveTns" onclick="enregistrerTns()">💾 Enregistrer les TNS</button>
+    <!-- ============ PANEL TNS ============ -->
+    <div class="panel" id="panel-tns">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">1</div>
+          <div>
+            <div class="card-title">Plafonds (PASS)</div>
+            <div class="card-subtitle">Plafond annuel de la Sécurité sociale de l'année et de l'année précédente (rappel).</div>
+          </div>
+        </div>
+        <div id="tnsGroup-pass"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">2</div>
+          <div>
+            <div class="card-title">Cotisations</div>
+            <div class="card-subtitle">Taux des branches (barème SSI) + minimum retraite et forfaits CFP. Taux en %.</div>
+          </div>
+        </div>
+        <div id="tnsGroup-cot"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">3</div>
+          <div>
+            <div class="card-title">Prestations du régime obligatoire</div>
+            <div class="card-subtitle">IJ maladie, pensions d'invalidité et capital décès (barème SSI).</div>
+          </div>
+        </div>
+        <div id="tnsGroup-presta"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">4</div>
+          <div>
+            <div class="card-title">Traçabilité</div>
+            <div class="card-subtitle">Date d'effet appliquée aux barèmes lors de cet enregistrement (optionnel).</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="tnsDateEffet"></div>
+          <div class="form-field"><label>&nbsp;</label>
+            <div class="note" style="margin:0">Si renseignée, cette date est écrite sur <strong>tous</strong> les paramètres enregistrés. Laisser vide pour conserver les dates existantes — utile pour préserver le PASS N-1.</div>
+          </div>
+        </div>
+      </div>
+      <div class="actionbar">
+        <div class="lastup">Dernière mise à jour : <strong id="lastUpdateTns">—</strong></div>
+        <button class="btn btn-primary" id="btnSaveTns" onclick="enregistrerTns()">💾 Enregistrer les TNS</button>
+      </div>
     </div>
+    <div class="footer-info"><strong>TMK Performances</strong> · Paramètres des formations · Espace formateur</div>
   </div>
-
-  <div class="footer-info"><strong>TMK Performances</strong> · Paramètres des formations · Espace formateur</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
+  <div class="toast" id="toast"></div>
+  <script>
 // ===================== CONFIG SUPABASE (partagée) =====================
 const SUPABASE_URL = 'https://ibkvyjlglwufxvzxnysa.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xUfZHSOHf4TnBRRyzU_qJA_TcXIMSKX';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let currentRecordId = null;   // fiscalité
-let passData = {};            // retraite : { annee: montant }
-
+let currentRecordId = null; // fiscalité
+let passData = {}; // retraite : { annee: montant }
 // ===================== HELPERS PARTAGÉS =====================
 function showLoader(t='Chargement…'){document.getElementById('loaderText').textContent=t;document.getElementById('loader').classList.add('show')}
 function hideLoader(){document.getElementById('loader').classList.remove('show')}
@@ -588,378 +777,498 @@ function showToast(msg,type='success'){const t=document.getElementById('toast');
 function numOrNull(id){const v=document.getElementById(id).value;if(v===''||v===null)return null;const n=Number(v);return isNaN(n)?null:n}
 function strOrNull(id){const v=document.getElementById(id).value;return(v===''||v===null)?null:v}
 function fmtDate(iso){const d=new Date(iso);return d.toLocaleDateString('fr-FR')+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
-
 // ===================== ONGLETS =====================
 function switchTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
+document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
 }
 function toggleAcc(id){document.getElementById(id).classList.toggle('open')}
-
 // ===================== AUTH =====================
 document.getElementById('loginForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const email=document.getElementById('loginEmail').value, password=document.getElementById('loginPassword').value;
-  const err=document.getElementById('loginError'); err.classList.remove('show');
-  showLoader('Connexion…');
-  const {data,error}=await db.auth.signInWithPassword({email,password});
-  hideLoader();
-  if(error){err.textContent='Identifiants incorrects ou problème de connexion.';err.classList.add('show');return;}
-  initApp(data.user);
+e.preventDefault();
+const email=document.getElementById('loginEmail').value, password=document.getElementById('loginPassword').value;
+const err=document.getElementById('loginError'); err.classList.remove('show');
+showLoader('Connexion…');
+const {data,error}=await db.auth.signInWithPassword({email,password});
+hideLoader();
+if(error){err.textContent='Identifiants incorrects ou problème de connexion.';err.classList.add('show');return;}
+initApp(data.user);
 });
 async function seDeconnecter(){
-  showLoader('Déconnexion…'); await db.auth.signOut(); hideLoader();
-  document.getElementById('app').classList.remove('show');
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('loginPassword').value='';
+showLoader('Déconnexion…'); await db.auth.signOut(); hideLoader();
+document.getElementById('app').classList.remove('show');
+document.getElementById('loginScreen').style.display='flex';
+document.getElementById('loginPassword').value='';
 }
 async function checkSession(){
-  showLoader('Vérification de la session…');
-  const {data}=await db.auth.getSession(); hideLoader();
-  if(data.session) initApp(data.session.user);
+showLoader('Vérification de la session…');
+const {data}=await db.auth.getSession(); hideLoader();
+if(data.session) initApp(data.session.user);
 }
 async function initApp(user){
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('app').classList.add('show');
-  document.getElementById('userEmail').textContent=user.email;
-  await chargerFiscalite();
-  await chargerRetraite();
-  await chargerDureeRef();
-  await chargerPrevoyance();
-  await chargerTns();
+document.getElementById('loginScreen').style.display='none';
+document.getElementById('app').classList.add('show');
+document.getElementById('userEmail').textContent=user.email;
+await chargerFiscalite();
+await chargerRetraite();
+await chargerDureeRef();
+await chargerPrevoyance();
+await chargerSante();
+await chargerTns();
 }
-
 // ===================== FISCALITÉ : chargement =====================
 async function chargerFiscalite(){
-  showLoader('Chargement des paramètres fiscaux…');
-  const {data,error}=await db.from('parametres_fiscaux').select('*').eq('is_active',true).single();
-  hideLoader();
-  if(error){showToast('Erreur de chargement (fiscalité)','error');return;}
-  currentRecordId=data.id;
-  document.getElementById('annee').value=data.annee;
-  document.getElementById('anneeRevenus').value=data.annee_revenus;
-  document.getElementById('seuil1').value=data.bareme_seuil_0;
-  document.getElementById('seuil2').value=data.bareme_seuil_11;
-  document.getElementById('seuil3').value=data.bareme_seuil_30;
-  document.getElementById('seuil4').value=data.bareme_seuil_41;
-  document.getElementById('decoteSeuilIndiv').value=data.decote_seuil_indiv;
-  document.getElementById('decoteForfIndiv').value=data.decote_forfait_indiv;
-  document.getElementById('decoteSeuilCouple').value=data.decote_seuil_couple;
-  document.getElementById('decoteForfCouple').value=data.decote_forfait_couple;
-  document.getElementById('decoteTaux').value=data.decote_taux;
-  document.getElementById('plafondQF').value=data.plafond_qf_demi;
-  document.getElementById('plafondQFQuart').value=data.plafond_qf_quart;
-  document.getElementById('plafondParentIsole').value=data.plafond_qf_parent_isole;
-  document.getElementById('plafondVeuf').value=data.plafond_qf_veuf;
-  document.getElementById('plafondInvalidite').value=data.plafond_qf_invalidite;
-  document.getElementById('abattementFP').value=data.abattement_fp_taux;
-  document.getElementById('plafondPension').value=data.plafond_pension_enfant_majeur;
-  document.getElementById('abatSalTaux').value      = data.abat_sal_taux       ?? '';
-  document.getElementById('abatSalPlancher').value  = data.abat_sal_plancher   ?? '';
-  document.getElementById('abatSalPlafond').value   = data.abat_sal_plafond    ?? '';
-  document.getElementById('abatPensionTaux').value     = data.abat_pension_taux     ?? '';
-  document.getElementById('abatPensionPlancher').value = data.abat_pension_plancher ?? '';
-  document.getElementById('abatPensionPlafond').value  = data.abat_pension_plafond  ?? '';
-  document.getElementById('abatAgeMontantHaut').value = data.abat_age_montant_haut ?? '';
-  document.getElementById('abatAgeMontantBas').value  = data.abat_age_montant_bas  ?? '';
-  document.getElementById('abatAgeSeuilBas').value    = data.abat_age_seuil_bas    ?? '';
-  document.getElementById('abatAgeSeuilHaut').value   = data.abat_age_seuil_haut   ?? '';
-  document.getElementById('abatSource').value = data.abat_source ?? '';
-  document.getElementById('abatMajLe').value  = data.abat_maj_le ? String(data.abat_maj_le).slice(0,10) : '';
-  if(data.updated_at) document.getElementById('lastUpdateValue').textContent = fmtDate(data.updated_at);
-  updateAll();
+showLoader('Chargement des paramètres fiscaux…');
+const {data,error}=await db.from('parametres_fiscaux').select('*').eq('is_active',true).single();
+hideLoader();
+if(error){showToast('Erreur de chargement (fiscalité)','error');return;}
+currentRecordId=data.id;
+document.getElementById('annee').value=data.annee;
+document.getElementById('anneeRevenus').value=data.annee_revenus;
+document.getElementById('seuil1').value=data.bareme_seuil_0;
+document.getElementById('seuil2').value=data.bareme_seuil_11;
+document.getElementById('seuil3').value=data.bareme_seuil_30;
+document.getElementById('seuil4').value=data.bareme_seuil_41;
+document.getElementById('decoteSeuilIndiv').value=data.decote_seuil_indiv;
+document.getElementById('decoteForfIndiv').value=data.decote_forfait_indiv;
+document.getElementById('decoteSeuilCouple').value=data.decote_seuil_couple;
+document.getElementById('decoteForfCouple').value=data.decote_forfait_couple;
+document.getElementById('decoteTaux').value=data.decote_taux;
+document.getElementById('plafondQF').value=data.plafond_qf_demi;
+document.getElementById('plafondQFQuart').value=data.plafond_qf_quart;
+document.getElementById('plafondParentIsole').value=data.plafond_qf_parent_isole;
+document.getElementById('plafondVeuf').value=data.plafond_qf_veuf;
+document.getElementById('plafondInvalidite').value=data.plafond_qf_invalidite;
+document.getElementById('abattementFP').value=data.abattement_fp_taux;
+document.getElementById('plafondPension').value=data.plafond_pension_enfant_majeur;
+document.getElementById('abatSalTaux').value = data.abat_sal_taux ?? '';
+document.getElementById('abatSalPlancher').value = data.abat_sal_plancher ?? '';
+document.getElementById('abatSalPlafond').value = data.abat_sal_plafond ?? '';
+document.getElementById('abatPensionTaux').value = data.abat_pension_taux ?? '';
+document.getElementById('abatPensionPlancher').value = data.abat_pension_plancher ?? '';
+document.getElementById('abatPensionPlafond').value = data.abat_pension_plafond ?? '';
+document.getElementById('abatAgeMontantHaut').value = data.abat_age_montant_haut ?? '';
+document.getElementById('abatAgeMontantBas').value = data.abat_age_montant_bas ?? '';
+document.getElementById('abatAgeSeuilBas').value = data.abat_age_seuil_bas ?? '';
+document.getElementById('abatAgeSeuilHaut').value = data.abat_age_seuil_haut ?? '';
+document.getElementById('abatSource').value = data.abat_source ?? '';
+document.getElementById('abatMajLe').value = data.abat_maj_le ? String(data.abat_maj_le).slice(0,10) : '';
+if(data.updated_at) document.getElementById('lastUpdateValue').textContent = fmtDate(data.updated_at);
+updateAll();
 }
-
 // ===================== FISCALITÉ : calculs dynamiques =====================
 document.querySelectorAll('#panel-fiscalite input[type="number"]').forEach(i=>i.addEventListener('input',updateAll));
 function updateAll(){
-  const v1=parseInt(document.getElementById('seuil1').value)||0;
-  const v2=parseInt(document.getElementById('seuil2').value)||0;
-  const v3=parseInt(document.getElementById('seuil3').value)||0;
-  const v4=parseInt(document.getElementById('seuil4').value)||0;
-  document.getElementById('seuil1b').value=v1+1;
-  document.getElementById('seuil2b').value=v2+1;
-  document.getElementById('seuil3b').value=v3+1;
-  document.getElementById('seuil4b').value=v4+1;
-  document.getElementById('afficheAnnee').textContent=document.getElementById('annee').value||'—';
-  const c=computeConstants();
-  document.getElementById('cst11').textContent=formatEur(c.cst11);
-  document.getElementById('cst30').textContent=formatEur(c.cst30);
-  document.getElementById('cst41').textContent=formatEur(c.cst41);
-  document.getElementById('cst45').textContent=formatEur(c.cst45);
+const v1=parseInt(document.getElementById('seuil1').value)||0;
+const v2=parseInt(document.getElementById('seuil2').value)||0;
+const v3=parseInt(document.getElementById('seuil3').value)||0;
+const v4=parseInt(document.getElementById('seuil4').value)||0;
+document.getElementById('seuil1b').value=v1+1;
+document.getElementById('seuil2b').value=v2+1;
+document.getElementById('seuil3b').value=v3+1;
+document.getElementById('seuil4b').value=v4+1;
+document.getElementById('afficheAnnee').textContent=document.getElementById('annee').value||'—';
+const c=computeConstants();
+document.getElementById('cst11').textContent=formatEur(c.cst11);
+document.getElementById('cst30').textContent=formatEur(c.cst30);
+document.getElementById('cst41').textContent=formatEur(c.cst41);
+document.getElementById('cst45').textContent=formatEur(c.cst45);
 }
 function computeConstants(){
-  const s1=parseInt(document.getElementById('seuil1').value)||0;
-  const s2=parseInt(document.getElementById('seuil2').value)||0;
-  const s3=parseInt(document.getElementById('seuil3').value)||0;
-  const s4=parseInt(document.getElementById('seuil4').value)||0;
-  const cst11=s1*0.11;
-  const impot_a_s2=(s2-s1)*0.11;
-  const cst30=s2*0.30-impot_a_s2;
-  const impot_a_s3=impot_a_s2+(s3-s2)*0.30;
-  const cst41=s3*0.41-impot_a_s3;
-  const impot_a_s4=impot_a_s3+(s4-s3)*0.41;
-  const cst45=s4*0.45-impot_a_s4;
-  return {cst11,cst30,cst41,cst45};
+const s1=parseInt(document.getElementById('seuil1').value)||0;
+const s2=parseInt(document.getElementById('seuil2').value)||0;
+const s3=parseInt(document.getElementById('seuil3').value)||0;
+const s4=parseInt(document.getElementById('seuil4').value)||0;
+const cst11=s1*0.11;
+const impot_a_s2=(s2-s1)*0.11;
+const cst30=s2*0.30-impot_a_s2;
+const impot_a_s3=impot_a_s2+(s3-s2)*0.30;
+const cst41=s3*0.41-impot_a_s3;
+const impot_a_s4=impot_a_s3+(s4-s3)*0.41;
+const cst45=s4*0.45-impot_a_s4;
+return {cst11,cst30,cst41,cst45};
 }
 function formatEur(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}
-
 // ===================== FISCALITÉ : enregistrement =====================
 async function enregistrerFiscalite(){
-  const btn=document.getElementById('btnSaveFisc'); btn.disabled=true; btn.textContent='Enregistrement…';
-  const payload={
-    annee:parseInt(document.getElementById('annee').value),
-    annee_revenus:parseInt(document.getElementById('anneeRevenus').value),
-    bareme_seuil_0:parseInt(document.getElementById('seuil1').value),
-    bareme_seuil_11:parseInt(document.getElementById('seuil2').value),
-    bareme_seuil_30:parseInt(document.getElementById('seuil3').value),
-    bareme_seuil_41:parseInt(document.getElementById('seuil4').value),
-    decote_seuil_indiv:parseInt(document.getElementById('decoteSeuilIndiv').value),
-    decote_forfait_indiv:parseInt(document.getElementById('decoteForfIndiv').value),
-    decote_seuil_couple:parseInt(document.getElementById('decoteSeuilCouple').value),
-    decote_forfait_couple:parseInt(document.getElementById('decoteForfCouple').value),
-    decote_taux:parseFloat(document.getElementById('decoteTaux').value),
-    plafond_qf_demi:parseInt(document.getElementById('plafondQF').value),
-    plafond_qf_quart:parseInt(document.getElementById('plafondQFQuart').value),
-    plafond_qf_parent_isole:parseInt(document.getElementById('plafondParentIsole').value),
-    plafond_qf_veuf:parseInt(document.getElementById('plafondVeuf').value),
-    plafond_qf_invalidite:parseInt(document.getElementById('plafondInvalidite').value),
-    abattement_fp_taux:parseFloat(document.getElementById('abattementFP').value),
-    plafond_pension_enfant_majeur:parseInt(document.getElementById('plafondPension').value),
-    abat_sal_taux:numOrNull('abatSalTaux'),
-    abat_sal_plancher:numOrNull('abatSalPlancher'),
-    abat_sal_plafond:numOrNull('abatSalPlafond'),
-    abat_pension_taux:numOrNull('abatPensionTaux'),
-    abat_pension_plancher:numOrNull('abatPensionPlancher'),
-    abat_pension_plafond:numOrNull('abatPensionPlafond'),
-    abat_age_montant_haut:numOrNull('abatAgeMontantHaut'),
-    abat_age_montant_bas:numOrNull('abatAgeMontantBas'),
-    abat_age_seuil_bas:numOrNull('abatAgeSeuilBas'),
-    abat_age_seuil_haut:numOrNull('abatAgeSeuilHaut'),
-    abat_source:strOrNull('abatSource'),
-    abat_maj_le:strOrNull('abatMajLe'),
-    is_active:true
-  };
-  const {data:existing}=await db.from('parametres_fiscaux').select('id').eq('annee',payload.annee).maybeSingle();
-  let result;
-  if(existing){ result=await db.from('parametres_fiscaux').update(payload).eq('id',existing.id).select().single(); }
-  else{ result=await db.from('parametres_fiscaux').insert(payload).select().single(); }
-  btn.disabled=false; btn.innerHTML='💾 Enregistrer la fiscalité';
-  if(result.error){showToast('Erreur : '+result.error.message,'error');return;}
-  currentRecordId=result.data.id;
-  if(result.data.updated_at) document.getElementById('lastUpdateValue').textContent=fmtDate(result.data.updated_at);
-  showToast('Fiscalité enregistrée ✓');
+const btn=document.getElementById('btnSaveFisc'); btn.disabled=true; btn.textContent='Enregistrement…';
+const payload={
+annee:parseInt(document.getElementById('annee').value),
+annee_revenus:parseInt(document.getElementById('anneeRevenus').value),
+bareme_seuil_0:parseInt(document.getElementById('seuil1').value),
+bareme_seuil_11:parseInt(document.getElementById('seuil2').value),
+bareme_seuil_30:parseInt(document.getElementById('seuil3').value),
+bareme_seuil_41:parseInt(document.getElementById('seuil4').value),
+decote_seuil_indiv:parseInt(document.getElementById('decoteSeuilIndiv').value),
+decote_forfait_indiv:parseInt(document.getElementById('decoteForfIndiv').value),
+decote_seuil_couple:parseInt(document.getElementById('decoteSeuilCouple').value),
+decote_forfait_couple:parseInt(document.getElementById('decoteForfCouple').value),
+decote_taux:parseFloat(document.getElementById('decoteTaux').value),
+plafond_qf_demi:parseInt(document.getElementById('plafondQF').value),
+plafond_qf_quart:parseInt(document.getElementById('plafondQFQuart').value),
+plafond_qf_parent_isole:parseInt(document.getElementById('plafondParentIsole').value),
+plafond_qf_veuf:parseInt(document.getElementById('plafondVeuf').value),
+plafond_qf_invalidite:parseInt(document.getElementById('plafondInvalidite').value),
+abattement_fp_taux:parseFloat(document.getElementById('abattementFP').value),
+plafond_pension_enfant_majeur:parseInt(document.getElementById('plafondPension').value),
+abat_sal_taux:numOrNull('abatSalTaux'),
+abat_sal_plancher:numOrNull('abatSalPlancher'),
+abat_sal_plafond:numOrNull('abatSalPlafond'),
+abat_pension_taux:numOrNull('abatPensionTaux'),
+abat_pension_plancher:numOrNull('abatPensionPlancher'),
+abat_pension_plafond:numOrNull('abatPensionPlafond'),
+abat_age_montant_haut:numOrNull('abatAgeMontantHaut'),
+abat_age_montant_bas:numOrNull('abatAgeMontantBas'),
+abat_age_seuil_bas:numOrNull('abatAgeSeuilBas'),
+abat_age_seuil_haut:numOrNull('abatAgeSeuilHaut'),
+abat_source:strOrNull('abatSource'),
+abat_maj_le:strOrNull('abatMajLe'),
+is_active:true
+};
+const {data:existing}=await db.from('parametres_fiscaux').select('id').eq('annee',payload.annee).maybeSingle();
+let result;
+if(existing){ result=await db.from('parametres_fiscaux').update(payload).eq('id',existing.id).select().single(); }
+else{ result=await db.from('parametres_fiscaux').insert(payload).select().single(); }
+btn.disabled=false; btn.innerHTML='💾 Enregistrer la fiscalité';
+if(result.error){showToast('Erreur : '+result.error.message,'error');return;}
+currentRecordId=result.data.id;
+if(result.data.updated_at) document.getElementById('lastUpdateValue').textContent=fmtDate(result.data.updated_at);
+showToast('Fiscalité enregistrée ✓');
 }
-
 // ===================== RETRAITE : chargement =====================
 async function chargerRetraite(){
-  let maj=null;
-  const pass=await db.from('pass_annuel').select('annee,montant_eur,updated_at').order('annee',{ascending:false});
-  if(!pass.error && pass.data){
-    passData={}; pass.data.forEach(r=>passData[r.annee]=Number(r.montant_eur));
-    pass.data.forEach(r=>{if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at});
-  }
-  renderPass();
-  const par=await db.from('parametres_parcours').select('cle,valeur,updated_at');
-  if(par.error){showToast('Erreur de chargement (retraite)','error');return;}
-  const m={}; par.data.forEach(r=>{m[r.cle]=Number(r.valeur); if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at});
-  document.getElementById('smic').value        = m.smic_mensuel_brut ?? '';
-  document.getElementById('coeff').value       = m.coeff_net_vers_brut ?? '';
-  document.getElementById('dureeAnnees').value = m.duree_cotisation_annees ?? '';
-  document.getElementById('dureeTrim').value   = m.duree_cotisation_trimestres ?? '';
-  if(maj) document.getElementById('lastUpdateRetraite').textContent = fmtDate(maj);
+let maj=null;
+const pass=await db.from('pass_annuel').select('annee,montant_eur,updated_at').order('annee',{ascending:false});
+if(!pass.error && pass.data){
+passData={}; pass.data.forEach(r=>passData[r.annee]=Number(r.montant_eur));
+pass.data.forEach(r=>{if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at});
+}
+renderPass();
+const par=await db.from('parametres_parcours').select('cle,valeur,updated_at');
+if(par.error){showToast('Erreur de chargement (retraite)','error');return;}
+const m={}; par.data.forEach(r=>{m[r.cle]=Number(r.valeur); if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at});
+document.getElementById('smic').value = m.smic_mensuel_brut ?? '';
+document.getElementById('coeff').value = m.coeff_net_vers_brut ?? '';
+document.getElementById('dureeAnnees').value = m.duree_cotisation_annees ?? '';
+document.getElementById('dureeTrim').value = m.duree_cotisation_trimestres ?? '';
+if(maj) document.getElementById('lastUpdateRetraite').textContent = fmtDate(maj);
 }
 function renderPass(){
-  const annees=Object.keys(passData).map(Number).sort((a,b)=>b-a);
-  document.getElementById('passList').innerHTML = annees.map(a=>`
-    <div class="pass-row"><span class="yr">PASS ${a}</span>
-      <input type="number" min="0" step="1" value="${passData[a]}" data-year="${a}">
-      <button class="del" type="button" title="Retirer" onclick="retirerAnnee(${a})">✕</button></div>`).join('')
-    || '<p style="color:var(--text-muted);font-size:13px">Aucune valeur — ajoutez une année ci-dessous.</p>';
-  document.querySelectorAll('#passList input').forEach(inp=>{
-    inp.addEventListener('input',e=>{passData[Number(e.target.dataset.year)]=Number(e.target.value)||0});
-  });
+const annees=Object.keys(passData).map(Number).sort((a,b)=>b-a);
+document.getElementById('passList').innerHTML = annees.map(a=>`
+<div class="pass-row"><span class="yr">PASS ${a}</span>
+<input type="number" min="0" step="1" value="${passData[a]}" data-year="${a}">
+<button class="del" type="button" title="Retirer" onclick="retirerAnnee(${a})">✕</button></div>`).join('')
+|| '<p style="color:var(--text-muted);font-size:13px">Aucune valeur — ajoutez une année ci-dessous.</p>';
+document.querySelectorAll('#passList input').forEach(inp=>{
+inp.addEventListener('input',e=>{passData[Number(e.target.dataset.year)]=Number(e.target.value)||0});
+});
 }
 function ajouterAnnee(){
-  const y=parseInt(document.getElementById('newYear').value), a=parseFloat(document.getElementById('newAmount').value);
-  if(!y||isNaN(a)){showToast('Renseignez une année et un montant valides','error');return;}
-  passData[y]=a; document.getElementById('newYear').value=''; document.getElementById('newAmount').value=''; renderPass();
+const y=parseInt(document.getElementById('newYear').value), a=parseFloat(document.getElementById('newAmount').value);
+if(!y||isNaN(a)){showToast('Renseignez une année et un montant valides','error');return;}
+passData[y]=a; document.getElementById('newYear').value=''; document.getElementById('newAmount').value=''; renderPass();
 }
 function retirerAnnee(y){delete passData[y]; renderPass();}
-
 // ===================== RETRAITE : enregistrement =====================
 async function enregistrerRetraite(){
-  const btn=document.getElementById('btnSaveRetraite'); btn.disabled=true; btn.textContent='Enregistrement…';
-  const now=new Date().toISOString();
-  try{
-    const params=[
-      {cle:'smic_mensuel_brut',valeur:numOrNull('smic'),unite:'€',libelle:'SMIC mensuel brut',updated_at:now},
-      {cle:'coeff_net_vers_brut',valeur:numOrNull('coeff'),unite:'',libelle:'Coefficient net vers brut',updated_at:now},
-      {cle:'duree_cotisation_annees',valeur:numOrNull('dureeAnnees'),unite:'ans',libelle:'Durée de cotisation par défaut',updated_at:now},
-      {cle:'duree_cotisation_trimestres',valeur:numOrNull('dureeTrim'),unite:'trimestres',libelle:'Durée de cotisation par défaut',updated_at:now},
-    ].filter(p=>p.valeur!==null);
-    const r1=await db.from('parametres_parcours').upsert(params,{onConflict:'cle'});
-    if(r1.error) throw r1.error;
-    const passRows=Object.keys(passData).map(Number).map(a=>({annee:a,montant_eur:Math.round(passData[a]),updated_at:now}));
-    if(passRows.length){ const r2=await db.from('pass_annuel').upsert(passRows,{onConflict:'annee'}); if(r2.error) throw r2.error; }
-    document.getElementById('lastUpdateRetraite').textContent=fmtDate(now);
-    showToast('Retraite enregistrée ✓');
-  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
-  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la retraite'; }
+const btn=document.getElementById('btnSaveRetraite'); btn.disabled=true; btn.textContent='Enregistrement…';
+const now=new Date().toISOString();
+try{
+const params=[
+{cle:'smic_mensuel_brut',valeur:numOrNull('smic'),unite:'€',libelle:'SMIC mensuel brut',updated_at:now},
+{cle:'coeff_net_vers_brut',valeur:numOrNull('coeff'),unite:'',libelle:'Coefficient net vers brut',updated_at:now},
+{cle:'duree_cotisation_annees',valeur:numOrNull('dureeAnnees'),unite:'ans',libelle:'Durée de cotisation par défaut',updated_at:now},
+{cle:'duree_cotisation_trimestres',valeur:numOrNull('dureeTrim'),unite:'trimestres',libelle:'Durée de cotisation par défaut',updated_at:now},
+].filter(p=>p.valeur!==null);
+const r1=await db.from('parametres_parcours').upsert(params,{onConflict:'cle'});
+if(r1.error) throw r1.error;
+const passRows=Object.keys(passData).map(Number).map(a=>({annee:a,montant_eur:Math.round(passData[a]),updated_at:now}));
+if(passRows.length){ const r2=await db.from('pass_annuel').upsert(passRows,{onConflict:'annee'}); if(r2.error) throw r2.error; }
+document.getElementById('lastUpdateRetraite').textContent=fmtDate(now);
+showToast('Retraite enregistrée ✓');
+}catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la retraite'; }
 }
-
 // ===================== DURÉE DE RÉFÉRENCE =====================
 let dureeRows = [];
 let dureeOriginalIds = new Set();
 const SOURCE_DEFAUT = "Circulaire Cnav 2026-07 du 05/03/2026, annexe 1";
-
 async function chargerDureeRef(){
-  const {data,error}=await db.from('duree_reference').select('*').order('id',{ascending:true});
-  if(error){showToast('Erreur de chargement (durée de référence)','error');return;}
-  dureeRows = (data||[]).map(r=>({...r}));
-  dureeOriginalIds = new Set(dureeRows.map(r=>r.id));
-  let maj=null; (data||[]).forEach(r=>{if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at;});
-  if(maj) document.getElementById('lastUpdateDuree').textContent = fmtDate(maj);
-  renderDureeRef();
+const {data,error}=await db.from('duree_reference').select('*').order('id',{ascending:true});
+if(error){showToast('Erreur de chargement (durée de référence)','error');return;}
+dureeRows = (data||[]).map(r=>({...r}));
+dureeOriginalIds = new Set(dureeRows.map(r=>r.id));
+let maj=null; (data||[]).forEach(r=>{if(r.updated_at&&(!maj||r.updated_at>maj))maj=r.updated_at;});
+if(maj) document.getElementById('lastUpdateDuree').textContent = fmtDate(maj);
+renderDureeRef();
 }
-
 function esc(v){ return (v===null||v===undefined)?'':String(v).replace(/"/g,'&quot;'); }
 function renderDureeRef(){
-  const body=document.getElementById('dureeRefBody');
-  body.innerHTML = dureeRows.map((r,i)=>`
-    <tr>
-      <td class="num">${r.id}</td>
-      <td><input value="${esc(r.generation)}" data-i="${i}" data-f="generation"></td>
-      <td><input value="${esc(r.age_legal)}" data-i="${i}" data-f="age_legal"></td>
-      <td><input value="${esc(r.age_legal_ref)}" data-i="${i}" data-f="age_legal_ref" placeholder="—"></td>
-      <td><input class="mini" type="number" value="${esc(r.trimestres)}" data-i="${i}" data-f="trimestres"></td>
-      <td><input class="mini" type="number" value="${esc(r.trimestres_ref)}" data-i="${i}" data-f="trimestres_ref" placeholder="—"></td>
-      <td><input value="${esc(r.age_taux_plein)}" data-i="${i}" data-f="age_taux_plein"></td>
-      <td><input value="${esc(r.source)}" data-i="${i}" data-f="source"></td>
-      <td><button class="del" type="button" title="Supprimer" onclick="supprimerLigneDuree(${i})">✕</button></td>
-    </tr>`).join('');
-  body.querySelectorAll('input').forEach(inp=>{
-    inp.addEventListener('input',e=>{
-      const i=+e.target.dataset.i, f=e.target.dataset.f; let v=e.target.value;
-      if(f==='trimestres'||f==='trimestres_ref') v = (v===''?null:Number(v));
-      else if(f==='age_legal_ref') v = (v===''?null:v);
-      dureeRows[i][f]=v;
-    });
-  });
+const body=document.getElementById('dureeRefBody');
+body.innerHTML = dureeRows.map((r,i)=>`
+<tr>
+<td class="num">${r.id}</td>
+<td><input value="${esc(r.generation)}" data-i="${i}" data-f="generation"></td>
+<td><input value="${esc(r.age_legal)}" data-i="${i}" data-f="age_legal"></td>
+<td><input value="${esc(r.age_legal_ref)}" data-i="${i}" data-f="age_legal_ref" placeholder="—"></td>
+<td><input class="mini" type="number" value="${esc(r.trimestres)}" data-i="${i}" data-f="trimestres"></td>
+<td><input class="mini" type="number" value="${esc(r.trimestres_ref)}" data-i="${i}" data-f="trimestres_ref" placeholder="—"></td>
+<td><input value="${esc(r.age_taux_plein)}" data-i="${i}" data-f="age_taux_plein"></td>
+<td><input value="${esc(r.source)}" data-i="${i}" data-f="source"></td>
+<td><button class="del" type="button" title="Supprimer" onclick="supprimerLigneDuree(${i})">✕</button></td>
+</tr>`).join('');
+body.querySelectorAll('input').forEach(inp=>{
+inp.addEventListener('input',e=>{
+const i=+e.target.dataset.i, f=e.target.dataset.f; let v=e.target.value;
+if(f==='trimestres'||f==='trimestres_ref') v = (v===''?null:Number(v));
+else if(f==='age_legal_ref') v = (v===''?null:v);
+dureeRows[i][f]=v;
+});
+});
 }
 function ajouterLigneDuree(){
-  const maxId = dureeRows.reduce((m,r)=>Math.max(m,Number(r.id)||0),0);
-  dureeRows.push({id:maxId+1,generation:'',age_legal:'',age_legal_ref:null,trimestres:0,trimestres_ref:null,age_taux_plein:'67 ans',source:SOURCE_DEFAUT});
-  renderDureeRef();
+const maxId = dureeRows.reduce((m,r)=>Math.max(m,Number(r.id)||0),0);
+dureeRows.push({id:maxId+1,generation:'',age_legal:'',age_legal_ref:null,trimestres:0,trimestres_ref:null,age_taux_plein:'67 ans',source:SOURCE_DEFAUT});
+renderDureeRef();
 }
 function supprimerLigneDuree(i){ dureeRows.splice(i,1); renderDureeRef(); }
-
 async function enregistrerDureeRef(){
-  const btn=document.getElementById('btnSaveDuree'); btn.disabled=true; btn.textContent='Enregistrement…';
-  const now=new Date().toISOString();
-  try{
-    const rows = dureeRows
-      .filter(r=>r.generation && r.generation.trim()!=='')
-      .map(r=>({
-        id:Number(r.id), generation:r.generation, age_legal:r.age_legal,
-        age_legal_ref:(r.age_legal_ref===''?null:r.age_legal_ref),
-        trimestres:Number(r.trimestres)||0,
-        trimestres_ref:(r.trimestres_ref===''||r.trimestres_ref===null||r.trimestres_ref===undefined)?null:Number(r.trimestres_ref),
-        age_taux_plein:r.age_taux_plein||'67 ans', source:r.source||SOURCE_DEFAUT, updated_at:now
-      }));
-    const r1=await db.from('duree_reference').upsert(rows,{onConflict:'id'});
-    if(r1.error) throw r1.error;
-    // supprimer les lignes retirées
-    const currentIds=new Set(rows.map(r=>r.id));
-    const toDelete=[...dureeOriginalIds].filter(id=>!currentIds.has(id));
-    if(toDelete.length){ const r2=await db.from('duree_reference').delete().in('id',toDelete); if(r2.error) throw r2.error; }
-    dureeOriginalIds=new Set(rows.map(r=>r.id));
-    document.getElementById('lastUpdateDuree').textContent=fmtDate(now);
-    showToast('Durée de référence enregistrée ✓');
-  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
-  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la durée de référence'; }
+const btn=document.getElementById('btnSaveDuree'); btn.disabled=true; btn.textContent='Enregistrement…';
+const now=new Date().toISOString();
+try{
+const rows = dureeRows
+.filter(r=>r.generation && r.generation.trim()!=='')
+.map(r=>({
+id:Number(r.id), generation:r.generation, age_legal:r.age_legal,
+age_legal_ref:(r.age_legal_ref===''?null:r.age_legal_ref),
+trimestres:Number(r.trimestres)||0,
+trimestres_ref:(r.trimestres_ref===''||r.trimestres_ref===null||r.trimestres_ref===undefined)?null:Number(r.trimestres_ref),
+age_taux_plein:r.age_taux_plein||'67 ans', source:r.source||SOURCE_DEFAUT, updated_at:now
+}));
+const r1=await db.from('duree_reference').upsert(rows,{onConflict:'id'});
+if(r1.error) throw r1.error;
+// supprimer les lignes retirées
+const currentIds=new Set(rows.map(r=>r.id));
+const toDelete=[...dureeOriginalIds].filter(id=>!currentIds.has(id));
+if(toDelete.length){ const r2=await db.from('duree_reference').delete().in('id',toDelete); if(r2.error) throw r2.error; }
+dureeOriginalIds=new Set(rows.map(r=>r.id));
+document.getElementById('lastUpdateDuree').textContent=fmtDate(now);
+showToast('Durée de référence enregistrée ✓');
+}catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la durée de référence'; }
 }
-
 // ===================== PRÉVOYANCE =====================
 const PREVOYANCE_PARAMS = [
-  // Références générales
-  {cle:'smic_horaire',            label:'SMIC horaire brut',              unite:'€',      group:'ref'},
-  {cle:'smic_mensuel',            label:'SMIC mensuel brut (35 h)',       unite:'€',      group:'ref'},
-  {cle:'pmss',                    label:'Plafond mensuel Sécu (PMSS)',    unite:'€',      group:'ref'},
-  {cle:'pass',                    label:'Plafond annuel Sécu (PASS)',     unite:'€',      group:'ref'},
-  // IJ maladie
-  {cle:'ij_mal_taux',             label:'Taux IJ (× SJB)',                unite:'',       group:'mal'},
-  {cle:'ij_mal_diviseur',         label:'Diviseur SJB (3 mois)',          unite:'',       group:'mal'},
-  {cle:'ij_mal_coef_plafond',     label:'Plafond salaire retenu',         unite:'× SMIC', group:'mal'},
-  {cle:'ij_mal_plafond_salaire',  label:'Salaire mensuel plafonné',       unite:'€',      group:'mal'},
-  {cle:'ij_mal_montant_max',      label:'IJ journalière max',             unite:'€',      group:'mal'},
-  {cle:'ij_mal_carence',          label:'Carence Sécu',                   unite:'jours',  group:'mal'},
-  {cle:'ij_mal_duree_max',        label:'Durée max (sur 3 ans)',          unite:'jours',  group:'mal'},
-  // Mensualisation
-  {cle:'mens_taux1',              label:'Taux 1re période',               unite:'',       group:'mens'},
-  {cle:'mens_taux2',              label:'Taux 2e période',                unite:'',       group:'mens'},
-  {cle:'mens_carence_maladie',    label:'Carence maladie',                unite:'jours',  group:'mens'},
-  {cle:'mens_carence_atmp',       label:'Carence AT/MP',                  unite:'jours',  group:'mens'},
-  {cle:'mens_anciennete_min',     label:'Ancienneté minimale',            unite:'ans',    group:'mens'},
-  // IJ AT/MP
-  {cle:'at_taux1',                label:'Taux j.1–28',                    unite:'',       group:'at'},
-  {cle:'at_taux2',                label:'Taux dès j.29',                  unite:'',       group:'at'},
-  {cle:'at_diviseur_sjr',         label:'Diviseur SJR',                   unite:'',       group:'at'},
-  {cle:'at_sjr_plafond',          label:'SJR plafonné',                   unite:'€',      group:'at'},
-  {cle:'at_coef_gain_net',        label:'Coef gain journalier net',       unite:'',       group:'at'},
-  {cle:'at_ij_max_1_28',          label:'IJ max j.1–28',                  unite:'€',      group:'at'},
-  {cle:'at_ij_max_29',            label:'IJ max dès j.29',                unite:'€',      group:'at'},
-  {cle:'at_carence',              label:'Carence Sécu',                   unite:'jours',  group:'at'},
-  // Invalidité
-  {cle:'inv_taux_cat1',           label:'Taux catégorie 1 (× SAM)',       unite:'',       group:'inv'},
-  {cle:'inv_taux_cat2',           label:'Taux catégories 2 et 3 (× SAM)', unite:'',       group:'inv'},
-  {cle:'inv_sam_annees',          label:'Meilleures années (SAM)',        unite:'années', group:'inv'},
-  {cle:'inv_pension_min',         label:'Pension mensuelle minimale',     unite:'€',      group:'inv'},
-  {cle:'inv_pension_max_cat1',    label:'Pension mensuelle max cat. 1',   unite:'€',      group:'inv'},
-  {cle:'inv_pension_max_cat2',    label:'Pension mensuelle max cat. 2',   unite:'€',      group:'inv'},
-  {cle:'inv_mtp',                 label:'MTP (forfait mensuel)',          unite:'€',      group:'inv'},
-  {cle:'inv_mtp_taux',            label:'MTP (% de la pension)',          unite:'',       group:'inv'},
-  {cle:'inv_cat3_min',            label:'Pension min cat. 3 (MTP incl.)', unite:'€',      group:'inv'},
-  {cle:'inv_cat3_max',            label:'Pension max cat. 3 (MTP incl.)', unite:'€',      group:'inv'},
-  // Décès
-  {cle:'deces_capital_forfait',    label:'Capital décès forfaitaire',      unite:'€',      group:'dec'},
-  {cle:'veuvage_montant',          label:'Allocation veuvage (max/mois)',  unite:'€',      group:'dec'},
-  {cle:'veuvage_plafond',          label:'Veuvage : plafond ressources',   unite:'€',      group:'dec'},
-  {cle:'veuvage_age_max',          label:'Veuvage : âge max',              unite:'ans',    group:'dec'},
-  {cle:'veuvage_duree_max',        label:'Veuvage : durée max',            unite:'mois',   group:'dec'},
-  {cle:'reversion_taux',           label:'Réversion : taux',               unite:'',       group:'dec'},
-  {cle:'reversion_age_min',        label:'Réversion : âge minimal',        unite:'ans',    group:'dec'},
-  {cle:'reversion_plafond_seul',   label:'Réversion : plafond (seul)',     unite:'€',      group:'dec'},
-  {cle:'reversion_plafond_couple', label:'Réversion : plafond (couple)',   unite:'€',      group:'dec'},
-  {cle:'at_rente_conjoint',        label:'Rente AT/MP conjoint',           unite:'',       group:'dec'},
-  {cle:'at_rente_orphelin',        label:'Rente AT/MP orphelin (1er/2e)',  unite:'',       group:'dec'},
-  {cle:'at_rente_orphelin_sup',    label:'Rente AT/MP orphelin (3e+)',     unite:'',       group:'dec'},
-  {cle:'at_rente_orphelin_double', label:'Rente AT/MP orphelin (double)',  unite:'',       group:'dec'},
-  {cle:'pension_orphelin_taux',    label:'Pension orphelin : taux',        unite:'',       group:'dec'},
-  {cle:'pension_orphelin_plancher',label:'Pension orphelin : plancher',    unite:'€',      group:'dec'},
-  // Dépendance
-  {cle:'apa_plafond_gir1',         label:'APA plafond GIR 1',              unite:'€',      group:'dep'},
-  {cle:'apa_plafond_gir2',         label:'APA plafond GIR 2',              unite:'€',      group:'dep'},
-  {cle:'apa_plafond_gir3',         label:'APA plafond GIR 3',              unite:'€',      group:'dep'},
-  {cle:'apa_plafond_gir4',         label:'APA plafond GIR 4',              unite:'€',      group:'dep'},
-  {cle:'apa_seuil_versement',      label:'APA seuil de non-versement',     unite:'€',      group:'dep'},
-  {cle:'apa_age_min',              label:'APA âge minimal',                unite:'ans',    group:'dep'},
-  {cle:'apa_urgence_coef',         label:'APA urgence (× plafond GIR 1)',  unite:'',       group:'dep'},
+// Références générales
+{cle:'smic_horaire', label:'SMIC horaire brut', unite:'€', group:'ref'},
+{cle:'smic_mensuel', label:'SMIC mensuel brut (35 h)', unite:'€', group:'ref'},
+{cle:'pmss', label:'Plafond mensuel Sécu (PMSS)', unite:'€', group:'ref'},
+{cle:'pass', label:'Plafond annuel Sécu (PASS)', unite:'€', group:'ref'},
+// IJ maladie
+{cle:'ij_mal_taux', label:'Taux IJ (× SJB)', unite:'', group:'mal'},
+{cle:'ij_mal_diviseur', label:'Diviseur SJB (3 mois)', unite:'', group:'mal'},
+{cle:'ij_mal_coef_plafond', label:'Plafond salaire retenu', unite:'× SMIC', group:'mal'},
+{cle:'ij_mal_plafond_salaire', label:'Salaire mensuel plafonné', unite:'€', group:'mal'},
+{cle:'ij_mal_montant_max', label:'IJ journalière max', unite:'€', group:'mal'},
+{cle:'ij_mal_carence', label:'Carence Sécu', unite:'jours', group:'mal'},
+{cle:'ij_mal_duree_max', label:'Durée max (sur 3 ans)', unite:'jours', group:'mal'},
+// Mensualisation
+{cle:'mens_taux1', label:'Taux 1re période', unite:'', group:'mens'},
+{cle:'mens_taux2', label:'Taux 2e période', unite:'', group:'mens'},
+{cle:'mens_carence_maladie', label:'Carence maladie', unite:'jours', group:'mens'},
+{cle:'mens_carence_atmp', label:'Carence AT/MP', unite:'jours', group:'mens'},
+{cle:'mens_anciennete_min', label:'Ancienneté minimale', unite:'ans', group:'mens'},
+// IJ AT/MP
+{cle:'at_taux1', label:'Taux j.1–28', unite:'', group:'at'},
+{cle:'at_taux2', label:'Taux dès j.29', unite:'', group:'at'},
+{cle:'at_diviseur_sjr', label:'Diviseur SJR', unite:'', group:'at'},
+{cle:'at_sjr_plafond', label:'SJR plafonné', unite:'€', group:'at'},
+{cle:'at_coef_gain_net', label:'Coef gain journalier net', unite:'', group:'at'},
+{cle:'at_ij_max_1_28', label:'IJ max j.1–28', unite:'€', group:'at'},
+{cle:'at_ij_max_29', label:'IJ max dès j.29', unite:'€', group:'at'},
+{cle:'at_carence', label:'Carence Sécu', unite:'jours', group:'at'},
+// Invalidité
+{cle:'inv_taux_cat1', label:'Taux catégorie 1 (× SAM)', unite:'', group:'inv'},
+{cle:'inv_taux_cat2', label:'Taux catégories 2 et 3 (× SAM)', unite:'', group:'inv'},
+{cle:'inv_sam_annees', label:'Meilleures années (SAM)', unite:'années', group:'inv'},
+{cle:'inv_pension_min', label:'Pension mensuelle minimale', unite:'€', group:'inv'},
+{cle:'inv_pension_max_cat1', label:'Pension mensuelle max cat. 1', unite:'€', group:'inv'},
+{cle:'inv_pension_max_cat2', label:'Pension mensuelle max cat. 2', unite:'€', group:'inv'},
+{cle:'inv_mtp', label:'MTP (forfait mensuel)', unite:'€', group:'inv'},
+{cle:'inv_mtp_taux', label:'MTP (% de la pension)', unite:'', group:'inv'},
+{cle:'inv_cat3_min', label:'Pension min cat. 3 (MTP incl.)', unite:'€', group:'inv'},
+{cle:'inv_cat3_max', label:'Pension max cat. 3 (MTP incl.)', unite:'€', group:'inv'},
+// Décès
+{cle:'deces_capital_forfait', label:'Capital décès forfaitaire', unite:'€', group:'dec'},
+{cle:'veuvage_montant', label:'Allocation veuvage (max/mois)', unite:'€', group:'dec'},
+{cle:'veuvage_plafond', label:'Veuvage : plafond ressources', unite:'€', group:'dec'},
+{cle:'veuvage_age_max', label:'Veuvage : âge max', unite:'ans', group:'dec'},
+{cle:'veuvage_duree_max', label:'Veuvage : durée max', unite:'mois', group:'dec'},
+{cle:'reversion_taux', label:'Réversion : taux', unite:'', group:'dec'},
+{cle:'reversion_age_min', label:'Réversion : âge minimal', unite:'ans', group:'dec'},
+{cle:'reversion_plafond_seul', label:'Réversion : plafond (seul)', unite:'€', group:'dec'},
+{cle:'reversion_plafond_couple', label:'Réversion : plafond (couple)', unite:'€', group:'dec'},
+{cle:'at_rente_conjoint', label:'Rente AT/MP conjoint', unite:'', group:'dec'},
+{cle:'at_rente_orphelin', label:'Rente AT/MP orphelin (1er/2e)', unite:'', group:'dec'},
+{cle:'at_rente_orphelin_sup', label:'Rente AT/MP orphelin (3e+)', unite:'', group:'dec'},
+{cle:'at_rente_orphelin_double', label:'Rente AT/MP orphelin (double)', unite:'', group:'dec'},
+{cle:'pension_orphelin_taux', label:'Pension orphelin : taux', unite:'', group:'dec'},
+{cle:'pension_orphelin_plancher',label:'Pension orphelin : plancher', unite:'€', group:'dec'},
+// Dépendance
+{cle:'apa_plafond_gir1', label:'APA plafond GIR 1', unite:'€', group:'dep'},
+{cle:'apa_plafond_gir2', label:'APA plafond GIR 2', unite:'€', group:'dep'},
+{cle:'apa_plafond_gir3', label:'APA plafond GIR 3', unite:'€', group:'dep'},
+{cle:'apa_plafond_gir4', label:'APA plafond GIR 4', unite:'€', group:'dep'},
+{cle:'apa_seuil_versement', label:'APA seuil de non-versement', unite:'€', group:'dep'},
+{cle:'apa_age_min', label:'APA âge minimal', unite:'ans', group:'dep'},
+{cle:'apa_urgence_coef', label:'APA urgence (× plafond GIR 1)', unite:'', group:'dep'},
+];
+function renderPrevoyanceFields(){
+const groups={ref:[],mal:[],mens:[],at:[],inv:[],dec:[],dep:[]};
+PREVOYANCE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
+Object.keys(groups).forEach(g=>{
+const cont=document.getElementById('prevGroup-'+g); if(!cont) return;
+const items=groups[g]; let html='';
+for(let i=0;i<items.length;i+=2){
+html+='<div class="form-row">';
+for(let j=i;j<Math.min(i+2,items.length);j++){
+const p=items[j];
+const step = p.unite==='€' ? '0.01' : (p.unite==='jours'||p.unite==='ans'||p.unite==='années'||p.unite==='mois') ? '1' : '0.0001';
+const u = p.unite ? ' ('+p.unite+')' : '';
+html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${step}" id="prev_${p.cle}"></div>`;
+}
+html+='</div>';
+}
+cont.innerHTML=html;
+});
+}
+async function chargerPrevoyance(){
+const {data,error}=await db.from('parametres_prevoyance').select('cle,valeur,date_effet,updated_at');
+if(error){
+showToast('Table prévoyance introuvable — lancez parametres_prevoyance.sql','error');
+return;
+}
+let maj=null, eff=null;
+data.forEach(r=>{
+const el=document.getElementById('prev_'+r.cle);
+if(el) el.value = r.valeur;
+if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
+if(r.date_effet && (!eff || r.date_effet>eff)) eff=r.date_effet;
+});
+if(maj) document.getElementById('lastUpdatePrevoyance').textContent = fmtDate(maj);
+if(eff) document.getElementById('prevDateEffet').value = String(eff).slice(0,10);
+}
+async function enregistrerPrevoyance(){
+const btn=document.getElementById('btnSavePrevoyance'); btn.disabled=true; btn.textContent='Enregistrement…';
+const now=new Date().toISOString();
+try{
+const params=PREVOYANCE_PARAMS.map(p=>({
+cle:p.cle, valeur:numOrNull('prev_'+p.cle), unite:p.unite, libelle:p.label, updated_at:now
+})).filter(p=>p.valeur!==null);
+const dateEffet=strOrNull('prevDateEffet');
+if(dateEffet) params.forEach(p=>p.date_effet=dateEffet);
+if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
+const r=await db.from('parametres_prevoyance').upsert(params,{onConflict:'cle'});
+if(r.error) throw r.error;
+document.getElementById('lastUpdatePrevoyance').textContent=fmtDate(now);
+showToast('Prévoyance enregistrée ✓');
+}catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la prévoyance'; }
+}
+// ===================== SANTÉ (parametres_sante) =====================
+// NB : le champ `libelle` n'est volontairement PAS renvoyé à l'enregistrement.
+// Les libellés complets (avec références réglementaires) sont posés par maj_sante.sql
+// et doivent survivre aux enregistrements faits depuis cet écran.
+const SANTE_PARAMS=[
+  // Participations et franchises
+  {cle:'sante_participation_forfaitaire',            label:'Participation forfaitaire (par acte médical)',   unite:'EUR',        group:'part'},
+  {cle:'sante_pf_plafond_jour',                      label:'Participation forfaitaire — plafond / jour',     unite:'EUR',        group:'part'},
+  {cle:'sante_pf_plafond_annuel',                    label:'Participation forfaitaire — plafond / an',       unite:'EUR',        group:'part'},
+  {cle:'sante_franchise_medicament',                 label:'Franchise — boîte de médicament',                unite:'EUR',        group:'part'},
+  {cle:'sante_franchise_acte_paramedical',           label:'Franchise — acte paramédical',                   unite:'EUR',        group:'part'},
+  {cle:'sante_franchise_transport',                  label:'Franchise — transport sanitaire (par trajet)',   unite:'EUR',        group:'part'},
+  {cle:'sante_franchise_plafond_jour_paramedical',   label:'Franchise — plafond / jour actes paramédicaux',  unite:'EUR',        group:'part'},
+  {cle:'sante_franchise_plafond_jour_transport',     label:'Franchise — plafond / jour transports',          unite:'EUR',        group:'part'},
+  {cle:'sante_franchise_plafond_annuel',             label:'Franchise — plafond / an',                       unite:'EUR',        group:'part'},
+  {cle:'sante_forfait_journalier_hospitalier',       label:'Forfait journalier hospitalier',                 unite:'EUR/jour',   group:'part'},
+  {cle:'sante_forfait_journalier_hospitalier_psy',   label:'Forfait journalier — psychiatrie',               unite:'EUR/jour',   group:'part'},
+  {cle:'sante_forfait_patient_urgences',             label:'Forfait patient urgences (FPU)',                 unite:'EUR',        group:'part'},
+  {cle:'sante_fpu_minore',                           label:'FPU minoré (ALD, incapacité AT)',                unite:'EUR',        group:'part'},
+  {cle:'sante_participation_actes_lourds',           label:'Participation actes lourds',                     unite:'EUR',        group:'part'},
+  {cle:'sante_seuil_actes_lourds',                   label:'Seuil de déclenchement actes lourds',            unite:'EUR',        group:'part'},
+  // Parcours de soins
+  {cle:'sante_taux_consultation_parcours',           label:'Taux consultation dans le parcours',             unite:'%',          group:'parc'},
+  {cle:'sante_majoration_tm_hors_parcours',          label:'Majoration TM hors parcours (secteur 1 / OPTAM)',unite:'EUR',        group:'parc'},
+  {cle:'sante_taux_consultation_hors_parcours_non_optam', label:'Taux hors parcours (secteur 2 non OPTAM)',  unite:'%',          group:'parc'},
+  // Bases de remboursement
+  {cle:'sante_br_generaliste_s1',                    label:'BR généraliste secteur 1',                       unite:'EUR',        group:'br'},
+  {cle:'sante_br_generaliste_optam',                 label:'BR généraliste OPTAM',                           unite:'EUR',        group:'br'},
+  {cle:'sante_br_generaliste_non_optam',             label:'BR généraliste secteur 2 non OPTAM',             unite:'EUR',        group:'br'},
+  {cle:'sante_br_specialiste_s1',                    label:'BR spécialiste secteur 1',                       unite:'EUR',        group:'br'},
+  {cle:'sante_br_specialiste_optam',                 label:'BR spécialiste OPTAM',                           unite:'EUR',        group:'br'},
+  {cle:'sante_br_specialiste_non_optam',             label:'BR spécialiste secteur 2 non OPTAM',             unite:'EUR',        group:'br'},
+  {cle:'sante_br_psychiatre_s1',                     label:'BR psychiatre / neurologue secteur 1',           unite:'EUR',        group:'br'},
+  {cle:'sante_br_teleconsultation',                  label:'BR téléconsultation',                            unite:'EUR',        group:'br'},
+  {cle:'sante_br_apc',                               label:'BR avis ponctuel de consultant',                 unite:'EUR',        group:'br'},
+  {cle:'sante_tarif_autorite_generaliste',           label:"Tarif d'autorité généraliste (secteur 3)",       unite:'EUR',        group:'br'},
+  {cle:'sante_tarif_autorite_specialiste',           label:"Tarif d'autorité spécialiste (secteur 3)",       unite:'EUR',        group:'br'},
+  {cle:'sante_valeur_lettre_cle_amk',                label:'Lettre-clé AMK (kinésithérapie)',                unite:'EUR',        group:'br'},
+  {cle:'sante_br_seance_kine',                       label:'BR séance de kiné de référence (coef. 7,5)',     unite:'EUR',        group:'br'},
+  // Taux par nature de soins
+  {cle:'sante_taux_dentaire',                        label:'Soins et prothèses dentaires',                   unite:'%',          group:'taux'},
+  {cle:'sante_taux_analyses_labo',                   label:'Analyses et examens de laboratoire',             unite:'%',          group:'taux'},
+  {cle:'sante_taux_auxiliaires_medicaux',            label:'Actes des auxiliaires médicaux',                 unite:'%',          group:'taux'},
+  {cle:'sante_taux_optique_appareillage',            label:'Optique, appareillage et prothèses',             unite:'%',          group:'taux'},
+  {cle:'sante_taux_aide_auditive',                   label:'Aides auditives',                                unite:'%',          group:'taux'},
+  {cle:'sante_taux_transport',                       label:'Transport sanitaire',                            unite:'%',          group:'taux'},
+  {cle:'sante_taux_hospitalisation_sejour',          label:'Frais de séjour hospitalier',                    unite:'%',          group:'taux'},
+  {cle:'sante_taux_hospitalisation_actes_lourds',    label:'Hospitalisation — actes lourds',                 unite:'%',          group:'taux'},
+  // Médicaments
+  {cle:'sante_taux_medicament_irremplacable',        label:'Irremplaçable et particulièrement coûteux',      unite:'%',          group:'medic'},
+  {cle:'sante_taux_medicament_smr_majeur',           label:'SMR majeur ou important',                        unite:'%',          group:'medic'},
+  {cle:'sante_taux_medicament_smr_modere',           label:'SMR modéré',                                     unite:'%',          group:'medic'},
+  {cle:'sante_taux_medicament_smr_faible',           label:'SMR faible',                                     unite:'%',          group:'medic'},
+  // 100 % santé — audiologie
+  {cle:'sante_audio_plv_classe1_20ans_plus',         label:'PLV classe I — 20 ans et plus',                  unite:'EUR/oreille',group:'audio'},
+  {cle:'sante_audio_br_classe1_2_20ans_plus',        label:'BR classe I et II — 20 ans et plus',             unite:'EUR/oreille',group:'audio'},
+  {cle:'sante_audio_plv_classe1_moins_20ans',        label:'PLV classe I — moins de 20 ans ou cécité',       unite:'EUR/oreille',group:'audio'},
+  {cle:'sante_audio_br_classe1_2_moins_20ans',       label:'BR classe I et II — moins de 20 ans ou cécité',  unite:'EUR/oreille',group:'audio'},
+  // 100 % santé — optique et dentaire
+  {cle:'sante_optique_plv_monture_100_sante',        label:'PLV monture 100 % santé',                        unite:'EUR',        group:'rac0'},
+  {cle:'sante_optique_plv_equipement_simple_min',    label:'PLV équipement verres simples — min',            unite:'EUR',        group:'rac0'},
+  {cle:'sante_optique_plv_equipement_simple_max',    label:'PLV équipement verres simples — max',            unite:'EUR',        group:'rac0'},
+  {cle:'sante_optique_plv_equipement_complexe_min',  label:'PLV équipement progressifs — min',               unite:'EUR',        group:'rac0'},
+  {cle:'sante_optique_plv_equipement_complexe_max',  label:'PLV équipement progressifs — max',               unite:'EUR',        group:'rac0'},
+  {cle:'sante_optique_br_monture',                   label:'BR monture (panier libre)',                      unite:'EUR',        group:'rac0'},
+  {cle:'sante_optique_br_verre_simple_foyer',        label:'BR verre simple foyer (panier libre)',           unite:'EUR/verre',  group:'rac0'},
+  {cle:'sante_dentaire_plv_couronne_metallique',     label:'PLV couronne métallique',                        unite:'EUR',        group:'rac0'},
+  {cle:'sante_dentaire_plv_couronne_ceramo_metallique', label:'PLV couronne céramo-métallique (dents visibles)', unite:'EUR',   group:'rac0'},
+  {cle:'sante_dentaire_plv_couronne_zircone',        label:'PLV couronne zircone monolithique',              unite:'EUR',        group:'rac0'},
+  {cle:'sante_dentaire_br_couronne',                 label:'BR couronne (panier libre)',                     unite:'EUR',        group:'rac0'},
+  {cle:'sante_dentaire_prix_moyen_avant_reforme',    label:'Repère — prix moyen avant réforme',              unite:'EUR',        group:'rac0'},
+  {cle:'sante_dentaire_rac_moyen_avant_reforme',     label:'Repère — RAC moyen avant réforme',               unite:'EUR',        group:'rac0'},
+  // Honoraires d'exemple
+  {cle:'sante_honoraire_ex_generaliste_optam',       label:'Généraliste OPTAM',                              unite:'EUR',        group:'hono'},
+  {cle:'sante_honoraire_ex_generaliste_non_optam',   label:'Généraliste secteur 2 non OPTAM',                unite:'EUR',        group:'hono'},
+  {cle:'sante_honoraire_ex_specialiste_optam',       label:'Spécialiste OPTAM',                              unite:'EUR',        group:'hono'},
+  {cle:'sante_honoraire_ex_specialiste_non_optam',   label:'Spécialiste secteur 2 non OPTAM',                unite:'EUR',        group:'hono'},
+  {cle:'sante_honoraire_ex_generaliste_s3',          label:'Généraliste secteur 3',                          unite:'EUR',        group:'hono'},
+  {cle:'sante_honoraire_ex_specialiste_s3',          label:'Spécialiste secteur 3',                          unite:'EUR',        group:'hono'},
 ];
 
-function renderPrevoyanceFields(){
-  const groups={ref:[],mal:[],mens:[],at:[],inv:[],dec:[],dep:[]};
-  PREVOYANCE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
+function renderSanteFields(){
+  const groups={part:[],parc:[],br:[],taux:[],medic:[],audio:[],rac0:[],hono:[]};
+  SANTE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
   Object.keys(groups).forEach(g=>{
-    const cont=document.getElementById('prevGroup-'+g); if(!cont) return;
+    const cont=document.getElementById('santeGroup-'+g); if(!cont) return;
     const items=groups[g]; let html='';
     for(let i=0;i<items.length;i+=2){
       html+='<div class="form-row">';
       for(let j=i;j<Math.min(i+2,items.length);j++){
         const p=items[j];
-        const step = p.unite==='€' ? '0.01' : (p.unite==='jours'||p.unite==='ans'||p.unite==='années'||p.unite==='mois') ? '1' : '0.0001';
-        const u = p.unite ? ' ('+p.unite+')' : '';
-        html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${step}" id="prev_${p.cle}"></div>`;
+        const u = p.unite==='%' ? ' (décimal)' : (p.unite ? ' ('+p.unite.replace('EUR','€')+')' : '');
+        html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="0.01" id="sf_${p.cle}"></div>`;
       }
       html+='</div>';
     }
@@ -967,132 +1276,138 @@ function renderPrevoyanceFields(){
   });
 }
 
-async function chargerPrevoyance(){
-  const {data,error}=await db.from('parametres_prevoyance').select('cle,valeur,date_effet,updated_at');
+async function chargerSante(){
+  const {data,error}=await db.from('parametres_sante').select('cle,valeur,date_effet,updated_at');
   if(error){
-    showToast('Table prévoyance introuvable — lancez parametres_prevoyance.sql','error');
+    showToast('Table santé introuvable — lancez maj_sante.sql','error');
     return;
   }
-  let maj=null, eff=null;
-  data.forEach(r=>{
-    const el=document.getElementById('prev_'+r.cle);
-    if(el) el.value = r.valeur;
-    if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
-    if(r.date_effet && (!eff || r.date_effet>eff)) eff=r.date_effet;
-  });
-  if(maj) document.getElementById('lastUpdatePrevoyance').textContent = fmtDate(maj);
-  if(eff) document.getElementById('prevDateEffet').value = String(eff).slice(0,10);
-}
-
-async function enregistrerPrevoyance(){
-  const btn=document.getElementById('btnSavePrevoyance'); btn.disabled=true; btn.textContent='Enregistrement…';
-  const now=new Date().toISOString();
-  try{
-    const params=PREVOYANCE_PARAMS.map(p=>({
-      cle:p.cle, valeur:numOrNull('prev_'+p.cle), unite:p.unite, libelle:p.label, updated_at:now
-    })).filter(p=>p.valeur!==null);
-    const dateEffet=strOrNull('prevDateEffet');
-    if(dateEffet) params.forEach(p=>p.date_effet=dateEffet);
-    if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
-    const r=await db.from('parametres_prevoyance').upsert(params,{onConflict:'cle'});
-    if(r.error) throw r.error;
-    document.getElementById('lastUpdatePrevoyance').textContent=fmtDate(now);
-    showToast('Prévoyance enregistrée ✓');
-  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
-  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la prévoyance'; }
-}
-
-// ===================== TNS (parametres_tns) =====================
-const TNS_PARAMS=[
-  // Plafonds (PASS)
-  {cle:'tns_pass',                 label:'PASS (année en cours)',              unite:'€', group:'pass'},
-  {cle:'tns_pass_n1',              label:'PASS (année N-1)',                   unite:'€', group:'pass'},
-  // Cotisations
-  {cle:'tns_ij_taux',              label:'Indemnités journalières (≤ 5 PASS)', unite:'%', group:'cot'},
-  {cle:'tns_invdeces_taux',        label:'Invalidité-décès (≤ 1 PASS)',        unite:'%', group:'cot'},
-  {cle:'tns_retraite_base_t1',     label:'Retraite de base (≤ 1 PASS)',        unite:'%', group:'cot'},
-  {cle:'tns_retraite_base_t2',     label:'Retraite de base (au-delà 1 PASS)',  unite:'%', group:'cot'},
-  {cle:'tns_retraite_comp_t1',     label:'Retraite comp. (≤ 1 PASS)',          unite:'%', group:'cot'},
-  {cle:'tns_retraite_comp_t2',     label:'Retraite comp. (1 à 4 PASS)',        unite:'%', group:'cot'},
-  {cle:'tns_maladie1_taux_max',    label:'Maladie-maternité (taux max)',       unite:'%', group:'cot'},
-  {cle:'tns_maladie1_taux_sup3',   label:'Maladie (au-delà 3 PASS)',           unite:'%', group:'cot'},
-  {cle:'tns_allocfam_taux_max',    label:'Allocations familiales (taux max)',  unite:'%', group:'cot'},
-  {cle:'tns_csg_taux',             label:'CSG',                                unite:'%', group:'cot'},
-  {cle:'tns_crds_taux',            label:'CRDS',                               unite:'%', group:'cot'},
-  {cle:'tns_retraite_min_assiette',label:'Minimum retraite (assiette)',        unite:'€', group:'cot'},
-  {cle:'tns_cfp_artisan',          label:'CFP artisan (forfait)',              unite:'€', group:'cot'},
-  {cle:'tns_cfp_commercant',       label:'CFP commerçant / PL (forfait)',      unite:'€', group:'cot'},
-  // Prestations
-  {cle:'tns_presta_ij_max',        label:'IJ maladie max / jour',              unite:'€', group:'presta'},
-  {cle:'tns_presta_ij_seuil_zero', label:'IJ = 0 si revenu moyen <',           unite:'€', group:'presta'},
-  {cle:'tns_presta_inv_partielle_taux',label:'Invalidité partielle PIPM (% du revenu)', unite:'%', group:'presta'},
-  {cle:'tns_presta_inv_partielle_min',label:'PIPM : min mensuel',                unite:'€', group:'presta'},
-  {cle:'tns_presta_inv_partielle_max',label:'PIPM : max mensuel',                unite:'€', group:'presta'},
-  {cle:'tns_presta_inv_taux',      label:'Invalidité totale PITD (% du revenu)', unite:'%', group:'presta'},
-  {cle:'tns_presta_inv_totale_min',   label:'PITD : min mensuel',                unite:'€', group:'presta'},
-  {cle:'tns_presta_inv_totale_max',   label:'PITD : max mensuel',                unite:'€', group:'presta'},
-  {cle:'tns_presta_inv_mtp',       label:'Majoration tierce personne (MTP)',   unite:'€', group:'presta'},
-  {cle:'tns_presta_deces_actif',   label:'Capital décès (actif)',              unite:'€', group:'presta'},
-  {cle:'tns_presta_deces_retraite',label:'Capital décès (retraité)',           unite:'€', group:'presta'},
-];
-
-function renderTnsFields(){
-  const groups={pass:[],cot:[],presta:[]};
-  TNS_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
-  Object.keys(groups).forEach(g=>{
-    const cont=document.getElementById('tnsGroup-'+g); if(!cont) return;
-    const items=groups[g]; let html='';
-    for(let i=0;i<items.length;i+=2){
-      html+='<div class="form-row">';
-      for(let j=i;j<Math.min(i+2,items.length);j++){
-        const p=items[j];
-        const step = (p.unite==='€'||p.unite==='%') ? '0.01' : '0.0001';
-        const u = p.unite ? ' ('+p.unite+')' : '';
-        html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${step}" id="tnsf_${p.cle}"></div>`;
-      }
-      html+='</div>';
-    }
-    cont.innerHTML=html;
-  });
-}
-
-async function chargerTns(){
-  const {data,error}=await db.from('parametres_tns').select('cle,valeur,date_effet,updated_at');
-  if(error){
-    showToast('Table TNS introuvable — lancez parametres_tns.sql','error');
+  if(!data || !data.length){
+    showToast('Table santé vide — lancez maj_sante.sql pour charger les paramètres','error');
     return;
   }
   let maj=null;
   data.forEach(r=>{
-    const el=document.getElementById('tnsf_'+r.cle);
+    const el=document.getElementById('sf_'+r.cle);
     if(el) el.value = r.valeur;
     if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
   });
-  if(maj) document.getElementById('lastUpdateTns').textContent = fmtDate(maj);
+  if(maj) document.getElementById('lastUpdateSante').textContent = fmtDate(maj);
 }
 
-async function enregistrerTns(){
-  const btn=document.getElementById('btnSaveTns'); btn.disabled=true; btn.textContent='Enregistrement…';
+async function enregistrerSante(){
+  const btn=document.getElementById('btnSaveSante'); btn.disabled=true; btn.textContent='Enregistrement…';
   const now=new Date().toISOString();
   try{
-    const params=TNS_PARAMS.map(p=>({
-      cle:p.cle, valeur:numOrNull('tnsf_'+p.cle), unite:p.unite, libelle:p.label, updated_at:now
+    const params=SANTE_PARAMS.map(p=>({
+      cle:p.cle, valeur:numOrNull('sf_'+p.cle), unite:p.unite, updated_at:now
     })).filter(p=>p.valeur!==null);
-    const dateEffet=strOrNull('tnsDateEffet');
-    if(dateEffet) params.forEach(p=>p.date_effet=dateEffet);
+    // La date d'effet n'est écrite QUE si la case est cochée : les paramètres santé
+    // ont des dates d'effet hétérogènes (15/10/2023, 15/05/2024, 01/03/2026, 01/04/2026…)
+    // qu'un enregistrement global écraserait.
+    const appliquer=document.getElementById('santeAppliquerDate').checked;
+    const dateEffet=strOrNull('santeDateEffet');
+    if(appliquer && dateEffet) params.forEach(p=>p.date_effet=dateEffet);
     if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
-    const r=await db.from('parametres_tns').upsert(params,{onConflict:'cle'});
+    const r=await db.from('parametres_sante').upsert(params,{onConflict:'cle'});
     if(r.error) throw r.error;
-    document.getElementById('lastUpdateTns').textContent=fmtDate(now);
-    showToast('Paramètres TNS enregistrés ✓');
+    document.getElementById('lastUpdateSante').textContent=fmtDate(now);
+    showToast('Santé enregistrée ✓ ('+params.length+' paramètres)');
   }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
-  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer les TNS'; }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la santé'; }
 }
 
+// ===================== TNS (parametres_tns) =====================
+const TNS_PARAMS=[
+// Plafonds (PASS)
+{cle:'tns_pass', label:'PASS (année en cours)', unite:'€', group:'pass'},
+{cle:'tns_pass_n1', label:'PASS (année N-1)', unite:'€', group:'pass'},
+// Cotisations
+{cle:'tns_ij_taux', label:'Indemnités journalières (≤ 5 PASS)', unite:'%', group:'cot'},
+{cle:'tns_invdeces_taux', label:'Invalidité-décès (≤ 1 PASS)', unite:'%', group:'cot'},
+{cle:'tns_retraite_base_t1', label:'Retraite de base (≤ 1 PASS)', unite:'%', group:'cot'},
+{cle:'tns_retraite_base_t2', label:'Retraite de base (au-delà 1 PASS)', unite:'%', group:'cot'},
+{cle:'tns_retraite_comp_t1', label:'Retraite comp. (≤ 1 PASS)', unite:'%', group:'cot'},
+{cle:'tns_retraite_comp_t2', label:'Retraite comp. (1 à 4 PASS)', unite:'%', group:'cot'},
+{cle:'tns_maladie1_taux_max', label:'Maladie-maternité (taux max)', unite:'%', group:'cot'},
+{cle:'tns_maladie1_taux_sup3', label:'Maladie (au-delà 3 PASS)', unite:'%', group:'cot'},
+{cle:'tns_allocfam_taux_max', label:'Allocations familiales (taux max)', unite:'%', group:'cot'},
+{cle:'tns_csg_taux', label:'CSG', unite:'%', group:'cot'},
+{cle:'tns_crds_taux', label:'CRDS', unite:'%', group:'cot'},
+{cle:'tns_retraite_min_assiette',label:'Minimum retraite (assiette)', unite:'€', group:'cot'},
+{cle:'tns_cfp_artisan', label:'CFP artisan (forfait)', unite:'€', group:'cot'},
+{cle:'tns_cfp_commercant', label:'CFP commerçant / PL (forfait)', unite:'€', group:'cot'},
+// Prestations
+{cle:'tns_presta_ij_max', label:'IJ maladie max / jour', unite:'€', group:'presta'},
+{cle:'tns_presta_ij_seuil_zero', label:'IJ = 0 si revenu moyen <', unite:'€', group:'presta'},
+{cle:'tns_presta_inv_partielle_taux',label:'Invalidité partielle PIPM (% du revenu)', unite:'%', group:'presta'},
+{cle:'tns_presta_inv_partielle_min',label:'PIPM : min mensuel', unite:'€', group:'presta'},
+{cle:'tns_presta_inv_partielle_max',label:'PIPM : max mensuel', unite:'€', group:'presta'},
+{cle:'tns_presta_inv_taux', label:'Invalidité totale PITD (% du revenu)', unite:'%', group:'presta'},
+{cle:'tns_presta_inv_totale_min', label:'PITD : min mensuel', unite:'€', group:'presta'},
+{cle:'tns_presta_inv_totale_max', label:'PITD : max mensuel', unite:'€', group:'presta'},
+{cle:'tns_presta_inv_mtp', label:'Majoration tierce personne (MTP)', unite:'€', group:'presta'},
+{cle:'tns_presta_deces_actif', label:'Capital décès (actif)', unite:'€', group:'presta'},
+{cle:'tns_presta_deces_retraite',label:'Capital décès (retraité)', unite:'€', group:'presta'},
+];
+function renderTnsFields(){
+const groups={pass:[],cot:[],presta:[]};
+TNS_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
+Object.keys(groups).forEach(g=>{
+const cont=document.getElementById('tnsGroup-'+g); if(!cont) return;
+const items=groups[g]; let html='';
+for(let i=0;i<items.length;i+=2){
+html+='<div class="form-row">';
+for(let j=i;j<Math.min(i+2,items.length);j++){
+const p=items[j];
+const step = (p.unite==='€'||p.unite==='%') ? '0.01' : '0.0001';
+const u = p.unite ? ' ('+p.unite+')' : '';
+html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${step}" id="tnsf_${p.cle}"></div>`;
+}
+html+='</div>';
+}
+cont.innerHTML=html;
+});
+}
+async function chargerTns(){
+const {data,error}=await db.from('parametres_tns').select('cle,valeur,date_effet,updated_at');
+if(error){
+showToast('Table TNS introuvable — lancez parametres_tns.sql','error');
+return;
+}
+let maj=null;
+data.forEach(r=>{
+const el=document.getElementById('tnsf_'+r.cle);
+if(el) el.value = r.valeur;
+if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
+});
+if(maj) document.getElementById('lastUpdateTns').textContent = fmtDate(maj);
+}
+async function enregistrerTns(){
+const btn=document.getElementById('btnSaveTns'); btn.disabled=true; btn.textContent='Enregistrement…';
+const now=new Date().toISOString();
+try{
+const params=TNS_PARAMS.map(p=>({
+cle:p.cle, valeur:numOrNull('tnsf_'+p.cle), unite:p.unite, libelle:p.label, updated_at:now
+})).filter(p=>p.valeur!==null);
+const dateEffet=strOrNull('tnsDateEffet');
+if(dateEffet) params.forEach(p=>p.date_effet=dateEffet);
+if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
+const r=await db.from('parametres_tns').upsert(params,{onConflict:'cle'});
+if(r.error) throw r.error;
+document.getElementById('lastUpdateTns').textContent=fmtDate(now);
+showToast('Paramètres TNS enregistrés ✓');
+}catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer les TNS'; }
+}
 // ===================== INIT =====================
 renderPrevoyanceFields();
+renderSanteFields();
 renderTnsFields();
 checkSession();
 </script>
+</body>
+
+</html>
 </body>
 </html>

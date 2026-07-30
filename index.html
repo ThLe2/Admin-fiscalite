@@ -834,6 +834,14 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
 
     <div class="card">
       <div class="card-header"><div class="card-num">8</div><div>
+        <div class="card-title">Épargne logement — CEL et PEL</div>
+        <div class="card-subtitle">Plafonds, versements et taux par génération de plan. Saisie des taux en décimal.</div></div></div>
+      <div id="epGroup-epl"></div>
+      <div class="note">Le taux d'un PEL est <strong>fixé à son ouverture et garanti toute la vie du plan</strong> : deux plans ouverts à deux années différentes ne servent pas le même taux, d'où une clé par génération. Ne pas confondre la <strong>durée de versement</strong>, qui s'arrête à dix ans, et la <strong>durée du plan</strong>, qui s'achève à quinze ans pour les plans ouverts depuis mars 2011.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">9</div><div>
         <div class="card-title">Calcul des intérêts</div>
         <div class="card-subtitle">Constantes du calcul à la quinzaine.</div></div></div>
       <div id="epGroup-int"></div>
@@ -841,7 +849,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
     </div>
 
     <div class="card">
-      <div class="card-header"><div class="card-num">9</div><div>
+      <div class="card-header"><div class="card-num">10</div><div>
         <div class="card-title">Assurance vie — régimes antérieurs</div>
         <div class="card-subtitle">Prélèvement libératoire des versements antérieurs à septembre 2017. Saisie en décimal.</div></div></div>
       <div id="epGroup-avanc"></div>
@@ -849,7 +857,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
     </div>
 
     <div class="card">
-      <div class="card-header"><div class="card-num">10</div><div>
+      <div class="card-header"><div class="card-num">11</div><div>
         <div class="card-title">Traçabilité</div>
         <div class="card-subtitle">Date d'effet — à n'appliquer que délibérément.</div></div></div>
       <div class="form-row">
@@ -1582,22 +1590,45 @@ const EPARGNE_PARAMS=[
   {cle:'livret_jeune_plafond', label:'Livret Jeune — plafond de dépôt', unite:'EUR', step:'0.01', group:'livrets'},
   {cle:'livret_jeune_age_min', label:'Livret Jeune — âge minimal', unite:'ans', step:'1', group:'livrets'},
   {cle:'livret_jeune_age_max', label:'Livret Jeune — âge maximal', unite:'ans', step:'1', group:'livrets'},
-  {cle:'cel_plafond', label:'CEL — plafond', unite:'EUR', step:'0.01', group:'livrets'},
-  {cle:'pel_plafond', label:'PEL — plafond de versements', unite:'EUR', step:'0.01', group:'livrets'},
-  {cle:'pel_versement_initial_min', label:'PEL — versement minimal à l\'ouverture', unite:'EUR', step:'0.01', group:'livrets'},
-  {cle:'pel_versement_annuel_min', label:'PEL — versements périodiques minimaux par an', unite:'EUR', step:'0.01', group:'livrets'},
-  {cle:'pel_duree_min_annees', label:'PEL — durée minimale', unite:'ans', step:'1', group:'livrets'},
-  {cle:'pel_duree_max_annees', label:'PEL — durée maximale de versements', unite:'ans', step:'1', group:'livrets'},
-  {cle:'pel_taux_plans_depuis_2024', label:'PEL — taux garanti des plans ouverts depuis 2024', unite:'%', step:'0.0001', group:'livrets'},
+  {cle:'cel_plafond', label:'CEL — plafond', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'pel_plafond', label:'PEL — plafond de versements', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'pel_versement_initial_min', label:'PEL — versement minimal à l\'ouverture', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'pel_versement_annuel_min', label:'PEL — versements périodiques minimaux par an', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'pel_duree_min_annees', label:'PEL — durée minimale', unite:'ans', step:'1', group:'epl'},
+  {cle:'pel_duree_max_annees', label:'PEL — durée maximale de versements (10 ans)', unite:'ans', step:'1', group:'epl'},
+  {cle:'pel_taux_plans_depuis_2024', label:'PEL — taux des plans ouverts en 2024', unite:'%', step:'0.0001', group:'epl'},
   {cle:'interets_quinzaines_par_an', label:'Nombre de quinzaines de calcul par an', unite:'quinzaines', step:'1', group:'int'},
   {cle:'interets_capitalisation_mois', label:'Mois de capitalisation des intérêts', unite:'mois', step:'1', group:'int'},
   {cle:'av_pfl_moins_4_ans', label:'Prélèvement libératoire — contrat de moins de 4 ans', unite:'%', step:'0.0001', group:'avanc'},
   {cle:'av_pfl_4_a_8_ans', label:'Prélèvement libératoire — contrat de 4 à 8 ans', unite:'%', step:'0.0001', group:'avanc'},
   {cle:'av_pfl_apres_8_ans', label:'Prélèvement libératoire — contrat de plus de 8 ans', unite:'%', step:'0.0001', group:'avanc'},
+  {cle:'livret_a_depot_ouverture', label:'Livret A — dépôt minimum à l\'ouverture', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'livret_a_taux_precedent', label:'Livret A — taux précédent (jusqu\'au 31/07/2026)', unite:'%', step:'0.0001', group:'livrets'},
+  {cle:'ldds_depot_ouverture', label:'LDDS — dépôt minimum à l\'ouverture', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'lep_depot_ouverture', label:'LEP — dépôt minimum à l\'ouverture', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'lep_taux_formule', label:'LEP — taux qu\'aurait donné la formule réglementaire', unite:'%', step:'0.0001', group:'livrets'},
+  {cle:'livret_jeune_depot_ouverture', label:'Livret Jeune — dépôt minimum à l\'ouverture', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'livret_jeune_taux_plancher', label:'Livret Jeune — taux plancher réglementaire', unite:'%', step:'0.0001', group:'livrets'},
+  {cle:'cel_depot_ouverture', label:'CEL — dépôt minimum à l\'ouverture', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'cel_versement_min', label:'CEL — versement minimum ultérieur', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'cel_fiscalite_ir_annee', label:'CEL — année d\'ouverture à partir de laquelle les intérêts sont imposés', unite:'année', step:'1', group:'epl'},
+  {cle:'pel_duree_plan_max_annees', label:'PEL — durée maximale du plan (15 ans)', unite:'ans', step:'1', group:'epl'},
+  {cle:'pel_versement_mensuel_min', label:'PEL — équivalent mensuel du versement minimum', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'pel_versement_trimestriel_min', label:'PEL — équivalent trimestriel du versement minimum', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'pel_versement_semestriel_min', label:'PEL — équivalent semestriel du versement minimum', unite:'EUR', step:'0.01', group:'epl'},
+  {cle:'pel_taux_2026', label:'PEL — taux des plans ouverts depuis le 01/01/2026', unite:'%', step:'0.0001', group:'epl'},
+  {cle:'pel_taux_2025', label:'PEL — taux des plans ouverts en 2025', unite:'%', step:'0.0001', group:'epl'},
+  {cle:'pel_taux_2023', label:'PEL — taux des plans ouverts en 2023', unite:'%', step:'0.0001', group:'epl'},
+  {cle:'pel_taux_2016_2022', label:'PEL — taux des plans ouverts du 01/08/2016 au 31/12/2022', unite:'%', step:'0.0001', group:'epl'},
+  {cle:'pel_taux_pret_2026', label:'PEL — taux du prêt pour un plan ouvert en 2026', unite:'%', step:'0.0001', group:'epl'},
+  {cle:'pel_fiscalite_ir_annee', label:'PEL — année d\'ouverture à partir de laquelle les intérêts sont imposés', unite:'année', step:'1', group:'epl'},
+  {cle:'quinzaine_1_debut', label:'Premier jour de la première quinzaine', unite:'jour', step:'1', group:'int'},
+  {cle:'quinzaine_1_fin', label:'Dernier jour de la première quinzaine', unite:'jour', step:'1', group:'int'},
+  {cle:'quinzaine_2_debut', label:'Premier jour de la seconde quinzaine', unite:'jour', step:'1', group:'int'},
 ];
 
 function renderEpargneFields(){
-  const groups={ps:[],avr:[],avt:[],per:[],rvto:[],arb:[],livrets:[],int:[],avanc:[]};
+  const groups={ps:[],avr:[],avt:[],per:[],rvto:[],arb:[],livrets:[],epl:[],int:[],avanc:[]};
   EPARGNE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
   Object.keys(groups).forEach(g=>{
     const cont=document.getElementById('epGroup-'+g); if(!cont) return;

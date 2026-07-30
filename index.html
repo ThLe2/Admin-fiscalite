@@ -204,6 +204,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
       <button class="tab" data-tab="duree-ref" onclick="switchTab('duree-ref')">Durée de réf.</button>
       <button class="tab" data-tab="sante" onclick="switchTab('sante')">Santé</button>
       <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance</button>
+    <button class="tab" data-tab="epargne" onclick="switchTab('epargne')">Épargne</button>
       <button class="tab" data-tab="tns" onclick="switchTab('tns')">TNS</button>
     </div>
     <!-- ============ PANEL FISCALITÉ ============ -->
@@ -447,6 +448,19 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
           <div class="form-field"><label>Durée (trimestres)</label><input type="number" id="dureeTrim" step="1"></div>
         </div>
         <div class="note">Par défaut : <strong>43 ans</strong>, soit <strong>172 trimestres</strong>.</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">4</div>
+          <div>
+            <div class="card-title">Retraite complémentaire AGIRC-ARRCO</div>
+            <div class="card-subtitle">Valeur du point, prix d'achat et conditions de réversion.</div>
+          </div>
+        </div>
+        <div class="form-row"><div class="form-field"><label>Valeur de service du point AGIRC-ARRCO (€)</label><input type="number" step="0.01" id="rc_valeur_point_agirc_arrco"></div><div class="form-field"><label>Prix d&#39;achat du point — salaire de référence (€)</label><input type="number" step="0.01" id="rc_salaire_reference_point"></div></div>
+        <div class="form-row"><div class="form-field"><label>Réversion comp. — taux (décimal)</label><input type="number" step="0.0001" id="rc_reversion_comp_taux"></div><div class="form-field"><label>Réversion comp. — âge minimal (ans)</label><input type="number" step="1" id="rc_reversion_comp_age_min"></div></div>
+        <div class="form-row"><div class="form-field"><label>Réversion base — taux (recopie) (décimal)</label><input type="number" step="0.0001" id="rc_reversion_base_taux"></div><div class="form-field"><label>Réversion base — âge minimal (recopie) (ans)</label><input type="number" step="1" id="rc_reversion_base_age_min"></div></div>
+        <div class="note">Pension annuelle brute = nombre de points &times; valeur de service. Le rapport de la valeur de service au prix d'achat donne le rendement instantané du point. <strong>La réversion complémentaire ne suit pas les règles de la base</strong> : ni le même taux, ni le même âge, et aucune condition de ressources.</div>
       </div>
       <div class="actionbar">
         <div class="lastup">Dernière mise à jour : <strong id="lastUpdateRetraite">—</strong></div>
@@ -760,7 +774,104 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <button class="btn btn-primary" id="btnSaveTns" onclick="enregistrerTns()">💾 Enregistrer les TNS</button>
       </div>
     </div>
-    <div class="footer-info"><strong>TMK Performances</strong> · Paramètres des formations · Espace formateur</div>
+    <!-- ============ PANEL ÉPARGNE ============ -->
+  <div class="panel" id="panel-epargne">
+    <div class="card">
+      <div class="card-header"><div class="card-num">1</div><div>
+        <div class="card-title">Prélèvements sociaux</div>
+        <div class="card-subtitle">Taux de droit commun et exception de l'assurance vie. Saisie en décimal.</div></div></div>
+      <div id="epGroup-ps"></div>
+      <div class="note">La LFSS 2026 a porté le taux général de 17,2 % à 18,6 %. <strong>L'assurance vie, le PEL, le CEL et le PEP en sont exclus</strong> et restent à 17,2 % : c'est aujourd'hui 1,4 point d'écart en faveur de l'assurance vie.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">2</div><div>
+        <div class="card-title">Assurance vie — rachats</div>
+        <div class="card-subtitle">Le seuil des huit ans, l'abattement annuel, le taux réduit et le seuil de versements.</div></div></div>
+      <div id="epGroup-avr"></div>
+      <div class="note">Un même rachat peut supporter deux taux : 7,5 % sous 150 000 € de versements, 12,8 % au-delà, au prorata. Le seuil s'apprécie par assuré, tous contrats confondus.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">3</div><div>
+        <div class="card-title">Assurance vie — transmission</div>
+        <div class="card-subtitle">Articles 990 I et 757 B du CGI.</div></div></div>
+      <div id="epGroup-avt"></div>
+      <div class="note">L'abattement de l'article 990 I est <strong>individuel</strong> et se multiplie par le nombre de bénéficiaires ; celui de l'article 757 B est <strong>global</strong> et se partage. C'est la confusion la plus coûteuse du sujet.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">4</div><div>
+        <div class="card-title">PER</div>
+        <div class="card-subtitle">Plafonds de déduction, fiscalité de sortie, report des plafonds.</div></div></div>
+      <div id="epGroup-per"></div>
+      <div class="note">Deux nouveautés de la loi de finances 2026 : le report des plafonds passe de 3 à 5 ans <strong>sans rétroactivité</strong> — d'où les deux clés — et la déductibilité disparaît au-delà de 70 ans.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">5</div><div>
+        <div class="card-title">Rentes viagères à titre onéreux</div>
+        <div class="card-subtitle">Fractions imposables selon l'âge d'entrée en jouissance. Saisie en décimal.</div></div></div>
+      <div id="epGroup-rvto"></div>
+      <div class="note">Stockées en fraction <strong>imposable</strong>, comme les textes, et non en fraction exonérée. La fraction est figée à l'âge du premier versement et ne bouge plus.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">6</div><div>
+        <div class="card-title">Repères d'arbitrage</div>
+        <div class="card-subtitle">Taux des livrets réglementés et hypothèses de comparaison.</div></div></div>
+      <div id="epGroup-arb"></div>
+      <div class="note">Les intérêts du livret A et du LDDS sont exonérés d'impôt <strong>et</strong> de prélèvements sociaux. Révision semestrielle : prochaine échéance le 1<sup>er</sup> février 2027.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">7</div><div>
+        <div class="card-title">Livrets — plafonds et conditions</div>
+        <div class="card-subtitle">Plafonds, âges et contraintes de versement.</div></div></div>
+      <div id="epGroup-livrets"></div>
+      <div class="note">Attention : le plafond du CEL est <strong>global et inclut les intérêts</strong>, alors que ceux du livret A, du LDDS et du LEP portent sur les seuls versements — un solde peut donc légalement dépasser son plafond.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">8</div><div>
+        <div class="card-title">Calcul des intérêts</div>
+        <div class="card-subtitle">Constantes du calcul à la quinzaine.</div></div></div>
+      <div id="epGroup-int"></div>
+      <div class="note">Un versement produit intérêt à partir de la quinzaine <strong>suivante</strong>, un retrait les arrête à la fin de la <strong>précédente</strong>. D'où la règle pratique : verser en fin de quinzaine, retirer en début.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">9</div><div>
+        <div class="card-title">Assurance vie — régimes antérieurs</div>
+        <div class="card-subtitle">Prélèvement libératoire des versements antérieurs à septembre 2017. Saisie en décimal.</div></div></div>
+      <div id="epGroup-avanc"></div>
+      <div class="note">Ces taux coexistent avec le régime actuel sur un même contrat : l'assureur ventile les produits selon la date de versement. Indispensable pour tout contrat ancien.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-num">10</div><div>
+        <div class="card-title">Traçabilité</div>
+        <div class="card-subtitle">Date d'effet — à n'appliquer que délibérément.</div></div></div>
+      <div class="form-row">
+        <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="epDateEffet"></div>
+        <div class="form-field"><label>&nbsp;</label>
+          <div class="note" style="margin:0">
+            <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px;text-transform:none;letter-spacing:0;font-weight:400;color:inherit">
+              <input type="checkbox" id="epAppliquerDate" style="margin-top:2px">
+              <span>Appliquer cette date à <strong>tous</strong> les paramètres enregistrés. Décoché par défaut : les dates d'effet sont ici très hétérogènes — septembre 2017 pour la bascule de la fiscalité assurance vie, janvier 2024 pour le PEL, janvier 2026 pour les prélèvements sociaux, août 2026 pour les livrets.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actionbar">
+      <div class="lastup">Dernière mise à jour : <strong id="lastUpdateEpargne">—</strong></div>
+      <button class="btn btn-primary" id="btnSaveEpargne" onclick="enregistrerEpargne()">💾 Enregistrer l'épargne</button>
+    </div>
+  </div>
+
+  <div class="footer-info"><strong>TMK Performances</strong> · Paramètres des formations · Espace formateur</div>
   </div>
   <div class="toast" id="toast"></div>
   <script>
@@ -814,6 +925,7 @@ await chargerRetraite();
 await chargerDureeRef();
 await chargerPrevoyance();
 await chargerSante();
+await chargerEpargne();
 await chargerTns();
 }
 // ===================== FISCALITÉ : chargement =====================
@@ -951,6 +1063,12 @@ document.getElementById('smic').value = m.smic_mensuel_brut ?? '';
 document.getElementById('coeff').value = m.coeff_net_vers_brut ?? '';
 document.getElementById('dureeAnnees').value = m.duree_cotisation_annees ?? '';
 document.getElementById('dureeTrim').value = m.duree_cotisation_trimestres ?? '';
+document.getElementById('rc_valeur_point_agirc_arrco').value = m.valeur_point_agirc_arrco ?? '';
+document.getElementById('rc_salaire_reference_point').value = m.salaire_reference_point ?? '';
+document.getElementById('rc_reversion_comp_taux').value = m.reversion_comp_taux ?? '';
+document.getElementById('rc_reversion_comp_age_min').value = m.reversion_comp_age_min ?? '';
+document.getElementById('rc_reversion_base_taux').value = m.reversion_base_taux ?? '';
+document.getElementById('rc_reversion_base_age_min').value = m.reversion_base_age_min ?? '';
 if(maj) document.getElementById('lastUpdateRetraite').textContent = fmtDate(maj);
 }
 function renderPass(){
@@ -980,6 +1098,12 @@ const params=[
 {cle:'coeff_net_vers_brut',valeur:numOrNull('coeff'),unite:'',libelle:'Coefficient net vers brut',updated_at:now},
 {cle:'duree_cotisation_annees',valeur:numOrNull('dureeAnnees'),unite:'ans',libelle:'Durée de cotisation par défaut',updated_at:now},
 {cle:'duree_cotisation_trimestres',valeur:numOrNull('dureeTrim'),unite:'trimestres',libelle:'Durée de cotisation par défaut',updated_at:now},
+{cle:'valeur_point_agirc_arrco',valeur:numOrNull('rc_valeur_point_agirc_arrco'),unite:'EUR',libelle:'Valeur de service du point AGIRC-ARRCO',updated_at:now},
+{cle:'salaire_reference_point',valeur:numOrNull('rc_salaire_reference_point'),unite:'EUR',libelle:'Prix d\'achat du point — salaire de référence',updated_at:now},
+{cle:'reversion_comp_taux',valeur:numOrNull('rc_reversion_comp_taux'),unite:'%',libelle:'Réversion complémentaire — taux',updated_at:now},
+{cle:'reversion_comp_age_min',valeur:numOrNull('rc_reversion_comp_age_min'),unite:'ans',libelle:'Réversion complémentaire — âge minimal',updated_at:now},
+{cle:'reversion_base_taux',valeur:numOrNull('rc_reversion_base_taux'),unite:'%',libelle:'Réversion du régime de base — taux (recopie)',updated_at:now},
+{cle:'reversion_base_age_min',valeur:numOrNull('rc_reversion_base_age_min'),unite:'ans',libelle:'Réversion du régime de base — âge minimal (recopie)',updated_at:now},
 ].filter(p=>p.valeur!==null);
 const r1=await db.from('parametres_parcours').upsert(params,{onConflict:'cle'});
 if(r1.error) throw r1.error;
@@ -1400,9 +1524,135 @@ showToast('Paramètres TNS enregistrés ✓');
 }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
 finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer les TNS'; }
 }
+// ===================== ÉPARGNE (parametres_epargne) =====================
+// NB : comme pour la santé, le champ `libelle` n'est PAS renvoyé à l'enregistrement.
+// Les libellés complets, avec leurs références réglementaires, sont posés par
+// maj_epargne.sql et doivent survivre aux enregistrements faits depuis cet écran.
+const EPARGNE_PARAMS=[
+  {cle:'epargne_ps_taux_general', label:'Taux de droit commun sur les revenus du capital', unite:'%', step:'0.0001', group:'ps'},
+  {cle:'epargne_ps_taux_assurance_vie', label:'Assurance vie et contrats de capitalisation', unite:'%', step:'0.0001', group:'ps'},
+  {cle:'epargne_pfu_taux_ir', label:'Prélèvement forfaitaire unique — part impôt sur le revenu', unite:'%', step:'0.0001', group:'ps'},
+  {cle:'epargne_csg_taux', label:'CSG sur les revenus du capital', unite:'%', step:'0.0001', group:'ps'},
+  {cle:'epargne_crds_taux', label:'CRDS', unite:'%', step:'0.0001', group:'ps'},
+  {cle:'epargne_prelevement_solidarite', label:'Prélèvement de solidarité', unite:'%', step:'0.0001', group:'ps'},
+  {cle:'av_duree_seuil_annees', label:'Ancienneté ouvrant le régime favorable', unite:'ans', step:'1', group:'avr'},
+  {cle:'av_abattement_annuel_seul', label:'Abattement annuel sur les produits — personne seule', unite:'EUR', step:'0.01', group:'avr'},
+  {cle:'av_abattement_annuel_couple', label:'Abattement annuel sur les produits — couple soumis à imposition commune', unite:'EUR', step:'0.01', group:'avr'},
+  {cle:'av_taux_reduit', label:'Taux réduit après huit ans, sous le seuil de versements', unite:'%', step:'0.0001', group:'avr'},
+  {cle:'av_taux_pfu_ir', label:'Taux d\'impôt sur le revenu au-delà du seuil de versements', unite:'%', step:'0.0001', group:'avr'},
+  {cle:'av_seuil_versements', label:'Seuil de versements déclenchant le taux de 12,8 %', unite:'EUR', step:'0.01', group:'avr'},
+  {cle:'av_seuil_versements_couple', label:'Seuil de versements — couple', unite:'EUR', step:'0.01', group:'avr'},
+  {cle:'av_credit_impot_max_seul', label:'Crédit d\'impôt maximal — personne seule', unite:'EUR', step:'0.01', group:'avr'},
+  {cle:'av_credit_impot_max_couple', label:'Crédit d\'impôt maximal — couple', unite:'EUR', step:'0.01', group:'avr'},
+  {cle:'av_990i_abattement_beneficiaire', label:'Article 990 I — abattement par bénéficiaire', unite:'EUR', step:'0.01', group:'avt'},
+  {cle:'av_990i_taux_1', label:'Article 990 I — taux applicable après abattement', unite:'%', step:'0.0001', group:'avt'},
+  {cle:'av_990i_seuil_taux_2', label:'Article 990 I — seuil de passage au taux majoré', unite:'EUR', step:'0.01', group:'avt'},
+  {cle:'av_990i_taux_2', label:'Article 990 I — taux au-delà du seuil', unite:'%', step:'0.0001', group:'avt'},
+  {cle:'av_757b_abattement_global', label:'Article 757 B — abattement global', unite:'EUR', step:'0.01', group:'avt'},
+  {cle:'av_757b_age_pivot', label:'Âge pivot entre les deux régimes de transmission', unite:'ans', step:'1', group:'avt'},
+  {cle:'per_taux_deduction', label:'Plafond de déduction — pourcentage des revenus professionnels', unite:'%', step:'0.0001', group:'per'},
+  {cle:'per_plafond_coef_pass', label:'Plafond de déduction — nombre de PASS', unite:'× PASS', step:'0.01', group:'per'},
+  {cle:'per_plancher_coef_pass', label:'Plancher de déduction — fraction du PASS', unite:'× PASS', step:'0.01', group:'per'},
+  {cle:'per_ps_sortie', label:'Prélèvements sociaux sur les plus-values à la sortie en capital', unite:'%', step:'0.0001', group:'per'},
+  {cle:'per_ps_rente_taux_plein', label:'Prélèvements sociaux sur la rente issue de versements déduits — taux plein', unite:'%', step:'0.0001', group:'per'},
+  {cle:'per_rvtg_abattement_min', label:'Abattement de 10 % sur la rente — minimum par rentier', unite:'EUR', step:'0.01', group:'per'},
+  {cle:'per_rvtg_abattement_max', label:'Abattement de 10 % sur la rente — plafond par foyer fiscal', unite:'EUR', step:'0.01', group:'per'},
+  {cle:'per_report_plafond_annees', label:'Report des plafonds de déduction non utilisés — régime actuel', unite:'ans', step:'1', group:'per'},
+  {cle:'per_report_plafond_annees_anterieur', label:'Report des plafonds générés jusqu\'en 2025', unite:'ans', step:'1', group:'per'},
+  {cle:'per_age_limite_deduction', label:'Âge au-delà duquel les versements ne sont plus déductibles', unite:'ans', step:'1', group:'per'},
+  {cle:'per_tns_taux_1', label:'Plafond TNS — pourcentage du bénéfice imposable', unite:'%', step:'0.0001', group:'per'},
+  {cle:'per_tns_taux_2', label:'Plafond TNS — pourcentage de la fraction du bénéfice entre 1 et 8 PASS', unite:'%', step:'0.0001', group:'per'},
+  {cle:'per_tns_borne_sup_pass', label:'Plafond TNS — borne supérieure de la fraction majorée', unite:'× PASS', step:'0.01', group:'per'},
+  {cle:'per_rvtg_abattement', label:'Sortie en rente, versements déduits — abattement', unite:'%', step:'0.0001', group:'per'},
+  {cle:'per_990i_abattement', label:'PER assurantiel — abattement en cas de décès avant 70 ans', unite:'EUR', step:'0.01', group:'per'},
+  {cle:'rvto_fraction_imposable_moins_50', label:'Fraction imposable — moins de 50 ans', unite:'%', step:'0.0001', group:'rvto'},
+  {cle:'rvto_fraction_imposable_50_59', label:'Fraction imposable — de 50 à 59 ans', unite:'%', step:'0.0001', group:'rvto'},
+  {cle:'rvto_fraction_imposable_60_69', label:'Fraction imposable — de 60 à 69 ans', unite:'%', step:'0.0001', group:'rvto'},
+  {cle:'rvto_fraction_imposable_70_plus', label:'Fraction imposable — 70 ans et plus', unite:'%', step:'0.0001', group:'rvto'},
+  {cle:'rvto_ps_taux', label:'Prélèvements sociaux sur la fraction imposable', unite:'%', step:'0.0001', group:'rvto'},
+  {cle:'arbitrage_taux_livret_a', label:'Taux du livret A', unite:'%', step:'0.0001', group:'arb'},
+  {cle:'arbitrage_taux_ldds', label:'Taux du LDDS', unite:'%', step:'0.0001', group:'arb'},
+  {cle:'arbitrage_taux_lep', label:'Taux du LEP', unite:'%', step:'0.0001', group:'arb'},
+  {cle:'arbitrage_taux_cel', label:'Taux du CEL', unite:'%', step:'0.0001', group:'arb'},
+  {cle:'arbitrage_taux_livret_fiscalise', label:'Taux d\'un livret fiscalisé — hypothèse de comparaison', unite:'%', step:'0.0001', group:'arb'},
+  {cle:'arbitrage_taux_fonds_euros', label:'Rendement d\'un fonds en euros — hypothèse de comparaison', unite:'%', step:'0.0001', group:'arb'},
+  {cle:'livret_a_plafond', label:'Livret A — plafond de dépôt', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'ldds_plafond', label:'LDDS — plafond de dépôt', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'lep_plafond', label:'LEP — plafond de dépôt', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'livret_jeune_plafond', label:'Livret Jeune — plafond de dépôt', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'livret_jeune_age_min', label:'Livret Jeune — âge minimal', unite:'ans', step:'1', group:'livrets'},
+  {cle:'livret_jeune_age_max', label:'Livret Jeune — âge maximal', unite:'ans', step:'1', group:'livrets'},
+  {cle:'cel_plafond', label:'CEL — plafond', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'pel_plafond', label:'PEL — plafond de versements', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'pel_versement_initial_min', label:'PEL — versement minimal à l\'ouverture', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'pel_versement_annuel_min', label:'PEL — versements périodiques minimaux par an', unite:'EUR', step:'0.01', group:'livrets'},
+  {cle:'pel_duree_min_annees', label:'PEL — durée minimale', unite:'ans', step:'1', group:'livrets'},
+  {cle:'pel_duree_max_annees', label:'PEL — durée maximale de versements', unite:'ans', step:'1', group:'livrets'},
+  {cle:'pel_taux_plans_depuis_2024', label:'PEL — taux garanti des plans ouverts depuis 2024', unite:'%', step:'0.0001', group:'livrets'},
+  {cle:'interets_quinzaines_par_an', label:'Nombre de quinzaines de calcul par an', unite:'quinzaines', step:'1', group:'int'},
+  {cle:'interets_capitalisation_mois', label:'Mois de capitalisation des intérêts', unite:'mois', step:'1', group:'int'},
+  {cle:'av_pfl_moins_4_ans', label:'Prélèvement libératoire — contrat de moins de 4 ans', unite:'%', step:'0.0001', group:'avanc'},
+  {cle:'av_pfl_4_a_8_ans', label:'Prélèvement libératoire — contrat de 4 à 8 ans', unite:'%', step:'0.0001', group:'avanc'},
+  {cle:'av_pfl_apres_8_ans', label:'Prélèvement libératoire — contrat de plus de 8 ans', unite:'%', step:'0.0001', group:'avanc'},
+];
+
+function renderEpargneFields(){
+  const groups={ps:[],avr:[],avt:[],per:[],rvto:[],arb:[],livrets:[],int:[],avanc:[]};
+  EPARGNE_PARAMS.forEach(p=>{ if(groups[p.group]) groups[p.group].push(p); });
+  Object.keys(groups).forEach(g=>{
+    const cont=document.getElementById('epGroup-'+g); if(!cont) return;
+    const items=groups[g]; let html='';
+    for(let i=0;i<items.length;i+=2){
+      html+='<div class="form-row">';
+      for(let j=i;j<Math.min(i+2,items.length);j++){
+        const p=items[j];
+        const u = p.unite==='%' ? ' (décimal)' : (p.unite ? ' ('+p.unite.replace('EUR','€')+')' : '');
+        html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="${p.step}" id="ep_${p.cle}"></div>`;
+      }
+      html+='</div>';
+    }
+    cont.innerHTML=html;
+  });
+}
+
+async function chargerEpargne(){
+  const {data,error}=await db.from('parametres_epargne').select('cle,valeur,date_effet,updated_at');
+  if(error){ showToast('Table épargne introuvable — lancez maj_epargne.sql','error'); return; }
+  if(!data || !data.length){ showToast('Table épargne vide — lancez maj_epargne.sql','error'); return; }
+  let maj=null;
+  data.forEach(r=>{
+    const el=document.getElementById('ep_'+r.cle);
+    if(el) el.value = r.valeur;
+    if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
+  });
+  if(maj) document.getElementById('lastUpdateEpargne').textContent = fmtDate(maj);
+}
+
+async function enregistrerEpargne(){
+  const btn=document.getElementById('btnSaveEpargne'); btn.disabled=true; btn.textContent='Enregistrement…';
+  const now=new Date().toISOString();
+  try{
+    const params=EPARGNE_PARAMS.map(p=>({
+      cle:p.cle, valeur:numOrNull('ep_'+p.cle), unite:p.unite, updated_at:now
+    })).filter(p=>p.valeur!==null);
+    // Dates d'effet heterogenes (27/09/2017, 01/01/2024, 01/01/2026, 01/08/2026...) :
+    // on n'ecrit une date globale que si la case est explicitement cochee.
+    const appliquer=document.getElementById('epAppliquerDate').checked;
+    const dateEffet=strOrNull('epDateEffet');
+    if(appliquer && dateEffet) params.forEach(p=>p.date_effet=dateEffet);
+    if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
+    const r=await db.from('parametres_epargne').upsert(params,{onConflict:'cle'});
+    if(r.error) throw r.error;
+    document.getElementById('lastUpdateEpargne').textContent=fmtDate(now);
+    showToast('Épargne enregistrée ✓ ('+params.length+' paramètres)');
+  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
+  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer l\'épargne'; }
+}
+
 // ===================== INIT =====================
 renderPrevoyanceFields();
 renderSanteFields();
+renderEpargneFields();
 renderTnsFields();
 checkSession();
 </script>

@@ -154,6 +154,29 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
 .dr-table input:focus{outline:none;border-color:var(--tmk-prune);box-shadow:0 0 0 2px rgba(140,30,112,.1);}
 .dr-table input.mini{text-align:center;font-variant-numeric:tabular-nums;}
 .dr-table .del{background:transparent;border:none;color:var(--tmk-prune-light);cursor:pointer;font-size:16px;padding:2px 4px;}
+/* --- Onglet Santé : saisie datée --- */
+.form-field input.sf-mod{border-color:var(--tmk-or);background:#FFFBF0}
+.sf-hint{display:none;font-size:10.5px;color:var(--tmk-or);font-weight:600;margin-top:3px}
+.sf-hint.on{display:block}
+.sr-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border)}
+.sr-tools input[type=date]{padding:8px 11px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:13px}
+.sr-line{border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px;background:var(--bg-soft)}
+.sr-head{font-size:13.5px;font-weight:600;color:var(--tmk-prune-dark);margin-bottom:3px}
+.sr-cle{font-weight:400;font-size:11px;color:var(--text-muted)}
+.sr-val{font-size:14px;font-variant-numeric:tabular-nums;margin-bottom:10px;color:var(--text)}
+.sr-arrow{color:var(--tmk-prune);font-weight:700;margin:0 4px}
+.sr-choice{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
+.sr-choice label{font-size:12.5px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer}
+.sr-fields{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sr-fields input{padding:8px 11px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:13px;min-width:220px}
+.sr-lab{font-size:10.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.sr-note{font-size:11.5px;color:var(--text-muted);font-style:italic}
+#santeResult{margin-bottom:18px}
+.sres-title{font-family:'Fraunces',serif;font-size:15px;color:var(--tmk-charbon);margin:0 0 8px}
+.sres-line{padding:10px 14px;border-radius:var(--radius-sm);font-size:12.5px;margin-bottom:6px;line-height:1.55}
+.sres-line.ok{background:#EFF7F0;border-left:3px solid #2E7D32;color:#1B5E20}
+.sres-line.err{background:#FDEEEE;border-left:3px solid #A02020;color:#7A1616}
+#santeAvertissement:empty{display:none!important}
 .footer-info{text-align:center;margin-top:32px;padding:18px;font-size:11px;color:var(--text-muted)}
 .footer-info strong{color:var(--tmk-prune);font-weight:600}
 </style>
@@ -603,29 +626,32 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <div class="note">Ces montants servent uniquement à préremplir les simulateurs pour faire apparaître le dépassement d'honoraires. Le stagiaire peut les modifier librement.</div>
       </div>
 
-      <div class="card">
+      <div class="card" id="santeRecapCard" style="display:none">
         <div class="card-header">
           <div class="card-num">9</div>
           <div>
-            <div class="card-title">Traçabilité</div>
-            <div class="card-subtitle">Date d'effet — à n'appliquer que délibérément.</div>
+            <div class="card-title">Modifications à enregistrer</div>
+            <div class="card-subtitle">Chaque valeur modifiée exige une date d'effet, ou un motif s'il s'agit d'une erreur de saisie.</div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="santeDateEffet"></div>
-          <div class="form-field"><label>&nbsp;</label>
-            <div class="note" style="margin:0">
-              <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px;text-transform:none;letter-spacing:0;font-weight:400;color:inherit">
-                <input type="checkbox" id="santeAppliquerDate" style="margin-top:2px">
-                <span>Appliquer cette date à <strong>tous</strong> les paramètres enregistrés. Décoché par défaut : contrairement à la prévoyance, les paramètres santé ont des dates d'effet différentes les unes des autres (15/10/2023, 15/05/2024, 01/03/2026, 01/04/2026…) qu'un enregistrement global écraserait.</span>
-              </label>
-            </div>
-          </div>
+        <div class="sr-tools">
+          <label class="sr-lab" style="margin:0">Même date pour toutes les nouvelles valeurs</label>
+          <input type="date" id="santeDateGlobale">
+          <button class="btn btn-ghost" type="button" style="width:auto;margin:0" onclick="appliquerDateSante()">Appliquer</button>
+        </div>
+        <div id="santeRecap"></div>
+        <div class="sr-tools" style="justify-content:flex-end">
+          <button class="btn btn-ghost" type="button" style="width:auto;margin:0" onclick="fermerRecapSante()">Annuler</button>
+          <button class="btn btn-primary" type="button" id="btnConfirmSante" style="width:auto;margin:0" onclick="confirmerSante()">Confirmer l'enregistrement</button>
         </div>
       </div>
 
+      <div id="santeResult"></div>
+      <div class="note" id="santeAvertissement" style="display:block"></div>
+
       <div class="actionbar">
         <div class="lastup">Dernière mise à jour : <strong id="lastUpdateSante">—</strong></div>
+        <button class="btn btn-ghost" type="button" style="width:auto;margin:0 8px 0 0" onclick="historiqueSante()">Historique des valeurs</button>
         <button class="btn btn-primary" id="btnSaveSante" onclick="enregistrerSante()">💾 Enregistrer la santé</button>
       </div>
     </div>
@@ -1387,6 +1413,13 @@ const SANTE_PARAMS=[
   {cle:'sante_honoraire_ex_specialiste_non_optam',   label:'Spécialiste secteur 2 non OPTAM',                unite:'EUR',        group:'hono'},
   {cle:'sante_honoraire_ex_generaliste_s3',          label:'Généraliste secteur 3',                          unite:'EUR',        group:'hono'},
   {cle:'sante_honoraire_ex_specialiste_s3',          label:'Spécialiste secteur 3',                          unite:'EUR',        group:'hono'},
+  // --- Ajoutés : présents en base, jusqu'ici absents de cet écran ---
+  {cle:'sante_br_psychiatre_non_optam',              label:'BR psychiatre secteur 2 non OPTAM',              unite:'EUR',        group:'br'},
+  {cle:'sante_psychiatrie_acces_direct_age_min',     label:'Accès direct psychiatre — âge minimum',          unite:'ans',        group:'parc'},
+  {cle:'sante_psychiatrie_acces_direct_age_max',     label:'Accès direct psychiatre — âge maximum',          unite:'ans',        group:'parc'},
+  {cle:'sante_hors_parcours_majoration_points',      label:'Hors parcours — minoration du taux (en points)', unite:'%',          group:'parc'},
+  {cle:'sante_optique_br_monture_100_sante',         label:'BR monture panier 100 % santé',                  unite:'EUR',        group:'rac0'},
+  {cle:'sante_optique_br_verre_simple_100_sante',    label:'BR verre simple panier 100 % santé',             unite:'EUR/verre',  group:'rac0'},
 ];
 
 function renderSanteFields(){
@@ -1400,13 +1433,19 @@ function renderSanteFields(){
       for(let j=i;j<Math.min(i+2,items.length);j++){
         const p=items[j];
         const u = p.unite==='%' ? ' (décimal)' : (p.unite ? ' ('+p.unite.replace('EUR','€')+')' : '');
-        html+=`<div class="form-field"><label>${p.label}${u}</label><input type="number" step="0.01" id="sf_${p.cle}"></div>`;
+        html+='<div class="form-field"><label>'+p.label+u+'</label>'
+            + '<input type="number" step="0.01" id="sf_'+p.cle+'" oninput="marquerSante(\''+p.cle+'\')">'
+            + '<span class="sf-hint" id="sfh_'+p.cle+'"></span></div>';
       }
       html+='</div>';
     }
     cont.innerHTML=html;
   });
 }
+
+// Valeurs telles que chargées : sert à savoir ce qui a réellement changé.
+let santeInitial = {};
+let santePending = [];
 
 async function chargerSante(){
   const {data,error}=await db.from('parametres_sante').select('cle,valeur,date_effet,updated_at');
@@ -1418,35 +1457,152 @@ async function chargerSante(){
     showToast('Table santé vide — lancez maj_sante.sql pour charger les paramètres','error');
     return;
   }
-  let maj=null;
+  santeInitial={};
+  let maj=null, inconnus=[];
   data.forEach(r=>{
+    santeInitial[r.cle]={valeur:Number(r.valeur), date_effet:r.date_effet?String(r.date_effet).slice(0,10):null};
     const el=document.getElementById('sf_'+r.cle);
-    if(el) el.value = r.valeur;
+    if(el){ el.value = r.valeur; }
+    else { inconnus.push(r.cle); }
     if(r.updated_at && (!maj || r.updated_at>maj)) maj=r.updated_at;
   });
   if(maj) document.getElementById('lastUpdateSante').textContent = fmtDate(maj);
+  SANTE_PARAMS.forEach(p=>marquerSante(p.cle));
+  fermerRecapSante();
+  const av=document.getElementById('santeAvertissement');
+  if(av) av.innerHTML = inconnus.length
+    ? 'Attention : '+inconnus.length+' paramètre(s) en base ne figurent pas sur cet écran et ne sont donc pas modifiables ici : '+inconnus.join(', ')+'.'
+    : '';
 }
 
-async function enregistrerSante(){
-  const btn=document.getElementById('btnSaveSante'); btn.disabled=true; btn.textContent='Enregistrement…';
-  const now=new Date().toISOString();
-  try{
-    const params=SANTE_PARAMS.map(p=>({
-      cle:p.cle, valeur:numOrNull('sf_'+p.cle), unite:p.unite, updated_at:now
-    })).filter(p=>p.valeur!==null);
-    // La date d'effet n'est écrite QUE si la case est cochée : les paramètres santé
-    // ont des dates d'effet hétérogènes (15/10/2023, 15/05/2024, 01/03/2026, 01/04/2026…)
-    // qu'un enregistrement global écraserait.
-    const appliquer=document.getElementById('santeAppliquerDate').checked;
-    const dateEffet=strOrNull('santeDateEffet');
-    if(appliquer && dateEffet) params.forEach(p=>p.date_effet=dateEffet);
-    if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
-    const r=await db.from('parametres_sante').upsert(params,{onConflict:'cle'});
-    if(r.error) throw r.error;
-    document.getElementById('lastUpdateSante').textContent=fmtDate(now);
-    showToast('Santé enregistrée ✓ ('+params.length+' paramètres)');
-  }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }
-  finally{ btn.disabled=false; btn.innerHTML='💾 Enregistrer la santé'; }
+// Signale à l'écran qu'une valeur diffère de celle qui a été chargée.
+function marquerSante(cle){
+  const el=document.getElementById('sf_'+cle); if(!el) return;
+  const hint=document.getElementById('sfh_'+cle);
+  const ref=santeInitial[cle];
+  const v=el.value===''?null:Number(el.value);
+  const change = ref && v!==null && v!==ref.valeur;
+  el.classList.toggle('sf-mod', !!change);
+  if(hint){
+    hint.textContent = change
+      ? 'modifié — valeur en vigueur : '+ref.valeur+(ref.date_effet?' depuis le '+ref.date_effet.split('-').reverse().join('/'):'')
+      : '';
+    hint.classList.toggle('on', !!change);
+  }
+}
+
+// Bouton principal : ne enregistre rien, prépare le récapitulatif.
+function enregistrerSante(){
+  document.getElementById('santeResult').innerHTML='';
+  santePending = SANTE_PARAMS.map(p=>{
+    const ref=santeInitial[p.cle];
+    const v=numOrNull('sf_'+p.cle);
+    if(!ref || v===null || v===ref.valeur) return null;
+    return {cle:p.cle, label:p.label, unite:p.unite, avant:ref.valeur, apres:v,
+            date_actuelle:ref.date_effet, mode:'nouvelle',
+            date:new Date().toISOString().slice(0,10), motif:''};
+  }).filter(Boolean);
+
+  if(!santePending.length){
+    showToast('Aucune valeur modifiée — rien à enregistrer');
+    return;
+  }
+  renderRecapSante();
+  document.getElementById('santeRecapCard').style.display='block';
+  document.getElementById('santeRecapCard').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function renderRecapSante(){
+  const c=document.getElementById('santeRecap');
+  c.innerHTML = santePending.map((m,i)=>`
+    <div class="sr-line" id="srl${i}">
+      <div class="sr-head">${m.label} <span class="sr-cle">${m.cle}</span></div>
+      <div class="sr-val">${m.avant} <span class="sr-arrow">→</span> <strong>${m.apres}</strong>
+        ${m.unite==='%'?'(décimal)':(m.unite?'('+m.unite.replace('EUR','€')+')':'')}</div>
+      <div class="sr-choice">
+        <label><input type="radio" name="mode${i}" value="nouvelle" ${m.mode==='nouvelle'?'checked':''}
+               onchange="majModeSante(${i},'nouvelle')"> Nouvelle valeur — le barème a changé</label>
+        <label><input type="radio" name="mode${i}" value="correction" ${m.mode==='correction'?'checked':''}
+               onchange="majModeSante(${i},'correction')"> Corriger une erreur de saisie</label>
+      </div>
+      <div class="sr-fields" id="srf${i}">${renderChampsSante(i)}</div>
+    </div>`).join('');
+}
+
+function renderChampsSante(i){
+  const m=santePending[i];
+  if(m.mode==='nouvelle'){
+    return `<label class="sr-lab">Date d'effet — à partir de quand cette valeur s'applique</label>
+      <input type="date" value="${m.date}" onchange="majDateSante(${i}, this.value)">
+      ${m.date_actuelle?`<span class="sr-note">doit être postérieure au ${m.date_actuelle.split('-').reverse().join('/')}</span>`:''}`;
+  }
+  return `<label class="sr-lab">Motif de la correction (obligatoire)</label>
+    <input type="text" placeholder="ex : saisie 31 au lieu de 30,50" value="${m.motif}"
+           oninput="majMotifSante(${i}, this.value)">
+    <span class="sr-note">ne crée pas de nouvelle version : remplace la valeur en vigueur</span>`;
+}
+
+function majModeSante(i, mode){ santePending[i].mode=mode; document.getElementById('srf'+i).innerHTML=renderChampsSante(i); }
+function majDateSante(i, v){ santePending[i].date=v; }
+function majMotifSante(i, v){ santePending[i].motif=v; }
+function appliquerDateSante(){
+  const d=document.getElementById('santeDateGlobale').value;
+  if(!d){ showToast('Choisissez une date','error'); return; }
+  santePending.forEach(m=>{ if(m.mode==='nouvelle') m.date=d; });
+  renderRecapSante();
+}
+function fermerRecapSante(){
+  const c=document.getElementById('santeRecapCard'); if(c) c.style.display='none';
+  santePending=[];
+}
+
+// Enregistrement réel : une ligne à la fois, pour qu'un refus n'annule pas les autres.
+async function confirmerSante(){
+  const btn=document.getElementById('btnConfirmSante'); btn.disabled=true; btn.textContent='Enregistrement…';
+  const res=document.getElementById('santeResult');
+  const lignes=[];
+  for(const m of santePending){
+    if(m.mode==='nouvelle'){
+      if(!m.date){ lignes.push({cle:m.cle, ok:false, msg:'Aucune date d\'effet saisie.'}); continue; }
+      if(m.date_actuelle && m.date<=m.date_actuelle){
+        lignes.push({cle:m.cle, ok:false,
+          msg:'La date d\'effet doit être postérieure au '+m.date_actuelle.split('-').reverse().join('/')+
+              '. S\'il s\'agit de corriger une erreur, choisissez « Corriger une erreur de saisie ».'});
+        continue;
+      }
+      const r=await db.from('parametres_sante')
+        .update({valeur:m.apres, date_effet:m.date, updated_at:new Date().toISOString()})
+        .eq('cle', m.cle);
+      lignes.push({cle:m.cle, ok:!r.error, msg:r.error?r.error.message:'Nouvelle valeur enregistrée, effet au '+m.date.split('-').reverse().join('/')+'.'});
+    }else{
+      if(!m.motif.trim()){ lignes.push({cle:m.cle, ok:false, msg:'Une correction exige un motif écrit.'}); continue; }
+      const r=await db.rpc('corriger_parametre_sante', {p_cle:m.cle, p_valeur:m.apres, p_motif:m.motif.trim()});
+      lignes.push({cle:m.cle, ok:!r.error, msg:r.error?r.error.message:'Correction enregistrée, sans nouvelle version.'});
+    }
+  }
+  btn.disabled=false; btn.innerHTML='Confirmer l\'enregistrement';
+  const ok=lignes.filter(l=>l.ok).length, ko=lignes.length-ok;
+  res.innerHTML='<div class="sres-title">'+ok+' enregistrement(s) réussi(s)'+(ko?', '+ko+' refusé(s)':'')+'</div>'
+    + lignes.map(l=>'<div class="sres-line '+(l.ok?'ok':'err')+'"><strong>'+l.cle+'</strong><br>'
+        + String(l.msg).replace(/\n/g,'<br>')+'</div>').join('');
+  if(ok) await chargerSante();
+  if(ko) document.getElementById('santeRecapCard').style.display='none';
+}
+
+// Historique : les dernières valeurs remplacées, lues dans le journal.
+async function historiqueSante(){
+  const res=document.getElementById('santeResult');
+  res.innerHTML='<div class="sres-title">Chargement de l\'historique…</div>';
+  const {data,error}=await db.from('parametres_sante_journal')
+    .select('cle,valeur,valide_du,valide_au,corrige_le,corrige_motif')
+    .order('valide_du',{ascending:false}).limit(60);
+  if(error){ res.innerHTML='<div class="sres-line err">'+error.message+'</div>'; return; }
+  const f=d=>d?String(d).slice(0,10).split('-').reverse().join('/'):'—';
+  res.innerHTML='<div class="sres-title">Historique des valeurs ('+data.length+' dernières)</div>'
+    + '<table class="dr-table"><thead><tr><th>Paramètre</th><th>Valeur</th><th>Du</th><th>Au</th><th>Correction</th></tr></thead><tbody>'
+    + data.map(r=>'<tr><td>'+r.cle+'</td><td>'+r.valeur+'</td><td>'+f(r.valide_du)+'</td><td>'
+        +(r.valide_au?f(r.valide_au):'<em>en vigueur</em>')+'</td><td>'+(r.corrige_motif||'')+'</td></tr>').join('')
+    + '</tbody></table>';
 }
 
 // ===================== TNS (parametres_tns) =====================
@@ -1688,6 +1844,10 @@ renderTnsFields();
 checkSession();
 </script>
 </body>
+
+</html>
+</body>
+</html>
 
 </html>
 </body>

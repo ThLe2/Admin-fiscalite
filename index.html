@@ -739,7 +739,12 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <div class="form-row">
           <div class="form-field"><label>Date d'effet des barèmes</label><input type="date" id="prevDateEffet"></div>
           <div class="form-field"><label>&nbsp;</label>
-            <div class="note" style="margin:0">Si renseignée, cette date est écrite sur tous les paramètres enregistrés (sert au bandeau « à jour au… » des supports). Laisser vide pour ne pas y toucher.</div>
+            <div class="note" style="margin:0">
+            <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px;text-transform:none;letter-spacing:0;font-weight:400;color:inherit">
+              <input type="checkbox" id="prevAppliquerDate" style="margin-top:2px">
+              <span>Appliquer cette date à <strong>tous</strong> les paramètres enregistrés. Décoché par défaut : les dates d'effet sont hétérogènes (01/01 pour le PASS et les plafonds AT/MP, 01/04 pour le capital décès, 01/07 pour l'IJ maladie, 01/11/2026 pour la réforme AT/MP).</span>
+            </label>
+          </div>
           </div>
         </div>
       </div>
@@ -1237,15 +1242,25 @@ const PREVOYANCE_PARAMS = [
 {cle:'mens_carence_maladie', label:'Carence maladie', unite:'jours', group:'mens'},
 {cle:'mens_carence_atmp', label:'Carence AT/MP', unite:'jours', group:'mens'},
 {cle:'mens_anciennete_min', label:'Ancienneté minimale', unite:'ans', group:'mens'},
+{cle:'mens_duree_periode1', label:'Durée de base 1re période', unite:'jours', group:'mens'},
+{cle:'mens_duree_periode2', label:'Durée de base 2e période', unite:'jours', group:'mens'},
+{cle:'mens_annees_par_palier', label:'Palier d\'ancienneté', unite:'ans', group:'mens'},
+{cle:'mens_bonus_jours_par_palier', label:'Jours en plus par palier et par période', unite:'jours', group:'mens'},
+{cle:'mens_duree_max_periode', label:'Durée max par période', unite:'jours', group:'mens'},
 // IJ AT/MP
 {cle:'at_taux1', label:'Taux j.1–28', unite:'', group:'at'},
 {cle:'at_taux2', label:'Taux dès j.29', unite:'', group:'at'},
+{cle:'at_jours_periode1', label:'Nombre de jours au 1er taux (bascule)', unite:'jours', group:'at'},
 {cle:'at_diviseur_sjr', label:'Diviseur SJR', unite:'', group:'at'},
-{cle:'at_sjr_plafond', label:'SJR plafonné', unite:'€', group:'at'},
+{cle:'at_sjr_plafond', label:'SJR plafonné — AT/MP survenus avant le 01/11/2026', unite:'€', group:'at'},
 {cle:'at_coef_gain_net', label:'Coef gain journalier net', unite:'', group:'at'},
-{cle:'at_ij_max_1_28', label:'IJ max j.1–28', unite:'€', group:'at'},
-{cle:'at_ij_max_29', label:'IJ max dès j.29', unite:'€', group:'at'},
+{cle:'at_ij_max_1_28', label:'IJ max j.1–28 — AT/MP avant le 01/11/2026', unite:'€', group:'at'},
+{cle:'at_ij_max_29', label:'IJ max dès j.29 — AT/MP avant le 01/11/2026', unite:'€', group:'at'},
 {cle:'at_carence', label:'Carence Sécu', unite:'jours', group:'at'},
+// Réforme R. 433-2 (décret 2026-909) : AT/MP survenus à compter du 01/11/2026 — 0,226 % du PASS
+{cle:'at_sjr_plafond_reforme', label:'SJR plafonné — AT/MP survenus dès le 01/11/2026', unite:'€', group:'at'},
+{cle:'at_ij_max_1_28_reforme', label:'IJ max j.1–28 — AT/MP dès le 01/11/2026', unite:'€', group:'at'},
+{cle:'at_ij_max_29_reforme', label:'IJ max dès j.29 — AT/MP dès le 01/11/2026', unite:'€', group:'at'},
 // Invalidité
 {cle:'inv_taux_cat1', label:'Taux catégorie 1 (× SAM)', unite:'', group:'inv'},
 {cle:'inv_taux_cat2', label:'Taux catégories 2 et 3 (× SAM)', unite:'', group:'inv'},
@@ -1301,6 +1316,7 @@ html+='</div>';
 cont.innerHTML=html;
 });
 }
+let PREV_CLES_EN_BASE=new Set();
 async function chargerPrevoyance(){
 const {data,error}=await db.from('parametres_prevoyance').select('cle,valeur,date_effet,updated_at');
 if(error){
@@ -1308,6 +1324,7 @@ showToast('Table prévoyance introuvable — lancez parametres_prevoyance.sql','
 return;
 }
 let maj=null, eff=null;
+PREV_CLES_EN_BASE=new Set(data.map(r=>r.cle));
 data.forEach(r=>{
 const el=document.getElementById('prev_'+r.cle);
 if(el) el.value = r.valeur;
@@ -1322,13 +1339,23 @@ const btn=document.getElementById('btnSavePrevoyance'); btn.disabled=true; btn.t
 const now=new Date().toISOString();
 try{
 const params=PREVOYANCE_PARAMS.map(p=>({
-cle:p.cle, valeur:numOrNull('prev_'+p.cle), unite:p.unite, libelle:p.label, updated_at:now
+cle:p.cle, valeur:numOrNull('prev_'+p.cle), unite:p.unite, updated_at:now, _label:p.label
 })).filter(p=>p.valeur!==null);
+// NB : `libelle` volontairement non renvoyé pour les clés déjà en base (comme Santé et Épargne) :
+// les libellés sourcés posés par les SQL survivent aux enregistrements. Une clé encore absente
+// est créée avec son libellé d'écran (colonne NOT NULL), dans un envoi séparé.
+const existants=params.filter(p=>PREV_CLES_EN_BASE.has(p.cle)).map(({_label,...p})=>p);
+const nouveaux=params.filter(p=>!PREV_CLES_EN_BASE.has(p.cle)).map(({_label,...p})=>({...p,libelle:_label}));
+// On n'écrit une date globale que si la case est explicitement cochée.
 const dateEffet=strOrNull('prevDateEffet');
-if(dateEffet) params.forEach(p=>p.date_effet=dateEffet);
+if(document.getElementById('prevAppliquerDate').checked && dateEffet) [...existants,...nouveaux].forEach(p=>p.date_effet=dateEffet);
 if(!params.length){ showToast('Aucune valeur à enregistrer','error'); return; }
-const r=await db.from('parametres_prevoyance').upsert(params,{onConflict:'cle'});
-if(r.error) throw r.error;
+for(const lot of [existants,nouveaux]){
+  if(!lot.length) continue;
+  const r=await db.from('parametres_prevoyance').upsert(lot,{onConflict:'cle'});
+  if(r.error) throw r.error;
+}
+nouveaux.forEach(p=>PREV_CLES_EN_BASE.add(p.cle));
 document.getElementById('lastUpdatePrevoyance').textContent=fmtDate(now);
 showToast('Prévoyance enregistrée ✓');
 }catch(err){ showToast('Erreur : '+(err.message||err),'error'); }

@@ -179,6 +179,21 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
 #santeAvertissement:empty{display:none!important}
 .footer-info{text-align:center;margin-top:32px;padding:18px;font-size:11px;color:var(--text-muted)}
 .footer-info strong{color:var(--tmk-prune);font-weight:600}
+
+/* ===== Onglet Actualité ===== */
+.form-field select,.form-field textarea{padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;background:#fff;color:var(--text)}
+.form-field textarea{min-height:70px;resize:vertical;line-height:1.45}
+.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--tmk-prune);box-shadow:0 0 0 3px rgba(140,30,112,.1)}
+.act-filtre{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.act-filtre select{padding:8px 11px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:13px}
+.act-statut{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.act-statut.attendu{background:#FFF3D6;color:#7A5200}.act-statut.intervenu{background:#E3F2E5;color:#1B5E20}
+.act-statut.reporte{background:#E8EEF7;color:#24446E}.act-statut.abandonne{background:#EEE;color:#555}
+.act-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+.act-actions{display:flex;gap:10px}.act-actions .btn{width:auto;margin:0;padding:10px 16px}
+.act-journal{margin-top:10px;font-size:12px;border-top:1px dashed var(--border);padding-top:8px;display:none}
+.act-journal.show{display:block}.act-journal div{padding:3px 0}
+.act-modifie{border-color:var(--tmk-or)!important;background:#FFFBF0!important}
 </style>
 </head>
 
@@ -212,7 +227,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <div class="header-content">
           <div class="header-badge">Espace Formateur · Paramètres</div>
           <h1>Paramètres des formations</h1>
-          <p>Fiscalité, retraite, santé, prévoyance — mise à jour centralisée. Toute modification est répercutée sur les fiches et simulateurs des stagiaires.</p>
+          <p>Fiscalité, retraite, santé, prévoyance, actualité — mise à jour centralisée. Toute modification est répercutée sur les fiches et simulateurs des stagiaires.</p>
         </div>
         <div class="header-user">
           <div class="header-user-email" id="userEmail">—</div>
@@ -229,6 +244,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
       <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance</button>
     <button class="tab" data-tab="epargne" onclick="switchTab('epargne')">Épargne</button>
       <button class="tab" data-tab="tns" onclick="switchTab('tns')">TNS</button>
+      <button class="tab" data-tab="actualite" onclick="switchTab('actualite')">Actualité</button>
     </div>
     <!-- ============ PANEL FISCALITÉ ============ -->
     <div class="panel active" id="panel-fiscalite">
@@ -805,6 +821,34 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <button class="btn btn-primary" id="btnSaveTns" onclick="enregistrerTns()">💾 Enregistrer les TNS</button>
       </div>
     </div>
+    <!-- ============ PANEL ACTUALITÉ ============ -->
+    <div class="panel" id="panel-actualite">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">i</div>
+          <div>
+            <div class="card-title">Points d'actualité en attente</div>
+            <div class="card-subtitle">Table parametres_actualite : statut affiché dans les pages des DA (encart vidéo, fiche « Où en est-on ? », jalon de frise). Chaque enregistrement est historisé.</div>
+          </div>
+        </div>
+        <div class="act-filtre"><label for="actFiltreDa" style="font-size:12px;font-weight:600">DA</label><select id="actFiltreDa" onchange="renderActualite()"></select>
+          <span class="act-meta" id="actCompte"></span></div>
+        <div class="note" style="margin-bottom:0">Quand l'événement survient : passer le statut à <strong>intervenu</strong>, renseigner le <strong>résultat</strong> et la <strong>date d'intervention</strong>, puis mettre à jour « vérifié le ». Les pages affichent le nouvel état à leur prochain chargement, sans republication.</div>
+      </div>
+      <div id="actListe"></div>
+      <div class="card">
+        <div class="card-header"><div class="card-num">+</div><div>
+          <div class="card-title">Ajouter un point</div>
+          <div class="card-subtitle">Clé en minuscules et tirets (ex. dpf-pourvoi-cjue). Elle se place ensuite dans la page : data-actualite="clé".</div></div></div>
+        <div class="form-row three">
+          <div class="form-field"><label>Clé</label><input id="actN_cle" placeholder="ex. ris-vote-pleniere"></div>
+          <div class="form-field"><label>Code du DA</label><input id="actN_da_code" placeholder="ex. actualite-droit-assurances"></div>
+          <div class="form-field"><label>Module</label><input id="actN_module" placeholder="M1"></div>
+        </div>
+        <div id="actNouveauChamps"></div>
+        <div class="act-actions"><button class="btn btn-primary" id="btnActAjout" onclick="ajouterActualite()">➕ Ajouter le point</button></div>
+      </div>
+    </div>
     <!-- ============ PANEL ÉPARGNE ============ -->
   <div class="panel" id="panel-epargne">
     <div class="card">
@@ -966,6 +1010,7 @@ await chargerPrevoyance();
 await chargerSante();
 await chargerEpargne();
 await chargerTns();
+await chargerActualite();
 }
 // ===================== FISCALITÉ : chargement =====================
 async function chargerFiscalite(){
@@ -1869,6 +1914,111 @@ renderSanteFields();
 renderEpargneFields();
 renderTnsFields();
 checkSession();
+
+// ===================== ACTUALITÉ (parametres_actualite) =====================
+// Écriture réservée au personnel (politique RLS lms.est_personnel()). maj_le / maj_par et le journal sont posés par les déclencheurs.
+const ACT_CHAMPS=[
+ {c:'intitule',l:'Intitulé',t:'text',full:true,req:true},
+ {c:'statut',l:'Statut',t:'select'},
+ {c:'ordre',l:'Ordre d\'affichage',t:'number'},
+ {c:'verifie_le',l:'Vérifié à la source le',t:'date',req:true},
+ {c:'acquis',l:'Acquis à ce jour',t:'area',full:true,req:true},
+ {c:'attendu',l:'Ce qui reste à intervenir',t:'area',full:true},
+ {c:'date_attendue',l:'Date attendue',t:'date'},
+ {c:'date_attendue_libelle',l:'Précision sur la date',t:'text',ph:'date indicative, non fixée…'},
+ {c:'date_intervenue',l:'Date d\'intervention',t:'date'},
+ {c:'resultat',l:'Résultat (une fois intervenu)',t:'area',full:true},
+ {c:'source_libelle',l:'Source — libellé',t:'text',req:true},
+ {c:'source_url',l:'Source — adresse (https://)',t:'text',req:true},
+];
+const ACT_STATUTS={attendu:'Attendu',intervenu:'Intervenu',reporte:'Reporté',abandonne:'Abandonné'};
+let ACT_DATA=[];
+function actId(cle,c){return 'act_'+cle.replace(/[^a-z0-9]/g,'_')+'_'+c}
+function actHtml(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function actChamp(pre,f,v){
+ const id=pre+f.c, val=actHtml(v), lab='<label for="'+id+'">'+f.l+(f.req?' *':'')+'</label>';
+ let inp;
+ if(f.t==='select') inp='<select id="'+id+'">'+Object.entries(ACT_STATUTS).map(([k,l])=>'<option value="'+k+'"'+(k===v?' selected':'')+'>'+l+'</option>').join('')+'</select>';
+ else if(f.t==='area') inp='<textarea id="'+id+'">'+val+'</textarea>';
+ else inp='<input id="'+id+'" type="'+f.t+'" value="'+val+'"'+(f.ph?' placeholder="'+f.ph+'"':'')+'>';
+ return '<div class="form-field"'+(f.full?' style="grid-column:1/-1"':'')+'>'+lab+inp+'</div>';
+}
+function actFormulaire(pre,r){return '<div class="form-row">'+ACT_CHAMPS.map(f=>actChamp(pre,f,r?r[f.c]:(f.c==='statut'?'attendu':''))).join('')+'</div>'}
+async function chargerActualite(){
+ const {data,error}=await db.from('parametres_actualite').select('*').order('da_code').order('ordre');
+ if(error){ showToast('Table actualité illisible : '+error.message,'error'); return; }
+ ACT_DATA=data||[];
+ const sel=document.getElementById('actFiltreDa'), das=[...new Set(ACT_DATA.map(r=>r.da_code))], cur=sel.value;
+ sel.innerHTML='<option value="">Tous les DA</option>'+das.map(d=>'<option'+(d===cur?' selected':'')+'>'+actHtml(d)+'</option>').join('');
+ document.getElementById('actNouveauChamps').innerHTML=actFormulaire('actN_',null);
+ renderActualite();
+}
+function renderActualite(){
+ const f=document.getElementById('actFiltreDa').value, rows=ACT_DATA.filter(r=>!f||r.da_code===f);
+ document.getElementById('actCompte').textContent=rows.length+' point(s) · '+rows.filter(r=>r.statut==='attendu').length+' en attente';
+ document.getElementById('actListe').innerHTML=rows.length?rows.map(r=>{
+  const p='act_'+r.cle.replace(/[^a-z0-9]/g,'_')+'_';
+  return '<div class="card" id="actCarte_'+p+'"><div class="card-header" style="justify-content:space-between"><div>'
+   +'<div class="card-title">'+actHtml(r.module)+' · '+actHtml(r.cle)+' <span class="act-statut '+r.statut+'">'+ACT_STATUTS[r.statut]+'</span></div>'
+   +'<div class="act-meta">'+actHtml(r.da_code)+' · vérifié le '+(r.verifie_le?new Date(r.verifie_le).toLocaleDateString('fr-FR'):'—')+' · modifié le '+(r.maj_le?fmtDate(r.maj_le):'—')+'</div></div></div>'
+   +actFormulaire(p,r)
+   +'<div class="act-actions"><button class="btn btn-primary" onclick="enregistrerActualite(\''+r.cle+'\',this)">💾 Enregistrer</button>'
+   +'<button class="btn btn-ghost" onclick="journalActualite(\''+r.cle+'\')">Historique</button></div>'
+   +'<div class="act-journal" id="actJ_'+p+'"></div></div>';
+ }).join(''):'<div class="card"><div class="note" style="margin:0">Aucun point en base pour ce filtre.</div></div>';
+ document.querySelectorAll('#actListe input,#actListe textarea,#actListe select').forEach(el=>el.addEventListener('input',()=>el.classList.add('act-modifie')));
+}
+function actLire(pre){
+ const o={};
+ ACT_CHAMPS.forEach(f=>{let v=document.getElementById(pre+f.c).value.trim(); o[f.c]=v===''?null:(f.t==='number'?Number(v):v)});
+ if(o.ordre===null) o.ordre=0;
+ return o;
+}
+function actControler(o){
+ for(const f of ACT_CHAMPS) if(f.req && !o[f.c]) return 'Champ obligatoire : '+f.l;
+ if(!/^https:\/\//.test(o.source_url)) return 'L\'adresse de la source doit commencer par https://';
+ if(o.statut==='intervenu' && (!o.resultat||!o.date_intervenue)) return 'Statut « intervenu » : renseigner le résultat et la date d\'intervention';
+ return null;
+}
+async function enregistrerActualite(cle,btn){
+ const pre='act_'+cle.replace(/[^a-z0-9]/g,'_')+'_', o=actLire(pre), err=actControler(o);
+ if(err){ showToast(err,'error'); return; }
+ btn.disabled=true; btn.textContent='Enregistrement…';
+ try{
+  const r=await db.from('parametres_actualite').update(o).eq('cle',cle).select();
+  if(r.error) throw r.error;
+  if(!r.data||!r.data.length) throw new Error('aucune ligne modifiée — ce compte n\'a pas le droit d\'écrire (personnel LMS uniquement)');
+  showToast('Point « '+cle+' » enregistré ✓'); await chargerActualite();
+ }catch(e){ showToast('Erreur : '+(e.message||e),'error'); btn.disabled=false; btn.innerHTML='💾 Enregistrer'; }
+}
+async function ajouterActualite(){
+ const o=actLire('actN_');
+ ['cle','da_code','module'].forEach(c=>{const v=document.getElementById('actN_'+c).value.trim(); o[c]=v||null});
+ if(!o.cle||!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(o.cle)){ showToast('Clé invalide : minuscules, chiffres et tirets','error'); return; }
+ if(!o.da_code||!o.module){ showToast('Code du DA et module obligatoires','error'); return; }
+ const err=actControler(o); if(err){ showToast(err,'error'); return; }
+ const btn=document.getElementById('btnActAjout'); btn.disabled=true;
+ try{
+  const r=await db.from('parametres_actualite').insert(o).select();
+  if(r.error) throw r.error;
+  ['cle','da_code','module'].forEach(c=>document.getElementById('actN_'+c).value='');
+  showToast('Point « '+o.cle+' » ajouté ✓'); await chargerActualite();
+ }catch(e){ showToast('Erreur : '+(e.message||e),'error'); }
+ finally{ btn.disabled=false; }
+}
+async function journalActualite(cle){
+ const el=document.getElementById('actJ_act_'+cle.replace(/[^a-z0-9]/g,'_')+'_');
+ if(el.classList.toggle('show')===false) return;
+ el.textContent='Chargement…';
+ const {data,error}=await db.from('parametres_actualite_journal').select('ancien,nouveau,modifie_le').eq('cle',cle).order('modifie_le',{ascending:false}).limit(20);
+ if(error){ el.textContent='Historique illisible : '+error.message; return; }
+ if(!data.length){ el.textContent='Aucune modification enregistrée.'; return; }
+ el.innerHTML=data.map(j=>{
+  const a=j.ancien||{}, n=j.nouveau||{};
+  const ch=j.ancien?ACT_CHAMPS.filter(f=>String(a[f.c]??'')!==String(n[f.c]??'')).map(f=>f.l.toLowerCase()):['création'];
+  return '<div><strong>'+fmtDate(j.modifie_le)+'</strong> — '+actHtml(ch.join(', ')||'aucun changement de contenu')+(n.statut&&a.statut&&a.statut!==n.statut?' ('+ACT_STATUTS[a.statut]+' → '+ACT_STATUTS[n.statut]+')':'')+'</div>';
+ }).join('');
+}
 </script>
 </body>
 

@@ -194,6 +194,24 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
 .act-journal{margin-top:10px;font-size:12px;border-top:1px dashed var(--border);padding-top:8px;display:none}
 .act-journal.show{display:block}.act-journal div{padding:3px 0}
 .act-modifie{border-color:var(--tmk-or)!important;background:#FFFBF0!important}
+
+/* ===== Onglet Veille ===== */
+.veille-bandeau{display:none;margin:0 0 12px;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;border-left:4px solid var(--tmk-or);background:#FFF8E1;color:var(--tmk-charbon)}
+.veille-bandeau.show{display:block}.veille-bandeau.alerte{border-left-color:#B3261E;background:#FDECEA}
+.veille-bandeau strong{font-weight:700}
+.vt{width:100%;border-collapse:collapse;font-size:13px}
+.vt th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);padding:6px 8px;border-bottom:1.5px solid var(--border)}
+.vt td{padding:8px;border-bottom:1px solid var(--border);vertical-align:top}
+.vt td.cle{font-family:monospace;font-size:12px}
+.vt .btn{width:auto;margin:0;padding:6px 10px;font-size:12px}
+.etat{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.etat.depassee,.etat.disparue{background:#FDECEA;color:#8C1D18}.etat.j15{background:#FFF3D6;color:#7A5200}
+.etat.avenir{background:#EEF2F6;color:#3B4A5C}.etat.noninscrit{background:#F3E5F5;color:#5E1349}
+.vfiltres{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.vfiltres button{border:1.5px solid var(--border);background:#fff;border-radius:20px;padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer}
+.vfiltres button.on{border-color:var(--tmk-prune);background:var(--tmk-prune);color:#fff}
+.vrap{white-space:pre-wrap;font-size:12px;background:#FAF7F5;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;max-height:420px;overflow:auto;display:none;margin-top:8px}
+.vrap.show{display:block}
 </style>
 </head>
 
@@ -236,6 +254,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
       </div>
     </header>
     <!-- ONGLETS -->
+    <div class="veille-bandeau" id="veilleBandeau" onclick="switchTab('veille')" role="button" tabindex="0"></div>
     <div class="tabs">
       <button class="tab active" data-tab="fiscalite" onclick="switchTab('fiscalite')">Fiscalité</button>
       <button class="tab" data-tab="retraite" onclick="switchTab('retraite')">Retraite</button>
@@ -245,6 +264,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
     <button class="tab" data-tab="epargne" onclick="switchTab('epargne')">Épargne</button>
       <button class="tab" data-tab="tns" onclick="switchTab('tns')">TNS</button>
       <button class="tab" data-tab="actualite" onclick="switchTab('actualite')">Actualité</button>
+      <button class="tab" data-tab="veille" onclick="switchTab('veille')">Veille</button>
     </div>
     <!-- ============ PANEL FISCALITÉ ============ -->
     <div class="panel active" id="panel-fiscalite">
@@ -849,6 +869,34 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <div class="act-actions"><button class="btn btn-primary" id="btnActAjout" onclick="ajouterActualite()">➕ Ajouter le point</button></div>
       </div>
     </div>
+    <!-- ============ PANEL VEILLE ============ -->
+    <div class="panel" id="panel-veille">
+      <div class="card">
+        <div class="card-header"><div class="card-num">1</div><div>
+          <div class="card-title">Échéances</div>
+          <div class="card-subtitle">Vue v_echeances : registre de veille, points d'actualité en attente et clés non inscrites. Après vérification à la source, « Marquer vérifié » pose la date et calcule le contrôle suivant.</div></div></div>
+        <div class="vfiltres" id="vFiltres"></div>
+        <div style="overflow-x:auto"><table class="vt"><thead><tr><th>État</th><th>Échéance</th><th>Élément</th><th>Valeur</th><th>Source</th><th></th></tr></thead><tbody id="vListe"></tbody></table></div>
+        <div class="note" style="margin-bottom:0">Corriger une valeur se fait dans l'onglet de sa table (Épargne, Santé…). Un point d'actualité se met à jour dans l'onglet Actualité ; il sort d'ici quand son statut n'est plus « attendu ».</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-num">2</div><div>
+          <div class="card-title">Destinataires du rapport du lundi</div>
+          <div class="card-subtitle">Le rapport part chaque lundi matin vers les adresses actives. Ces adresses ne sont lisibles qu'avec un compte du personnel.</div></div></div>
+        <div style="overflow-x:auto"><table class="vt"><thead><tr><th>Adresse</th><th>Nom</th><th>Actif</th><th></th></tr></thead><tbody id="vDest"></tbody></table></div>
+        <div class="form-row three" style="margin-top:12px">
+          <div class="form-field"><label for="vNvEmail">Adresse e-mail</label><input id="vNvEmail" type="email" placeholder="prenom.nom@tmk-performances.com"></div>
+          <div class="form-field"><label for="vNvNom">Nom</label><input id="vNvNom"></div>
+          <div class="form-field"><label>&nbsp;</label><button class="btn btn-primary" style="margin:0" onclick="veilleAjouterDest()">➕ Ajouter</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-num">3</div><div>
+          <div class="card-title">Derniers rapports</div>
+          <div class="card-subtitle">Chaque passage du lundi est conservé ici, tel qu'il a été envoyé.</div></div></div>
+        <div id="vRapports"></div>
+      </div>
+    </div>
     <!-- ============ PANEL ÉPARGNE ============ -->
   <div class="panel" id="panel-epargne">
     <div class="card">
@@ -1011,6 +1059,7 @@ await chargerSante();
 await chargerEpargne();
 await chargerTns();
 await chargerActualite();
+await chargerVeille();
 }
 // ===================== FISCALITÉ : chargement =====================
 async function chargerFiscalite(){
@@ -2018,6 +2067,82 @@ async function journalActualite(cle){
   const ch=j.ancien?ACT_CHAMPS.filter(f=>String(a[f.c]??'')!==String(n[f.c]??'')).map(f=>f.l.toLowerCase()):['création'];
   return '<div><strong>'+fmtDate(j.modifie_le)+'</strong> — '+actHtml(ch.join(', ')||'aucun changement de contenu')+(n.statut&&a.statut&&a.statut!==n.statut?' ('+ACT_STATUTS[a.statut]+' → '+ACT_STATUTS[n.statut]+')':'')+'</div>';
  }).join('');
+}
+
+// ===================== VEILLE (veille_registre, v_echeances, destinataires, rapports) =====================
+const V_ETATS=[['dépassée','depassee','Dépassées'],['dans 15 jours','j15','Dans 15 jours'],['non inscrit','noninscrit','Non inscrites'],['clé disparue','disparue','Clés disparues'],['à venir','avenir','À venir']];
+let V_DATA=[], V_FILTRE='urgent';
+function vEsc(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function vDate(d){return d?new Date(d+'T00:00:00').toLocaleDateString('fr-FR'):'—'}
+async function chargerVeille(){
+ const {data,error}=await db.from('v_echeances').select('*').order('echeance',{ascending:true,nullsFirst:true});
+ const b=document.getElementById('veilleBandeau');
+ if(error){ b.className='veille-bandeau show'; b.textContent='Échéancier indisponible : '+error.message+' (le script veille_echeancier.sql a-t-il été exécuté ?)'; return; }
+ V_DATA=data||[];
+ const n=e=>V_DATA.filter(r=>r.etat===e).length, dep=n('dépassée')+n('clé disparue'), j15=n('dans 15 jours'), ni=n('non inscrit');
+ if(dep+j15+ni){
+  b.className='veille-bandeau show'+(dep?' alerte':'');
+  b.innerHTML='<strong>Veille</strong> — '+[dep?dep+' échéance(s) dépassée(s)':'',j15?j15+' dans les 15 jours':'',ni?ni+' clé(s) non inscrite(s) au registre':''].filter(Boolean).join(' · ')+' — voir l\'onglet Veille';
+ } else b.className='veille-bandeau';
+ renderVeille(); chargerDestinataires(); chargerRapports();
+}
+function renderVeille(){
+ const f=document.getElementById('vFiltres');
+ const cnt=e=>V_DATA.filter(r=>r.etat===e).length;
+ f.innerHTML='<button class="'+(V_FILTRE==='urgent'?'on':'')+'" onclick="V_FILTRE=\'urgent\';renderVeille()">À traiter ('+(cnt('dépassée')+cnt('dans 15 jours')+cnt('non inscrit')+cnt('clé disparue'))+')</button>'
+  +V_ETATS.map(([e,c,l])=>'<button class="'+(V_FILTRE===e?'on':'')+'" onclick="V_FILTRE=\''+e+'\';renderVeille()">'+l+' ('+cnt(e)+')</button>').join('');
+ const rows=V_DATA.filter(r=>V_FILTRE==='urgent'?r.etat!=='à venir':r.etat===V_FILTRE);
+ document.getElementById('vListe').innerHTML=rows.length?rows.map((r,i)=>{
+  const k=V_ETATS.find(x=>x[0]===r.etat)||['','avenir'];
+  const val=r.valeur!==null&&r.valeur!==undefined?vEsc(r.valeur)+' '+vEsc(r.unite||''):'';
+  const src=r.source_url?'<a href="'+vEsc(r.source_url)+'" target="_blank" rel="noopener">'+vEsc(r.source_officielle||'source')+'</a>':vEsc(r.source_officielle||'');
+  const act=r.origine==='registre'?'<button class="btn btn-ghost" onclick="veilleMarquer('+V_DATA.indexOf(r)+')">Marquer vérifié</button>'
+   :r.origine==='actualite'?'<button class="btn btn-ghost" onclick="switchTab(\'actualite\')">Onglet Actualité</button>':'';
+  return '<tr><td><span class="etat '+k[1]+'">'+vEsc(r.etat)+'</span></td><td>'+vDate(r.echeance)+(r.jours_restants!==null?'<div class="act-meta">'+(r.jours_restants<0?'il y a '+(-r.jours_restants)+' j':'dans '+r.jours_restants+' j')+'</div>':'')+'</td>'
+   +'<td><strong>'+vEsc(r.intitule)+'</strong><div class="act-meta"><span class="cle">'+vEsc(r.table_source)+' · '+vEsc(r.cle)+'</span> · '+vEsc(r.famille||'')+(r.verifie_le?' · vérifié le '+vDate(r.verifie_le):'')+'</div></td>'
+   +'<td>'+val+'</td><td>'+src+'</td><td>'+act+'</td></tr>';
+ }).join(''):'<tr><td colspan="6">Rien dans cette catégorie.</td></tr>';
+}
+async function veilleMarquer(i){
+ const r=V_DATA[i]; if(!r) return;
+ const note=prompt('Vérifié à la source le '+new Date().toLocaleDateString('fr-FR')+'.\nCe que vous avez constaté (facultatif) :',''); // fenêtre native : saisie courte
+ if(note===null) return;
+ const {data,error}=await db.rpc('veille_marquer_verifie',{p_table:r.table_source,p_cle:r.cle,p_note:note||null});
+ if(error){ showToast('Erreur : '+error.message,'error'); return; }
+ showToast('Vérifié ✓ — prochain contrôle le '+vDate(data.prochain_controle)); chargerVeille();
+}
+async function chargerDestinataires(){
+ const {data,error}=await db.from('veille_destinataires').select('*').order('id');
+ const t=document.getElementById('vDest');
+ if(error){ t.innerHTML='<tr><td colspan="4">Destinataires illisibles : '+vEsc(error.message)+'</td></tr>'; return; }
+ t.innerHTML=data.length?data.map(d=>'<tr><td>'+vEsc(d.email)+'</td><td>'+vEsc(d.nom||'')+'</td><td><input type="checkbox" '+(d.actif?'checked':'')+' onchange="veilleActif('+d.id+',this.checked)" aria-label="Actif"></td>'
+  +'<td><button class="btn btn-ghost" onclick="veilleSupprDest('+d.id+',\''+vEsc(d.email)+'\')">Retirer</button></td></tr>').join(''):'<tr><td colspan="4">Aucun destinataire : le rapport ne partira que par notification.</td></tr>';
+}
+async function veilleAjouterDest(){
+ const email=document.getElementById('vNvEmail').value.trim(), nom=document.getElementById('vNvNom').value.trim();
+ if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)){ showToast('Adresse e-mail invalide','error'); return; }
+ const {error}=await db.from('veille_destinataires').insert({email,nom:nom||null});
+ if(error){ showToast('Erreur : '+error.message,'error'); return; }
+ document.getElementById('vNvEmail').value=''; document.getElementById('vNvNom').value='';
+ showToast('Destinataire ajouté ✓'); chargerDestinataires();
+}
+async function veilleActif(id,on){
+ const {error}=await db.from('veille_destinataires').update({actif:on}).eq('id',id);
+ if(error) showToast('Erreur : '+error.message,'error'); else showToast(on?'Destinataire réactivé':'Destinataire suspendu');
+}
+async function veilleSupprDest(id,email){
+ if(!confirm('Retirer '+email+' de la liste ?')) return;
+ const {error}=await db.from('veille_destinataires').delete().eq('id',id);
+ if(error) showToast('Erreur : '+error.message,'error'); else { showToast('Destinataire retiré'); chargerDestinataires(); }
+}
+async function chargerRapports(){
+ const {data,error}=await db.from('veille_rapports').select('id,cree_le,nb_depassees,nb_15_jours,nb_ecarts,contenu,envoye_a').order('cree_le',{ascending:false}).limit(8);
+ const el=document.getElementById('vRapports');
+ if(error){ el.textContent='Rapports illisibles : '+error.message; return; }
+ if(!data.length){ el.innerHTML='<div class="note" style="margin:0">Aucun rapport pour l\'instant : le premier arrivera lundi.</div>'; return; }
+ el.innerHTML=data.map(r=>'<div style="border-bottom:1px solid var(--border);padding:8px 0"><button class="btn btn-ghost" style="width:auto;margin:0;padding:6px 10px;font-size:12px" onclick="document.getElementById(\'vr'+r.id+'\').classList.toggle(\'show\')">'+fmtDate(r.cree_le)+'</button> '
+  +'<span class="act-meta">'+r.nb_depassees+' dépassée(s) · '+r.nb_15_jours+' dans 15 j · '+r.nb_ecarts+' écart(s) · envoyé à '+vEsc((r.envoye_a||[]).join(', ')||'—')+'</span>'
+  +'<div class="vrap" id="vr'+r.id+'">'+vEsc(r.contenu)+'</div></div>').join('');
 }
 </script>
 </body>

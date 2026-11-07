@@ -179,39 +179,6 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
 #santeAvertissement:empty{display:none!important}
 .footer-info{text-align:center;margin-top:32px;padding:18px;font-size:11px;color:var(--text-muted)}
 .footer-info strong{color:var(--tmk-prune);font-weight:600}
-
-/* ===== Onglet Actualité ===== */
-.form-field select,.form-field textarea{padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;background:#fff;color:var(--text)}
-.form-field textarea{min-height:70px;resize:vertical;line-height:1.45}
-.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--tmk-prune);box-shadow:0 0 0 3px rgba(140,30,112,.1)}
-.act-filtre{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
-.act-filtre select{padding:8px 11px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:13px}
-.act-statut{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.act-statut.attendu{background:#FFF3D6;color:#7A5200}.act-statut.intervenu{background:#E3F2E5;color:#1B5E20}
-.act-statut.reporte{background:#E8EEF7;color:#24446E}.act-statut.abandonne{background:#EEE;color:#555}
-.act-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
-.act-actions{display:flex;gap:10px}.act-actions .btn{width:auto;margin:0;padding:10px 16px}
-.act-journal{margin-top:10px;font-size:12px;border-top:1px dashed var(--border);padding-top:8px;display:none}
-.act-journal.show{display:block}.act-journal div{padding:3px 0}
-.act-modifie{border-color:var(--tmk-or)!important;background:#FFFBF0!important}
-
-/* ===== Onglet Veille ===== */
-.veille-bandeau{display:none;margin:0 0 12px;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;border-left:4px solid var(--tmk-or);background:#FFF8E1;color:var(--tmk-charbon)}
-.veille-bandeau.show{display:block}.veille-bandeau.alerte{border-left-color:#B3261E;background:#FDECEA}
-.veille-bandeau strong{font-weight:700}
-.vt{width:100%;border-collapse:collapse;font-size:13px}
-.vt th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);padding:6px 8px;border-bottom:1.5px solid var(--border)}
-.vt td{padding:8px;border-bottom:1px solid var(--border);vertical-align:top}
-.vt td.cle{font-family:monospace;font-size:12px}
-.vt .btn{width:auto;margin:0;padding:6px 10px;font-size:12px}
-.etat{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
-.etat.depassee,.etat.disparue{background:#FDECEA;color:#8C1D18}.etat.j15{background:#FFF3D6;color:#7A5200}
-.etat.avenir{background:#EEF2F6;color:#3B4A5C}.etat.noninscrit{background:#F3E5F5;color:#5E1349}
-.vfiltres{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.vfiltres button{border:1.5px solid var(--border);background:#fff;border-radius:20px;padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer}
-.vfiltres button.on{border-color:var(--tmk-prune);background:var(--tmk-prune);color:#fff}
-.vrap{white-space:pre-wrap;font-size:12px;background:#FAF7F5;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;max-height:420px;overflow:auto;display:none;margin-top:8px}
-.vrap.show{display:block}
 </style>
 </head>
 
@@ -245,7 +212,7 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <div class="header-content">
           <div class="header-badge">Espace Formateur · Paramètres</div>
           <h1>Paramètres des formations</h1>
-          <p>Fiscalité, retraite, santé, prévoyance, actualité — mise à jour centralisée. Toute modification est répercutée sur les fiches et simulateurs des stagiaires.</p>
+          <p>Fiscalité, retraite, santé, prévoyance — mise à jour centralisée. Toute modification est répercutée sur les fiches et simulateurs des stagiaires.</p>
         </div>
         <div class="header-user">
           <div class="header-user-email" id="userEmail">—</div>
@@ -254,7 +221,6 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
       </div>
     </header>
     <!-- ONGLETS -->
-    <div class="veille-bandeau" id="veilleBandeau" onclick="switchTab('veille')" role="button" tabindex="0"></div>
     <div class="tabs">
       <button class="tab active" data-tab="fiscalite" onclick="switchTab('fiscalite')">Fiscalité</button>
       <button class="tab" data-tab="retraite" onclick="switchTab('retraite')">Retraite</button>
@@ -263,8 +229,6 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
       <button class="tab" data-tab="prevoyance" onclick="switchTab('prevoyance')">Prévoyance</button>
     <button class="tab" data-tab="epargne" onclick="switchTab('epargne')">Épargne</button>
       <button class="tab" data-tab="tns" onclick="switchTab('tns')">TNS</button>
-      <button class="tab" data-tab="actualite" onclick="switchTab('actualite')">Actualité</button>
-      <button class="tab" data-tab="veille" onclick="switchTab('veille')">Veille</button>
     </div>
     <!-- ============ PANEL FISCALITÉ ============ -->
     <div class="panel active" id="panel-fiscalite">
@@ -841,62 +805,6 @@ background-image:radial-gradient(circle at 20% 0%,rgba(140,30,112,.04),transpare
         <button class="btn btn-primary" id="btnSaveTns" onclick="enregistrerTns()">💾 Enregistrer les TNS</button>
       </div>
     </div>
-    <!-- ============ PANEL ACTUALITÉ ============ -->
-    <div class="panel" id="panel-actualite">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-num">i</div>
-          <div>
-            <div class="card-title">Points d'actualité en attente</div>
-            <div class="card-subtitle">Table parametres_actualite : statut affiché dans les pages des DA (encart vidéo, fiche « Où en est-on ? », jalon de frise). Chaque enregistrement est historisé.</div>
-          </div>
-        </div>
-        <div class="act-filtre"><label for="actFiltreDa" style="font-size:12px;font-weight:600">DA</label><select id="actFiltreDa" onchange="renderActualite()"></select>
-          <span class="act-meta" id="actCompte"></span></div>
-        <div class="note" style="margin-bottom:0">Quand l'événement survient : passer le statut à <strong>intervenu</strong>, renseigner le <strong>résultat</strong> et la <strong>date d'intervention</strong>, puis mettre à jour « vérifié le ». Les pages affichent le nouvel état à leur prochain chargement, sans republication.</div>
-      </div>
-      <div id="actListe"></div>
-      <div class="card">
-        <div class="card-header"><div class="card-num">+</div><div>
-          <div class="card-title">Ajouter un point</div>
-          <div class="card-subtitle">Clé en minuscules et tirets (ex. dpf-pourvoi-cjue). Elle se place ensuite dans la page : data-actualite="clé".</div></div></div>
-        <div class="form-row three">
-          <div class="form-field"><label>Clé</label><input id="actN_cle" placeholder="ex. ris-vote-pleniere"></div>
-          <div class="form-field"><label>Code du DA</label><input id="actN_da_code" placeholder="ex. actualite-droit-assurances"></div>
-          <div class="form-field"><label>Module</label><input id="actN_module" placeholder="M1"></div>
-        </div>
-        <div id="actNouveauChamps"></div>
-        <div class="act-actions"><button class="btn btn-primary" id="btnActAjout" onclick="ajouterActualite()">➕ Ajouter le point</button></div>
-      </div>
-    </div>
-    <!-- ============ PANEL VEILLE ============ -->
-    <div class="panel" id="panel-veille">
-      <div class="card">
-        <div class="card-header"><div class="card-num">1</div><div>
-          <div class="card-title">Échéances</div>
-          <div class="card-subtitle">Vue v_echeances : registre de veille, points d'actualité en attente et clés non inscrites. Après vérification à la source, « Marquer vérifié » pose la date et calcule le contrôle suivant.</div></div></div>
-        <div class="vfiltres" id="vFiltres"></div>
-        <div style="overflow-x:auto"><table class="vt"><thead><tr><th>État</th><th>Échéance</th><th>Élément</th><th>Valeur</th><th>Source</th><th></th></tr></thead><tbody id="vListe"></tbody></table></div>
-        <div class="note" style="margin-bottom:0">Corriger une valeur se fait dans l'onglet de sa table (Épargne, Santé…). Un point d'actualité se met à jour dans l'onglet Actualité ; il sort d'ici quand son statut n'est plus « attendu ».</div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-num">2</div><div>
-          <div class="card-title">Destinataires du rapport du lundi</div>
-          <div class="card-subtitle">Le rapport part chaque lundi matin vers les adresses actives. Ces adresses ne sont lisibles qu'avec un compte du personnel.</div></div></div>
-        <div style="overflow-x:auto"><table class="vt"><thead><tr><th>Adresse</th><th>Nom</th><th>Actif</th><th></th></tr></thead><tbody id="vDest"></tbody></table></div>
-        <div class="form-row three" style="margin-top:12px">
-          <div class="form-field"><label for="vNvEmail">Adresse e-mail</label><input id="vNvEmail" type="email" placeholder="prenom.nom@tmk-performances.com"></div>
-          <div class="form-field"><label for="vNvNom">Nom</label><input id="vNvNom"></div>
-          <div class="form-field"><label>&nbsp;</label><button class="btn btn-primary" style="margin:0" onclick="veilleAjouterDest()">➕ Ajouter</button></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-num">3</div><div>
-          <div class="card-title">Derniers rapports</div>
-          <div class="card-subtitle">Chaque passage du lundi est conservé ici, tel qu'il a été envoyé.</div></div></div>
-        <div id="vRapports"></div>
-      </div>
-    </div>
     <!-- ============ PANEL ÉPARGNE ============ -->
   <div class="panel" id="panel-epargne">
     <div class="card">
@@ -1058,8 +966,6 @@ await chargerPrevoyance();
 await chargerSante();
 await chargerEpargne();
 await chargerTns();
-await chargerActualite();
-await chargerVeille();
 }
 // ===================== FISCALITÉ : chargement =====================
 async function chargerFiscalite(){
@@ -1963,187 +1869,6 @@ renderSanteFields();
 renderEpargneFields();
 renderTnsFields();
 checkSession();
-
-// ===================== ACTUALITÉ (parametres_actualite) =====================
-// Écriture réservée au personnel (politique RLS lms.est_personnel()). maj_le / maj_par et le journal sont posés par les déclencheurs.
-const ACT_CHAMPS=[
- {c:'intitule',l:'Intitulé',t:'text',full:true,req:true},
- {c:'statut',l:'Statut',t:'select'},
- {c:'ordre',l:'Ordre d\'affichage',t:'number'},
- {c:'verifie_le',l:'Vérifié à la source le',t:'date',req:true},
- {c:'acquis',l:'Acquis à ce jour',t:'area',full:true,req:true},
- {c:'attendu',l:'Ce qui reste à intervenir',t:'area',full:true},
- {c:'date_attendue',l:'Date attendue',t:'date'},
- {c:'date_attendue_libelle',l:'Précision sur la date',t:'text',ph:'date indicative, non fixée…'},
- {c:'date_intervenue',l:'Date d\'intervention',t:'date'},
- {c:'resultat',l:'Résultat (une fois intervenu)',t:'area',full:true},
- {c:'source_libelle',l:'Source — libellé',t:'text',req:true},
- {c:'source_url',l:'Source — adresse (https://)',t:'text',req:true},
-];
-const ACT_STATUTS={attendu:'Attendu',intervenu:'Intervenu',reporte:'Reporté',abandonne:'Abandonné'};
-let ACT_DATA=[];
-function actId(cle,c){return 'act_'+cle.replace(/[^a-z0-9]/g,'_')+'_'+c}
-function actHtml(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function actChamp(pre,f,v){
- const id=pre+f.c, val=actHtml(v), lab='<label for="'+id+'">'+f.l+(f.req?' *':'')+'</label>';
- let inp;
- if(f.t==='select') inp='<select id="'+id+'">'+Object.entries(ACT_STATUTS).map(([k,l])=>'<option value="'+k+'"'+(k===v?' selected':'')+'>'+l+'</option>').join('')+'</select>';
- else if(f.t==='area') inp='<textarea id="'+id+'">'+val+'</textarea>';
- else inp='<input id="'+id+'" type="'+f.t+'" value="'+val+'"'+(f.ph?' placeholder="'+f.ph+'"':'')+'>';
- return '<div class="form-field"'+(f.full?' style="grid-column:1/-1"':'')+'>'+lab+inp+'</div>';
-}
-function actFormulaire(pre,r){return '<div class="form-row">'+ACT_CHAMPS.map(f=>actChamp(pre,f,r?r[f.c]:(f.c==='statut'?'attendu':''))).join('')+'</div>'}
-async function chargerActualite(){
- const {data,error}=await db.from('parametres_actualite').select('*').order('da_code').order('ordre');
- if(error){ showToast('Table actualité illisible : '+error.message,'error'); return; }
- ACT_DATA=data||[];
- const sel=document.getElementById('actFiltreDa'), das=[...new Set(ACT_DATA.map(r=>r.da_code))], cur=sel.value;
- sel.innerHTML='<option value="">Tous les DA</option>'+das.map(d=>'<option'+(d===cur?' selected':'')+'>'+actHtml(d)+'</option>').join('');
- document.getElementById('actNouveauChamps').innerHTML=actFormulaire('actN_',null);
- renderActualite();
-}
-function renderActualite(){
- const f=document.getElementById('actFiltreDa').value, rows=ACT_DATA.filter(r=>!f||r.da_code===f);
- document.getElementById('actCompte').textContent=rows.length+' point(s) · '+rows.filter(r=>r.statut==='attendu').length+' en attente';
- document.getElementById('actListe').innerHTML=rows.length?rows.map(r=>{
-  const p='act_'+r.cle.replace(/[^a-z0-9]/g,'_')+'_';
-  return '<div class="card" id="actCarte_'+p+'"><div class="card-header" style="justify-content:space-between"><div>'
-   +'<div class="card-title">'+actHtml(r.module)+' · '+actHtml(r.cle)+' <span class="act-statut '+r.statut+'">'+ACT_STATUTS[r.statut]+'</span></div>'
-   +'<div class="act-meta">'+actHtml(r.da_code)+' · vérifié le '+(r.verifie_le?new Date(r.verifie_le).toLocaleDateString('fr-FR'):'—')+' · modifié le '+(r.maj_le?fmtDate(r.maj_le):'—')+'</div></div></div>'
-   +actFormulaire(p,r)
-   +'<div class="act-actions"><button class="btn btn-primary" onclick="enregistrerActualite(\''+r.cle+'\',this)">💾 Enregistrer</button>'
-   +'<button class="btn btn-ghost" onclick="journalActualite(\''+r.cle+'\')">Historique</button></div>'
-   +'<div class="act-journal" id="actJ_'+p+'"></div></div>';
- }).join(''):'<div class="card"><div class="note" style="margin:0">Aucun point en base pour ce filtre.</div></div>';
- document.querySelectorAll('#actListe input,#actListe textarea,#actListe select').forEach(el=>el.addEventListener('input',()=>el.classList.add('act-modifie')));
-}
-function actLire(pre){
- const o={};
- ACT_CHAMPS.forEach(f=>{let v=document.getElementById(pre+f.c).value.trim(); o[f.c]=v===''?null:(f.t==='number'?Number(v):v)});
- if(o.ordre===null) o.ordre=0;
- return o;
-}
-function actControler(o){
- for(const f of ACT_CHAMPS) if(f.req && !o[f.c]) return 'Champ obligatoire : '+f.l;
- if(!/^https:\/\//.test(o.source_url)) return 'L\'adresse de la source doit commencer par https://';
- if(o.statut==='intervenu' && (!o.resultat||!o.date_intervenue)) return 'Statut « intervenu » : renseigner le résultat et la date d\'intervention';
- return null;
-}
-async function enregistrerActualite(cle,btn){
- const pre='act_'+cle.replace(/[^a-z0-9]/g,'_')+'_', o=actLire(pre), err=actControler(o);
- if(err){ showToast(err,'error'); return; }
- btn.disabled=true; btn.textContent='Enregistrement…';
- try{
-  const r=await db.from('parametres_actualite').update(o).eq('cle',cle).select();
-  if(r.error) throw r.error;
-  if(!r.data||!r.data.length) throw new Error('aucune ligne modifiée — ce compte n\'a pas le droit d\'écrire (personnel LMS uniquement)');
-  showToast('Point « '+cle+' » enregistré ✓'); await chargerActualite();
- }catch(e){ showToast('Erreur : '+(e.message||e),'error'); btn.disabled=false; btn.innerHTML='💾 Enregistrer'; }
-}
-async function ajouterActualite(){
- const o=actLire('actN_');
- ['cle','da_code','module'].forEach(c=>{const v=document.getElementById('actN_'+c).value.trim(); o[c]=v||null});
- if(!o.cle||!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(o.cle)){ showToast('Clé invalide : minuscules, chiffres et tirets','error'); return; }
- if(!o.da_code||!o.module){ showToast('Code du DA et module obligatoires','error'); return; }
- const err=actControler(o); if(err){ showToast(err,'error'); return; }
- const btn=document.getElementById('btnActAjout'); btn.disabled=true;
- try{
-  const r=await db.from('parametres_actualite').insert(o).select();
-  if(r.error) throw r.error;
-  ['cle','da_code','module'].forEach(c=>document.getElementById('actN_'+c).value='');
-  showToast('Point « '+o.cle+' » ajouté ✓'); await chargerActualite();
- }catch(e){ showToast('Erreur : '+(e.message||e),'error'); }
- finally{ btn.disabled=false; }
-}
-async function journalActualite(cle){
- const el=document.getElementById('actJ_act_'+cle.replace(/[^a-z0-9]/g,'_')+'_');
- if(el.classList.toggle('show')===false) return;
- el.textContent='Chargement…';
- const {data,error}=await db.from('parametres_actualite_journal').select('ancien,nouveau,modifie_le').eq('cle',cle).order('modifie_le',{ascending:false}).limit(20);
- if(error){ el.textContent='Historique illisible : '+error.message; return; }
- if(!data.length){ el.textContent='Aucune modification enregistrée.'; return; }
- el.innerHTML=data.map(j=>{
-  const a=j.ancien||{}, n=j.nouveau||{};
-  const ch=j.ancien?ACT_CHAMPS.filter(f=>String(a[f.c]??'')!==String(n[f.c]??'')).map(f=>f.l.toLowerCase()):['création'];
-  return '<div><strong>'+fmtDate(j.modifie_le)+'</strong> — '+actHtml(ch.join(', ')||'aucun changement de contenu')+(n.statut&&a.statut&&a.statut!==n.statut?' ('+ACT_STATUTS[a.statut]+' → '+ACT_STATUTS[n.statut]+')':'')+'</div>';
- }).join('');
-}
-
-// ===================== VEILLE (veille_registre, v_echeances, destinataires, rapports) =====================
-const V_ETATS=[['dépassée','depassee','Dépassées'],['dans 15 jours','j15','Dans 15 jours'],['non inscrit','noninscrit','Non inscrites'],['clé disparue','disparue','Clés disparues'],['à venir','avenir','À venir']];
-let V_DATA=[], V_FILTRE='urgent';
-function vEsc(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function vDate(d){return d?new Date(d+'T00:00:00').toLocaleDateString('fr-FR'):'—'}
-async function chargerVeille(){
- const {data,error}=await db.from('v_echeances').select('*').order('echeance',{ascending:true,nullsFirst:true});
- const b=document.getElementById('veilleBandeau');
- if(error){ b.className='veille-bandeau show'; b.textContent='Échéancier indisponible : '+error.message+' (le script veille_echeancier.sql a-t-il été exécuté ?)'; return; }
- V_DATA=data||[];
- const n=e=>V_DATA.filter(r=>r.etat===e).length, dep=n('dépassée')+n('clé disparue'), j15=n('dans 15 jours'), ni=n('non inscrit');
- if(dep+j15+ni){
-  b.className='veille-bandeau show'+(dep?' alerte':'');
-  b.innerHTML='<strong>Veille</strong> — '+[dep?dep+' échéance(s) dépassée(s)':'',j15?j15+' dans les 15 jours':'',ni?ni+' clé(s) non inscrite(s) au registre':''].filter(Boolean).join(' · ')+' — voir l\'onglet Veille';
- } else b.className='veille-bandeau';
- renderVeille(); chargerDestinataires(); chargerRapports();
-}
-function renderVeille(){
- const f=document.getElementById('vFiltres');
- const cnt=e=>V_DATA.filter(r=>r.etat===e).length;
- f.innerHTML='<button class="'+(V_FILTRE==='urgent'?'on':'')+'" onclick="V_FILTRE=\'urgent\';renderVeille()">À traiter ('+(cnt('dépassée')+cnt('dans 15 jours')+cnt('non inscrit')+cnt('clé disparue'))+')</button>'
-  +V_ETATS.map(([e,c,l])=>'<button class="'+(V_FILTRE===e?'on':'')+'" onclick="V_FILTRE=\''+e+'\';renderVeille()">'+l+' ('+cnt(e)+')</button>').join('');
- const rows=V_DATA.filter(r=>V_FILTRE==='urgent'?r.etat!=='à venir':r.etat===V_FILTRE);
- document.getElementById('vListe').innerHTML=rows.length?rows.map((r,i)=>{
-  const k=V_ETATS.find(x=>x[0]===r.etat)||['','avenir'];
-  const val=r.valeur!==null&&r.valeur!==undefined?vEsc(r.valeur)+' '+vEsc(r.unite||''):'';
-  const src=r.source_url?'<a href="'+vEsc(r.source_url)+'" target="_blank" rel="noopener">'+vEsc(r.source_officielle||'source')+'</a>':vEsc(r.source_officielle||'');
-  const act=r.origine==='registre'?'<button class="btn btn-ghost" onclick="veilleMarquer('+V_DATA.indexOf(r)+')">Marquer vérifié</button>'
-   :r.origine==='actualite'?'<button class="btn btn-ghost" onclick="switchTab(\'actualite\')">Onglet Actualité</button>':'';
-  return '<tr><td><span class="etat '+k[1]+'">'+vEsc(r.etat)+'</span></td><td>'+vDate(r.echeance)+(r.jours_restants!==null?'<div class="act-meta">'+(r.jours_restants<0?'il y a '+(-r.jours_restants)+' j':'dans '+r.jours_restants+' j')+'</div>':'')+'</td>'
-   +'<td><strong>'+vEsc(r.intitule)+'</strong><div class="act-meta"><span class="cle">'+vEsc(r.table_source)+' · '+vEsc(r.cle)+'</span> · '+vEsc(r.famille||'')+(r.verifie_le?' · vérifié le '+vDate(r.verifie_le):'')+'</div></td>'
-   +'<td>'+val+'</td><td>'+src+'</td><td>'+act+'</td></tr>';
- }).join(''):'<tr><td colspan="6">Rien dans cette catégorie.</td></tr>';
-}
-async function veilleMarquer(i){
- const r=V_DATA[i]; if(!r) return;
- const note=prompt('Vérifié à la source le '+new Date().toLocaleDateString('fr-FR')+'.\nCe que vous avez constaté (facultatif) :',''); // fenêtre native : saisie courte
- if(note===null) return;
- const {data,error}=await db.rpc('veille_marquer_verifie',{p_table:r.table_source,p_cle:r.cle,p_note:note||null});
- if(error){ showToast('Erreur : '+error.message,'error'); return; }
- showToast('Vérifié ✓ — prochain contrôle le '+vDate(data.prochain_controle)); chargerVeille();
-}
-async function chargerDestinataires(){
- const {data,error}=await db.from('veille_destinataires').select('*').order('id');
- const t=document.getElementById('vDest');
- if(error){ t.innerHTML='<tr><td colspan="4">Destinataires illisibles : '+vEsc(error.message)+'</td></tr>'; return; }
- t.innerHTML=data.length?data.map(d=>'<tr><td>'+vEsc(d.email)+'</td><td>'+vEsc(d.nom||'')+'</td><td><input type="checkbox" '+(d.actif?'checked':'')+' onchange="veilleActif('+d.id+',this.checked)" aria-label="Actif"></td>'
-  +'<td><button class="btn btn-ghost" onclick="veilleSupprDest('+d.id+',\''+vEsc(d.email)+'\')">Retirer</button></td></tr>').join(''):'<tr><td colspan="4">Aucun destinataire : le rapport ne partira que par notification.</td></tr>';
-}
-async function veilleAjouterDest(){
- const email=document.getElementById('vNvEmail').value.trim(), nom=document.getElementById('vNvNom').value.trim();
- if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)){ showToast('Adresse e-mail invalide','error'); return; }
- const {error}=await db.from('veille_destinataires').insert({email,nom:nom||null});
- if(error){ showToast('Erreur : '+error.message,'error'); return; }
- document.getElementById('vNvEmail').value=''; document.getElementById('vNvNom').value='';
- showToast('Destinataire ajouté ✓'); chargerDestinataires();
-}
-async function veilleActif(id,on){
- const {error}=await db.from('veille_destinataires').update({actif:on}).eq('id',id);
- if(error) showToast('Erreur : '+error.message,'error'); else showToast(on?'Destinataire réactivé':'Destinataire suspendu');
-}
-async function veilleSupprDest(id,email){
- if(!confirm('Retirer '+email+' de la liste ?')) return;
- const {error}=await db.from('veille_destinataires').delete().eq('id',id);
- if(error) showToast('Erreur : '+error.message,'error'); else { showToast('Destinataire retiré'); chargerDestinataires(); }
-}
-async function chargerRapports(){
- const {data,error}=await db.from('veille_rapports').select('id,cree_le,nb_depassees,nb_15_jours,nb_ecarts,contenu,envoye_a').order('cree_le',{ascending:false}).limit(8);
- const el=document.getElementById('vRapports');
- if(error){ el.textContent='Rapports illisibles : '+error.message; return; }
- if(!data.length){ el.innerHTML='<div class="note" style="margin:0">Aucun rapport pour l\'instant : le premier arrivera lundi.</div>'; return; }
- el.innerHTML=data.map(r=>'<div style="border-bottom:1px solid var(--border);padding:8px 0"><button class="btn btn-ghost" style="width:auto;margin:0;padding:6px 10px;font-size:12px" onclick="document.getElementById(\'vr'+r.id+'\').classList.toggle(\'show\')">'+fmtDate(r.cree_le)+'</button> '
-  +'<span class="act-meta">'+r.nb_depassees+' dépassée(s) · '+r.nb_15_jours+' dans 15 j · '+r.nb_ecarts+' écart(s) · envoyé à '+vEsc((r.envoye_a||[]).join(', ')||'—')+'</span>'
-  +'<div class="vrap" id="vr'+r.id+'">'+vEsc(r.contenu)+'</div></div>').join('');
-}
 </script>
 </body>
 

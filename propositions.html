@@ -99,6 +99,8 @@ const BASES = {
   accompagna: { nom: 'Accompagna', url: 'https://axgdlokgnsndshrahovg.supabase.co', cle: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z2Rsb2tnbnNuZHNocmFob3ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0OTY0NDcsImV4cCI6MjExMDA3MjQ0N30.jNjaDUAGd7A4EhftnDy2dZEMTMBauwRp99sVfISjzdw' },
   phare:      { nom: 'Les Ateliers du Phare (test)', url: 'https://fnhnumzosdehvbotnswh.supabase.co', cle: 'sb_publishable_OsTN8hmy1IeT6KEjHz4GUA_kLNsjb5O' },
 };
+// Base où la veille dépose les propositions (les autres bases ne font que recevoir les mises à jour).
+const CENTRALE = 'accompagna';
 const CHAMPS = {
   intitule: 'Intitulé', statut: 'Statut', acquis: 'Acquis', attendu: 'Attendu', resultat: 'Résultat',
   date_attendue: 'Date attendue', date_attendue_libelle: 'Précision de la date', date_intervenue: 'Date intervenue',
@@ -110,7 +112,7 @@ const STATUTS = { 'à valider': 'st-av', 'validée': 'st-va', 'appliquée': 'st-
 const params = new URLSearchParams(location.search);
 const lien = { base: params.get('base'), id: Number(params.get('id')), jeton: params.get('t') };
 const modeLien = !!(lien.base && BASES[lien.base] && lien.id && lien.jeton);
-let baseCle = modeLien ? lien.base : (params.get('base') && BASES[params.get('base')] ? params.get('base') : lireMemo() || 'lms');
+let baseCle = modeLien ? lien.base : (params.get('base') && BASES[params.get('base')] ? params.get('base') : lireMemo() || CENTRALE);
 let db = client(baseCle);
 
 function client(k) {
@@ -213,11 +215,19 @@ async function recharger(id) {
   }
 }
 
+function allerCentrale() { memo(CENTRALE); location.href = location.pathname + '?base=' + CENTRALE; }
+
 async function chargerListe() {
   const liste = document.getElementById('liste');
   liste.innerHTML = '<div class="vide">Chargement…</div>';
   const { data, error } = await db.rpc('veille_propositions_lister', { p_tous: document.getElementById('tous').checked });
-  if (error) { liste.innerHTML = `<div class="card"><div class="msg show ko">${esc(error.message)}</div></div>`; return; }
+  if (error) {
+    const absent = /veille_propositions_lister|schema cache/i.test(error.message || '');
+    liste.innerHTML = absent
+      ? `<div class="card"><div class="msg show ko">Les propositions de la veille sont déposées dans la base ${esc(BASES[CENTRALE].nom)}. La base ${esc(BASES[baseCle].nom)} ne fait que recevoir les mises à jour validées.</div><div class="actions"><button class="b-prim" onclick="allerCentrale()">Ouvrir la base ${esc(BASES[CENTRALE].nom)}</button></div></div>`
+      : `<div class="card"><div class="msg show ko">${esc(error.message)}</div></div>`;
+    return;
+  }
   liste.innerHTML = data && data.length ? data.map(carte).join('') : '<div class="card vide">Aucune proposition en attente dans cette base.</div>';
 }
 

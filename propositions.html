@@ -191,7 +191,16 @@ async function decider(id, decision) {
   const m = document.getElementById('m' + id);
   const note = decision === 'refuser' ? (document.getElementById('rt' + id).value || '').trim() : null;
   if (decision === 'refuser' && note.length < 3) { message(m, 'Indiquez le motif du refus.', false); return; }
-  if (decision === 'valider' && !confirm('Valider cette mise à jour ? Elle sera appliquée tout de suite dans les bases visées.')) return;
+  if (decision === 'valider') {
+    // Confirmation dans la page (les fenêtres confirm() sont bloquées par certains navigateurs intégrés)
+    const btn = document.querySelector(`#p${id} .b-ok`);
+    if (btn && !btn.dataset.confirme) {
+      btn.dataset.confirme = '1';
+      btn.textContent = 'Confirmer : appliquer dans toutes les bases';
+      message(m, 'Cliquez une seconde fois pour confirmer. La mise à jour sera appliquée tout de suite dans les bases visées.', true);
+      return;
+    }
+  }
   document.querySelectorAll(`#p${id} button`).forEach((b) => b.disabled = true);
   const { error } = await db.rpc('veille_proposition_decider', { p_id: id, p_decision: decision, p_note: note, p_lien_jeton: modeLien ? lien.jeton : null });
   if (error) { message(m, error.message, false); document.querySelectorAll(`#p${id} button`).forEach((b) => b.disabled = false); return; }

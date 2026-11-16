@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validation des mises à jour — Veille</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <style>
+:root{
+--prune:#8C1E70; --prune-dark:#5E1349; --charbon:#283C28; --or:#C9A961;
+--bg:#FAF7F5; --card:#FFFFFF; --soft:#F4EEF1; --border:#E8DCE3;
+--text:#2A2024; --muted:#6B5B62; --ok:#2E7D32; --ok-bg:#E8F5E9; --ko:#A02020; --ko-bg:#FFEEEE;
+--wait:#8A6100; --wait-bg:#FFF6DD;
+--shadow:0 4px 16px rgba(140,30,112,.08),0 1px 3px rgba(140,30,112,.06);
+--radius-sm:6px; --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--prune)}
+.wrap{max-width:980px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:20px}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:24px;color:var(--charbon)}
+.sub{color:var(--muted);font-size:13px}
+.barre{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+select,button,textarea,input{font-family:inherit;font-size:14px}
+select,input,textarea{padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:#fff;color:var(--text)}
+textarea{width:100%;min-height:70px;resize:vertical}
+button{border:0;border-radius:var(--radius-sm);padding:10px 16px;font-weight:600;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.b-ok{background:var(--ok);color:#fff}.b-ko{background:#fff;color:var(--ko);border:1.5px solid var(--ko)}
+.b-sec{background:var(--soft);color:var(--prune-dark)}.b-prim{background:var(--prune);color:#fff}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:18px}
+.card h2{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:var(--charbon);margin-bottom:4px}
+.meta{font-size:12px;color:var(--muted);margin-bottom:12px}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.3px;padding:3px 9px;border-radius:999px;text-transform:uppercase;vertical-align:middle}
+.st-av{background:var(--wait-bg);color:var(--wait)}.st-va{background:#E3EEFB;color:#1F4E8C}
+.st-ap{background:var(--ok-bg);color:var(--ok)}.st-re{background:var(--ko-bg);color:var(--ko)}
+.n-off{background:var(--ok-bg);color:var(--ok)}.n-sec{background:var(--wait-bg);color:var(--wait)}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 8px}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600;color:var(--prune-dark)}
+td.avant{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(160,32,32,.45)}
+td.apres{font-weight:500}
+ul.sources{list-style:none}
+ul.sources li{padding:6px 0;border-bottom:1px dashed var(--border);font-size:13px}
+.note{background:var(--soft);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:flex-start}
+.refus{display:none;width:100%;margin-top:8px}
+.msg{padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin:10px 0;display:none}
+.msg.show{display:block}.msg.ok{background:var(--ok-bg);color:var(--ok)}.msg.ko{background:var(--ko-bg);color:var(--ko)}
+.res li{font-size:13px;margin-left:18px}
+.login{max-width:380px;margin:60px auto}
+.login label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:12px 0 6px}
+.login input{width:100%}
+.vide{color:var(--muted);text-align:center;padding:30px}
+@media (max-width:600px){.card{padding:16px}h1{font-size:20px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Mises à jour proposées par la veille</h1>
+      <div class="sub" id="sousTitre">Une validation (pédagogie ou direction) applique la mise à jour dans toutes les bases visées.</div>
+    </div>
+    <div class="barre" id="barreAdmin" style="display:none">
+      <select id="choixBase" aria-label="Base"></select>
+      <label class="sub"><input type="checkbox" id="tous"> historique complet</label>
+      <a class="sub" href="index.html">← Paramètres</a>
+      <button class="b-sec" id="deco">Déconnexion</button>
+    </div>
+  </header>
+
+  <div id="msgGlobal" class="msg"></div>
+
+  <div class="card login" id="ecranLogin" style="display:none">
+    <h2>Connexion</h2>
+    <div class="meta">Réservé à la pédagogie et à la direction.</div>
+    <label for="baseLogin">Base</label><select id="baseLogin"></select>
+    <label for="email">E-mail</label><input id="email" type="email" autocomplete="username">
+    <label for="mdp">Mot de passe</label><input id="mdp" type="password" autocomplete="current-password">
+    <div id="msgLogin" class="msg"></div>
+    <div class="actions"><button class="b-prim" id="btnLogin">Se connecter</button></div>
+  </div>
+
+  <div id="liste"></div>
+</div>
+
+<script>
+// Bases équipées du circuit. La base « centrale » est celle où la veille dépose la proposition :
+// c'est elle qui porte la fonction veille-propositions chargée d'appliquer dans toutes les bases.
+const BASES = {
+  lms:        { nom: 'LMS', url: 'https://ibkvyjlglwufxvzxnysa.supabase.co', cle: 'sb_publishable_xUfZHSOHf4TnBRRyzU_qJA_TcXIMSKX' },
+  accompagna: { nom: 'Accompagna', url: 'https://axgdlokgnsndshrahovg.supabase.co', cle: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z2Rsb2tnbnNuZHNocmFob3ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0OTY0NDcsImV4cCI6MjExMDA3MjQ0N30.jNjaDUAGd7A4EhftnDy2dZEMTMBauwRp99sVfISjzdw' },
+  phare:      { nom: 'Les Ateliers du Phare (test)', url: 'https://fnhnumzosdehvbotnswh.supabase.co', cle: 'sb_publishable_OsTN8hmy1IeT6KEjHz4GUA_kLNsjb5O' },
+};
+const CHAMPS = {
+  intitule: 'Intitulé', statut: 'Statut', acquis: 'Acquis', attendu: 'Attendu', resultat: 'Résultat',
+  date_attendue: 'Date attendue', date_attendue_libelle: 'Précision de la date', date_intervenue: 'Date intervenue',
+  source_libelle: 'Source (libellé)', source_url: 'Source (lien)', verifie_le: 'Vérifié le',
+  module: 'Module', ordre: 'Ordre', da_code: 'DA',
+};
+const STATUTS = { 'à valider': 'st-av', 'validée': 'st-va', 'appliquée': 'st-ap', 'refusée': 'st-re' };
+
+const params = new URLSearchParams(location.search);
+const lien = { base: params.get('base'), id: Number(params.get('id')), jeton: params.get('t') };
+const modeLien = !!(lien.base && BASES[lien.base] && lien.id && lien.jeton);
+let baseCle = modeLien ? lien.base : (params.get('base') && BASES[params.get('base')] ? params.get('base') : lireMemo() || 'lms');
+let db = client(baseCle);
+
+function client(k) {
+  return window.supabase.createClient(BASES[k].url, BASES[k].cle, { auth: { storageKey: 'veille-validation-' + k } });
+}
+function lireMemo() { try { return localStorage.getItem('veille-validation-base'); } catch (e) { return null; } }
+function memo(k) { try { localStorage.setItem('veille-validation-base', k); } catch (e) {} }
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtJour = (d) => d ? new Date(d.length === 10 ? d + 'T12:00:00' : d).toLocaleDateString('fr-FR') : '';
+const fmtHeure = (d) => d ? new Date(d).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : '';
+const valeur = (k, v) => v == null || v === '' ? '—' : (/^date_|verifie_le/.test(k) && /^\d{4}-\d{2}-\d{2}$/.test(v) ? fmtJour(v) : String(v));
+function message(el, texte, ok) { el.textContent = texte; el.className = 'msg show ' + (ok ? 'ok' : 'ko'); }
+
+function remplirBases(sel) {
+  sel.innerHTML = Object.entries(BASES).map(([k, b]) => `<option value="${k}">${esc(b.nom)}</option>`).join('');
+  sel.value = baseCle;
+}
+
+function carte(p) {
+  const actuel = p.valeurs_actuelles || {};
+  const propose = p.valeurs_proposees || {};
+  const lignes = Object.keys(propose).map((k) => {
+    const avant = actuel[k], apres = propose[k];
+    const change = JSON.stringify(avant ?? null) !== JSON.stringify(apres ?? null);
+    return `<tr><th>${esc(CHAMPS[k] || k)}</th><td class="${change && p.operation === 'modifier' ? 'avant' : ''}">${esc(p.operation === 'ajouter' ? '—' : valeur(k, avant))}</td><td class="apres">${esc(valeur(k, apres))}${change ? '' : ' <span class="sub">(inchangé)</span>'}</td></tr>`;
+  }).join('');
+  const sources = (p.sources || []).map((s) => `<li>
+      <span class="badge ${s.nature === 'officielle' ? 'n-off' : 'n-sec'}">${esc(s.nature || 'source')}</span>
+      <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.libelle || s.url)}</a>
+      ${s.date ? `<span class="sub"> · ${esc(fmtJour(s.date))}</span>` : ''}
+      ${s.note ? `<div class="sub">${esc(s.note)}</div>` : ''}</li>`).join('');
+  const res = p.resultats ? Object.entries(p.resultats).map(([b, r]) =>
+      `<li>${r.ok ? '✅' : '⚠️'} <strong>${esc(r.base || (BASES[b] && BASES[b].nom) || b)}</strong> — ${esc(r.message || '')}${r.maj_le ? ` · mis à jour le ${esc(fmtHeure(r.maj_le))}` : ''}</li>`).join('') : '';
+  const decision = p.decide_le ? `<div class="note">${p.statut === 'refusée' ? 'Refusée' : 'Validée'} le ${esc(fmtHeure(p.decide_le))} par ${esc(p.decide_par)} (${esc(p.decide_role === 'direction' ? 'direction' : 'pédagogie')}, ${esc(p.decide_via)})${p.note_decision ? '\n' + esc(p.note_decision) : ''}</div>` : '';
+  const ouverte = p.statut === 'à valider';
+  const relancer = p.statut === 'validée';
+  return `<div class="card" id="p${p.id}">
+    <span class="badge ${STATUTS[p.statut] || ''}">${esc(p.statut)}</span>
+    <h2 style="margin-top:8px">${esc(p.resume)}</h2>
+    <div class="meta">${esc(p.operation === 'ajouter' ? 'Nouvelle ligne' : 'Modification')} · ${esc(p.table_cible)} / <code>${esc(p.cle)}</code> · proposée le ${esc(fmtHeure(p.propose_le))} · bases : ${esc((p.bases || []).map((b) => (BASES[b] && BASES[b].nom) || b).join(', '))}</div>
+    ${p.motif ? `<div class="note">${esc(p.motif)}</div>` : ''}
+    <h3>Sources</h3><ul class="sources">${sources || '<li class="sub">Aucune source</li>'}</ul>
+    <h3>${p.operation === 'ajouter' ? 'Contenu de la nouvelle ligne' : 'Valeur actuelle → valeur proposée'}</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>Champ</th><th>Actuel</th><th>Proposé</th></tr></thead><tbody>${lignes}</tbody></table></div>
+    ${p.supports_touches ? `<h3>Supports à revoir après validation</h3><div class="note">${esc(p.supports_touches)}</div>` : ''}
+    ${decision ? `<h3>Décision</h3>${decision}` : ''}
+    ${res ? `<h3>Application</h3><ul class="res">${res}</ul>${p.applique_le ? `<div class="sub" style="margin-top:6px">Appliquée le ${esc(fmtHeure(p.applique_le))}</div>` : ''}` : ''}
+    <div class="msg" id="m${p.id}"></div>
+    ${ouverte ? `<div class="actions">
+        <button class="b-ok" onclick="decider(${p.id},'valider')">Valider et mettre à jour</button>
+        <button class="b-ko" onclick="ouvrirRefus(${p.id})">Refuser…</button>
+        <div class="refus" id="r${p.id}"><textarea id="rt${p.id}" placeholder="Motif du refus (obligatoire)"></textarea>
+          <div class="actions" style="margin-top:8px"><button class="b-ko" onclick="decider(${p.id},'refuser')">Confirmer le refus</button></div></div>
+      </div>` : ''}
+    ${relancer ? `<div class="actions"><button class="b-prim" onclick="appliquer(${p.id})">Relancer l'application</button></div>` : ''}
+  </div>`;
+}
+
+function ouvrirRefus(id) { document.getElementById('r' + id).style.display = 'block'; }
+
+async function appliquer(id) {
+  const m = document.getElementById('m' + id);
+  message(m, 'Application en cours dans les bases visées…', true);
+  try {
+    const r = await fetch(`${BASES[baseCle].url}/functions/v1/veille-propositions`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', apikey: BASES[baseCle].cle }, body: JSON.stringify({ id }),
+    });
+    const d = await r.json();
+    if (!r.ok && !d.resultats) throw new Error(d.erreur || ('HTTP ' + r.status));
+    message(m, d.ok ? 'Mise à jour appliquée dans toutes les bases visées.' : 'Application incomplète : voir le détail ci-dessous. Vous pourrez relancer.', d.ok);
+  } catch (e) { message(m, "L'application a échoué : " + e.message + ' — la proposition reste validée, relancez plus tard.', false); }
+  await recharger(id);
+}
+
+async function decider(id, decision) {
+  const m = document.getElementById('m' + id);
+  const note = decision === 'refuser' ? (document.getElementById('rt' + id).value || '').trim() : null;
+  if (decision === 'refuser' && note.length < 3) { message(m, 'Indiquez le motif du refus.', false); return; }
+  if (decision === 'valider' && !confirm('Valider cette mise à jour ? Elle sera appliquée tout de suite dans les bases visées.')) return;
+  document.querySelectorAll(`#p${id} button`).forEach((b) => b.disabled = true);
+  const { error } = await db.rpc('veille_proposition_decider', { p_id: id, p_decision: decision, p_note: note, p_lien_jeton: modeLien ? lien.jeton : null });
+  if (error) { message(m, error.message, false); document.querySelectorAll(`#p${id} button`).forEach((b) => b.disabled = false); return; }
+  if (decision === 'valider') await appliquer(id); else { message(m, 'Proposition refusée.', true); await recharger(id); }
+}
+
+async function recharger(id) {
+  let p;
+  if (modeLien) {
+    const { data, error } = await db.rpc('veille_proposition_lire', { p_id: id, p_lien_jeton: lien.jeton });
+    if (error) return; p = data;
+  } else {
+    const { data } = await db.rpc('veille_propositions_lister', { p_tous: true });
+    p = (data || []).find((x) => x.id === id);
+  }
+  if (p) {
+    const ancien = document.getElementById('p' + id);
+    const m = ancien.querySelector('.msg'); const garde = m && m.classList.contains('show') ? m.outerHTML : null;
+    ancien.outerHTML = carte(p);
+    if (garde) document.getElementById('m' + id).outerHTML = garde;
+  }
+}
+
+async function chargerListe() {
+  const liste = document.getElementById('liste');
+  liste.innerHTML = '<div class="vide">Chargement…</div>';
+  const { data, error } = await db.rpc('veille_propositions_lister', { p_tous: document.getElementById('tous').checked });
+  if (error) { liste.innerHTML = `<div class="card"><div class="msg show ko">${esc(error.message)}</div></div>`; return; }
+  liste.innerHTML = data && data.length ? data.map(carte).join('') : '<div class="card vide">Aucune proposition en attente dans cette base.</div>';
+}
+
+async function demarrerAdmin() {
+  remplirBases(document.getElementById('choixBase'));
+  remplirBases(document.getElementById('baseLogin'));
+  const { data } = await db.auth.getSession();
+  if (!data.session) { document.getElementById('ecranLogin').style.display = 'block'; return; }
+  document.getElementById('ecranLogin').style.display = 'none';
+  document.getElementById('barreAdmin').style.display = 'flex';
+  document.getElementById('sousTitre').textContent = `Connecté : ${data.session.user.email} — base ${BASES[baseCle].nom}. Une validation (pédagogie ou direction) applique la mise à jour dans toutes les bases visées.`;
+  await chargerListe();
+}
+
+document.getElementById('btnLogin').addEventListener('click', async () => {
+  baseCle = document.getElementById('baseLogin').value; memo(baseCle); db = client(baseCle);
+  const { error } = await db.auth.signInWithPassword({ email: document.getElementById('email').value.trim(), password: document.getElementById('mdp').value });
+  if (error) { message(document.getElementById('msgLogin'), 'Identifiants incorrects ou problème de connexion.', false); return; }
+  demarrerAdmin();
+});
+document.getElementById('choixBase').addEventListener('change', (e) => { baseCle = e.target.value; memo(baseCle); db = client(baseCle); document.getElementById('barreAdmin').style.display = 'none'; demarrerAdmin(); });
+document.getElementById('tous').addEventListener('change', chargerListe);
+document.getElementById('deco').addEventListener('click', async () => { await db.auth.signOut(); location.href = location.pathname; });
+
+(async () => {
+  if (modeLien) {
+    document.getElementById('sousTitre').textContent = `Lien personnel — base ${BASES[baseCle].nom}. Une validation applique la mise à jour dans toutes les bases visées.`;
+    const { data, error } = await db.rpc('veille_proposition_lire', { p_id: lien.id, p_lien_jeton: lien.jeton });
+    if (error) { message(document.getElementById('msgGlobal'), error.message + ' Vous pouvez aussi vous connecter à l’outil admin.', false); return; }
+    document.getElementById('liste').innerHTML = carte(data);
+  } else {
+    demarrerAdmin();
+  }
+})();
+</script>
+</body>
+</html>
